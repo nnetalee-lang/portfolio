@@ -25,6 +25,6 @@ There is no build step: what you see in these files is exactly what goes live.
 
 ## Before going live on neta-leeartzi.com
 
-- Remove the `<meta name="robots" content="noindex">` line from every page.
+- Done: search engines can now index the site (404 page excluded).
 - Add the tool logos to `img/tools/` and the project logos, then replace the `logo` placeholders.
 - Connect the domain in Vercel (Project → Settings → Domains), then update DNS at the domain provider.
