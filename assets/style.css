@@ -430,6 +430,42 @@ p, li, dd, h2, h3 { text-wrap: pretty; }
 .overview { grid-template-columns: repeat(var(--cols, 4), auto); justify-content: stretch; }
 .overview dd { white-space: nowrap; }
 
+
+/* User flow, drawn in HTML */
+.uflow { display: grid; gap: 0; justify-items: center; }
+.fpill { display: inline-flex; align-items: center; padding: 10px 18px; border-radius: 999px; border: 1px solid var(--line-strong); background: #fff; font-weight: 500; font-size: 15px; color: var(--ink); }
+.fpill.strong { background: var(--accent-text); border-color: var(--accent-text); color: #fff; }
+.fstart { display: flex; flex-direction: column; align-items: center; }
+.farrow { width: 1px; height: 28px; background: var(--line-strong); position: relative; }
+.farrow::after { content: ""; position: absolute; bottom: -1px; left: -4px; border: 4.5px solid transparent; border-top: 6px solid var(--line-strong); border-bottom: 0; }
+.flanes { position: relative; width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding-top: 44px; margin-top: 0; }
+.flanes::before { content: ""; position: absolute; top: 22px; left: 25%; right: 25%; height: 22px; border: 1px solid var(--line-strong); border-bottom: 0; border-radius: 12px 12px 0 0; }
+.flanes::after { content: ""; position: absolute; top: 0; left: 50%; width: 1px; height: 22px; background: var(--line-strong); }
+.flane { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 24px 24px 20px; }
+.flane h3 { font-size: 17px; font-weight: 600; }
+.flane-sub { margin-top: 2px; font-size: 14px; color: var(--faint); }
+.flane ol { list-style: none; margin: 20px 0 0; padding: 0; display: grid; gap: 0; }
+.flane li { position: relative; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 14px; padding-bottom: 18px; }
+.flane li:last-child { padding-bottom: 0; }
+.flane li:not(:last-child)::before { content: ""; position: absolute; left: 13.5px; top: 30px; bottom: 4px; width: 1px; background: var(--line-strong); }
+.fn { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 600; color: var(--accent-text); background: #fff; border: 1px solid var(--line-strong); }
+.ft { font-weight: 600; color: var(--ink); margin-top: 3px; }
+.fd { font-size: 14.5px; color: var(--muted); margin-top: 2px; }
+.fnote { margin-top: 8px; font-size: 13.5px; color: var(--muted); background: #fff; border: 1px dashed var(--line-strong); border-radius: 8px; padding: 6px 10px; }
+.fnote b { font-weight: 600; color: var(--ink-2); }
+.fend { position: relative; display: grid; justify-items: center; gap: 10px; text-align: center; padding-top: 44px; width: 100%; }
+.fend::before { content: ""; position: absolute; top: 0; left: 25%; right: 25%; height: 22px; border: 1px solid var(--line-strong); border-top: 0; border-radius: 0 0 12px 12px; }
+.fend::after { content: ""; position: absolute; top: 22px; left: 50%; width: 1px; height: 22px; background: var(--line-strong); }
+.fend p { font-size: 14.5px; color: var(--muted); max-width: 44ch; }
+@media (max-width: 880px) {
+  .flanes { grid-template-columns: 1fr; padding-top: 24px; }
+  .flanes::before, .fend::before { display: none; }
+  .flanes::after { top: 0; height: 24px; }
+  .flanes::before { display: none; }
+  .fend { padding-top: 24px; }
+  .fend::after { top: 0; height: 24px; }
+}
+
 @media (max-width: 1080px) {
   .levels { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .cards[style*="--cols: 4"], .callouts[style*="--cols: 4"] { --cols: 2 !important; }
