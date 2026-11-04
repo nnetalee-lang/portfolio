@@ -249,3 +249,11 @@
     reduce.addEventListener?.("change", () => { grainRun(); hob.stop(); hob.start(); });
   }
 })();
+
+/* Sticky header: a light surface once the page scrolls */
+(function () {
+  var h = document.querySelector(".site-header:not(.plain)");
+  if (!h) return;
+  var on = function () { h.classList.toggle("scrolled", window.scrollY > 8); };
+  on(); window.addEventListener("scroll", on, { passive: true });
+})();
