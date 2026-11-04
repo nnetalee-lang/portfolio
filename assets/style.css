@@ -200,6 +200,7 @@ h1, h2, h3 { text-wrap: balance; }
 .section .lead + .lead { margin-top: 10px; }
 .stack.stack > * + * { margin-top: clamp(40px, 5vw, 64px); }
 .stack.stack > .callouts { margin-top: 24px; }
+.stack.stack > :has(> .subhead) + * { margin-top: 24px; }
 .subsection { padding-top: clamp(72px, 8vw, 112px); }
 .subhead { font-size: 20px; font-weight: 500; letter-spacing: -.01em; }
 
@@ -401,6 +402,23 @@ p, li, dd, h2, h3 { text-wrap: pretty; }
 .case-hero + .hero-shot, .case-hero + .wrap.hero-shot { margin-top: 0; }
 .case-hero:has(+ .hero-shot) { padding-bottom: 40px; }
 .card ul { list-style: disc; }
+
+
+/* Building Onboarding: the live prototype instead of a screenshot */
+.proto { padding-bottom: clamp(24px, 4vw, 48px); }
+.proto-frame { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: #f9f9f9; }
+.proto-frame iframe { display: block; width: 100%; height: min(920px, 82vh); border: 0; }
+.proto-note { margin-top: 12px; font-size: 14px; color: var(--faint); }
+.proto-note a { color: var(--ink); }
+.proto-fallback { display: none; }
+@media (max-width: 880px) { .proto-frame, .proto-note { display: none; } .proto-fallback { display: block; } }
+/* Lists that draw their own dots */
+.card ul.dots, ul.dots { list-style: none; padding-left: 0; }
+/* Blocks inside a section sit a little closer */
+.stack.stack > * + * { margin-top: clamp(40px, 4.5vw, 56px); }
+.section { padding-block: clamp(64px, 7.5vw, 112px); }
+.stack.stack > .callouts { margin-top: 24px; }
+.stack.stack > :has(> .subhead) + * { margin-top: 24px; }
 
 @media (max-width: 1080px) {
   .levels { grid-template-columns: repeat(2, minmax(0, 1fr)); }

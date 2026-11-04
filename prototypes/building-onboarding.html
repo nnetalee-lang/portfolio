@@ -1,0 +1,1048 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Building Onboarding prototype | Neta-lee Artzi</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0&display=swap">
+<style>
+/* Layout: the existing Skyline admin shell (icon rail + gray canvas + white rounded panels).
+   New in this concept: facade schematic at the center, docked drop editor on the right. */
+:root{
+  --navy:#080E46;        /* Color - Primary */
+  --orange:#F4672E;      /* Color - Icon / primary button */
+  --coral:#F2A585;       /* active tab / nav item */
+  --coral-soft:#FDEEE7;
+  --bg:#F9F9F9;          /* Gray 10 */
+  --white:#FFFFFF;
+  --g2:#4F4F4F; --g4:#85868F; --g5:#E0E0E0; --g7:#B6B6B6; --field:#F4F4F6; --line:#EEEEF1;
+  --warn:#8A5300; --warn-bg:#FFF5E3; --warn-bd:#F1D29E; --warn-ic:#E39A1E;
+  --danger:#F05A4F;
+  --tA:#6F9CEB; --tB:#4DB3A8; --tC:#E3AE3C; --tD:#9A84D6; --tX:#C9C9CF;
+  --f-ui:'Montserrat', 'Segoe UI', system-ui, sans-serif;
+  --f-body:'Quicksand', 'Montserrat', system-ui, sans-serif;
+  --r-panel:24px; --r-pill:8px; --r-tab:10px;
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+html,body{background:var(--bg);color:var(--navy)}
+body{font-family:var(--f-ui);font-size:14px;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:16px}
+button{font-family:inherit;color:inherit;cursor:pointer}
+input,select{font-family:inherit;color:var(--navy)}
+:focus-visible{outline:2px solid var(--orange);outline-offset:2px}
+.ms{font-family:'Material Symbols Outlined';font-weight:300;font-size:24px;line-height:1;font-style:normal;display:inline-block;-webkit-font-feature-settings:'liga';font-feature-settings:'liga';user-select:none}
+
+.app{display:grid;grid-template-columns:82px minmax(0,1fr);gap:24px;max-width:1440px;margin:0 auto}
+/* nav rail */
+.rail{background:var(--white);border-radius:var(--r-panel);display:flex;flex-direction:column;align-items:center;padding:24px 0 20px;position:sticky;top:16px;height:calc(100vh - 32px);min-height:620px}
+.logo{display:grid;grid-template-columns:auto auto;font-weight:800;font-size:25px;line-height:.86;letter-spacing:-.5px;color:#111}
+.logo i{display:block;width:18px;height:18px;background:var(--orange);margin:2px 0 0 1px}
+.rail .search{margin-top:66px;width:50px;height:46px;border-radius:14px;background:var(--bg);display:grid;place-items:center;border:0}
+.rail nav{display:flex;flex-direction:column;gap:16px;margin-top:32px}
+.rail nav button{width:50px;height:44px;border:0;background:none;border-radius:12px;display:grid;place-items:center;color:var(--navy)}
+.rail nav button.on{background:var(--coral)}
+.rail .avatar{margin-top:auto;width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#F6C9B3,#E7A387);display:grid;place-items:center;font-weight:600;font-size:13px;color:var(--navy)}
+
+main{min-width:0;display:flex;flex-direction:column;gap:20px}
+.concept{align-self:flex-start;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--orange);background:var(--coral-soft);padding:5px 10px;border-radius:6px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.crumbs{display:flex;align-items:center;gap:16px;font-size:15px;font-weight:500}
+.back{display:flex;align-items:center;gap:4px;border:0;background:var(--white);border-radius:8px;padding:4px 10px 4px 4px;font-size:16px;font-weight:500}
+.back .ms{color:var(--orange);font-size:22px}
+.crumbs .sep{color:var(--g4)}
+.crumbs .muted{color:var(--g2);font-weight:400}
+.updated{font-size:10px;color:var(--g2)}
+.titlerow{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+h1{font-size:20px;font-weight:700;margin:0;display:flex;align-items:center;gap:6px;text-wrap:balance}
+h1 .ms{font-size:16px;color:var(--g4)}
+.sub{font-family:var(--f-body);font-weight:500;font-size:15px;margin:8px 0 0;color:var(--navy)}
+.estop{display:flex;align-items:center;gap:10px;font-family:var(--f-body);font-weight:500;font-size:15px;border:0;background:none;padding:0}
+.toggle{width:28px;height:16px;border-radius:10px;border:2px solid var(--navy);position:relative}
+.toggle::after{content:"";position:absolute;width:8px;height:8px;border-radius:50%;background:var(--navy);top:2px;left:2px;transition:left .15s}
+.estop[aria-pressed="true"] .toggle{background:var(--navy)}
+.estop[aria-pressed="true"] .toggle::after{left:14px;background:var(--white)}
+
+/* fields in the existing pill style */
+.fieldrow{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:flex-end}
+.fld{display:flex;flex-direction:column;gap:4px;min-width:0}
+.fld > span{font-size:11px;color:var(--g4);padding-left:4px}
+.pill{height:32px;border:0;border-radius:var(--r-pill);background:var(--white);padding:0 14px;font-size:14px;color:var(--g2);width:100%}
+.pill.sel{appearance:none;padding-right:34px;background:var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23080E46' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right 14px center}
+.details{display:flex;gap:16px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap}
+.details .fieldrow{flex:1}
+.linkbtn{border:0;background:none;display:inline-flex;align-items:center;gap:4px;font-weight:500;font-size:13px;color:var(--navy);padding:6px 4px}
+.linkbtn .ms{font-size:18px}
+.summary{display:flex;flex-wrap:wrap;align-items:center;gap:8px;flex:1}
+.chip{background:var(--white);border-radius:var(--r-pill);height:32px;display:inline-block;line-height:32px;padding:0 12px;font-size:13px;color:var(--g2);white-space:nowrap}
+.chip b{font-weight:600;color:var(--navy)}
+
+/* facade tabs */
+.tabs{display:inline-flex;flex-wrap:wrap;background:var(--white);border-radius:var(--r-tab);align-self:flex-start;max-width:100%}
+.tab{border:0;background:none;height:55px;padding:0 16px;border-radius:var(--r-tab);font-size:16px;font-weight:500;display:flex;align-items:center;gap:6px}
+.tab.on{background:var(--coral)}
+.tab .dot{width:7px;height:7px;border-radius:50%;background:var(--warn-ic)}
+.tab.add{font-weight:600;gap:8px}
+
+/* workspace */
+.work{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:16px;align-items:start}
+.card{background:var(--white);border-radius:var(--r-panel);padding:20px 20px 16px;min-width:0}
+.cardhead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.cardhead h2{font-size:16px;font-weight:600;margin:0}
+.cardhead p{margin:2px 0 0;font-size:12px;color:var(--g4);font-family:var(--f-body);font-weight:500}
+.titlewrap{display:flex;flex-direction:column;align-items:flex-start;gap:12px;min-width:0}
+.titlewrap:has(#facActions:empty){gap:0}
+.btn.dupmain{width:100%;margin-top:14px;height:40px;border-color:var(--orange);color:var(--orange);background:var(--white)}
+.btn.dupmain:hover{background:var(--coral-soft)}
+.pill.ro{display:flex;align-items:center;background:transparent;padding-left:4px;font-weight:600;color:var(--navy)}
+.headtools{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.stepper{display:flex;flex-direction:column;gap:4px}
+.stepper > span{font-size:11px;color:var(--g4);padding-left:2px;white-space:nowrap}
+.stp{display:flex;align-items:center;background:var(--field);border-radius:var(--r-pill);height:36px}
+.stp button{border:0;background:none;width:34px;height:36px;display:grid;place-items:center;color:var(--navy)}
+.stp button .ms{font-size:20px}
+.stp button:hover{color:var(--orange)}
+.stp input{width:44px;height:36px;border:0;background:none;text-align:center;font-size:15px;font-weight:600;font-variant-numeric:tabular-nums}
+.plan svg{display:block}
+.plan .side{cursor:pointer}
+.plan .side:hover line{stroke:var(--orange)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--g2)}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.linkbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#F1F3FA;border-radius:10px;padding:8px 12px;margin:4px 0 8px;font-size:13px;line-height:1.45}
+.linkbar > .ms{font-size:18px;color:var(--navy)}
+.linkbar > span:nth-child(2){flex:1 1 260px}
+.linkbar .linkbtn{text-decoration:underline;text-underline-offset:2px;padding:2px 4px}
+.tab .tablink{font-size:16px;opacity:.7}
+.shared{display:inline-flex;align-items:center;gap:4px;background:#F1F3FA;border-radius:6px;padding:2px 8px;font-size:11px;font-weight:500;color:var(--navy);margin-top:6px;white-space:nowrap}
+.shared .ms{font-size:14px}
+.toast .act{border:0;background:none;color:var(--coral);font-weight:600;font-size:13px;padding:0 0 0 8px;text-decoration:underline}
+.schem-wrap{overflow-x:auto;overflow-y:hidden;margin:0 -8px}
+.schem-wrap svg{display:block}
+svg text{font-family:var(--f-ui)}
+.col{cursor:grab;touch-action:none}
+body.grabbing,body.grabbing *{cursor:grabbing!important;user-select:none}
+.col.dragging{opacity:.75}
+.col.dragging .hit{fill:var(--coral-soft)!important;stroke:var(--coral);stroke-dasharray:4 3}
+.col.sib .hit{fill:#FDF4EF}
+.legend .tagdemo{font-size:10px;font-weight:600;color:var(--g2);border:1px solid var(--g5);border-radius:5px;padding:1px 5px;background:var(--white)}
+.btn.small{height:32px;padding:0 12px;font-size:13px;align-self:flex-end}
+.dialog.scope{text-align:left;width:min(440px,calc(100% - 32px))}
+.dialog.scope h3{margin-bottom:14px}
+.dialog.scope .radio{gap:10px;font-size:13px}
+.dialog.scope .radio label{align-items:flex-start;line-height:1.4}
+.dialog.scope .radio input{margin-top:1px}
+.dialog.scope .hint{margin:12px 0 0}
+.dialog.scope .hint:empty{display:none}
+.dialog.scope .row{margin-top:20px}
+.dialog.scope .row{justify-content:flex-end}
+.dftable{display:flex;flex-direction:column;gap:8px}
+.dfrow{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;background:var(--bg);border-radius:10px;padding:10px 12px;cursor:pointer;font-size:13px}
+.dfrow small{color:var(--g4);font-size:11px}
+.dfrow input[type=checkbox]{accent-color:var(--orange);width:16px;height:16px}
+.dfn{display:flex;align-items:center;gap:6px}
+.dfn input{width:52px;height:32px;border-radius:var(--r-pill);border:1px solid transparent;background:var(--white);text-align:center;font-size:13px;font-variant-numeric:tabular-nums}
+.movebox{display:flex;flex-direction:column;gap:6px;padding:6px;font-size:12px}
+.movebox input{width:70px;height:32px;border-radius:var(--r-pill);border:1px solid var(--g5);padding:0 8px;font-size:13px}
+.movebox small{color:var(--g4)}
+.col .hit{fill:transparent}
+.col:hover .hit{fill:#F6F6F9}
+.col.warned .hit{fill:var(--warn-bg)}
+.col.warned:hover .hit{fill:#FFEFD3}
+.col.on .hit{fill:var(--coral-soft)}
+.col.main .hit{stroke:var(--coral);stroke-width:1.5}
+.legend .neq{color:var(--g4);font-size:14px;font-weight:600;line-height:1}
+.col.on .win{cursor:pointer}
+.col.on .win:hover{stroke:var(--navy);stroke-width:1}
+.addcol{cursor:pointer}
+.addcol:hover rect{fill:#F6F6F9}
+
+/* side panel (summary + editor) */
+.side{position:sticky;top:16px;display:flex;flex-direction:column;max-height:calc(100vh - 32px);padding:0;overflow:hidden}
+.side .scroll{overflow-y:auto;padding:20px 20px 8px}
+.side h3{margin:0;font-size:16px;font-weight:600}
+.side .meta{font-size:12px;color:var(--g4);margin-top:2px}
+.side .close{border:0;background:var(--field);width:30px;height:30px;border-radius:8px;display:grid;place-items:center}
+.side .close .ms{font-size:18px}
+.sect{border-top:1px solid var(--line);padding-top:16px;margin-top:16px;display:flex;flex-direction:column;gap:12px}
+.sect h4{margin:0;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--g4)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.inp{display:flex;flex-direction:column;gap:5px;min-width:0}
+.inp label{font-size:12px;font-weight:500;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.excrow > span{white-space:nowrap}
+.fld > span,.stat span,.legend span,.crumbs span,.tab,.linkbtn,.savenote{white-space:nowrap}
+th,td{white-space:nowrap}
+.foot .row{flex-wrap:wrap}
+.inp input,.inp select{height:36px;border-radius:var(--r-pill);border:1px solid transparent;background:var(--field);padding:0 12px;font-size:14px;width:100%;font-variant-numeric:tabular-nums}
+.inp input:focus,.inp select:focus{outline:none;border-color:var(--coral);background:var(--white)}
+.inp.warned input{border-color:var(--warn-bd);background:var(--warn-bg)}
+.hint{font-size:12px;color:var(--g4);font-family:var(--f-body);font-weight:500;line-height:1.4}
+.soft{display:flex;gap:8px;align-items:flex-start;background:var(--warn-bg);border:1px solid var(--warn-bd);border-radius:10px;padding:8px 10px;font-size:12px;line-height:1.45;color:var(--warn)}
+.soft .ms{font-size:18px;color:var(--warn-ic)}
+.soft button{border:0;background:var(--white);border-radius:6px;padding:3px 8px;font-size:12px;font-weight:600;color:var(--navy);margin-top:4px;border:1px solid var(--warn-bd)}
+.soft.span{grid-column:1/-1}
+.runline{font-size:13px;color:var(--g2);line-height:1.5}
+.runline .ms{font-size:18px;vertical-align:-4px;margin-right:4px}
+.runline b{color:var(--navy);font-variant-numeric:tabular-nums;white-space:nowrap}
+.typekeys{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12px;color:var(--g4)}
+.typekeys button{width:30px;height:30px;border-radius:8px;border:0;font-weight:700;color:var(--white);font-size:13px}
+.typekeys button.bk{background:var(--field);color:var(--navy)}
+.typekeys button.bk .ms{font-size:18px}
+.seqprev{display:flex;flex-direction:column;gap:6px;background:var(--bg);border-radius:10px;padding:10px}
+.seqprev .unit{display:flex;flex-wrap:wrap;gap:3px}
+.seqprev .unit i{width:20px;height:20px;border-radius:4px;font-style:normal;font-size:11px;font-weight:700;color:var(--white);display:grid;place-items:center}
+.seqprev .unit i.more{background:none;color:var(--g4);width:auto;padding:0 2px}
+.seqprev p{margin:0;font-size:12px;color:var(--g2)}
+.ok{color:#2E8B57}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chips button{border:1px solid var(--g5);background:var(--white);border-radius:20px;padding:4px 10px;font-size:12px;font-weight:500}
+.chips button:hover{border-color:var(--coral)}
+.patterninput{font-family:var(--f-ui);letter-spacing:.12em;font-weight:600!important;text-transform:uppercase}
+.radio{display:flex;flex-direction:column;gap:6px;font-size:13px}
+.radio label{display:flex;gap:8px;align-items:center;cursor:pointer}
+.radio input{appearance:none;-webkit-appearance:none;margin:0;flex:0 0 16px;width:16px;height:16px;border-radius:50%;border:1.5px solid var(--g7);background:var(--white);cursor:pointer}
+.radio input:checked{border:1.5px solid var(--orange);box-shadow:inset 0 0 0 3px var(--white);background:var(--orange)}
+.exc{display:flex;flex-direction:column;gap:8px}
+.excrow{display:grid;grid-template-columns:auto 72px auto 1fr 32px;gap:8px;align-items:center;font-size:13px}
+.excrow input,.excrow select{height:32px;border-radius:var(--r-pill);border:1px solid transparent;background:var(--field);padding:0 8px;font-size:13px;width:100%}
+.excrow .rm{border:0;background:none;color:var(--g4);display:grid;place-items:center}
+.excrow .rm .ms{font-size:18px}
+.swatch{width:12px;height:12px;border-radius:3px;display:inline-block}
+.foot{border-top:1px solid var(--line);padding:12px 20px 16px;display:flex;flex-direction:column;gap:10px;background:var(--white)}
+.foot .row{display:flex;gap:8px;align-items:center}
+.btn{white-space:nowrap;height:38px;border-radius:var(--r-pill);padding:0 18px;font-weight:600;font-size:14px;border:1px solid var(--g5);background:var(--white)}
+.btn.primary{background:var(--orange);border-color:var(--orange);color:var(--white)}
+.btn.primary:hover{background:#E85A20}
+.btn.ghost{border-color:transparent;background:none}
+.btn.danger{background:var(--danger);border-color:var(--danger);color:var(--white)}
+.btn .ms{font-size:18px;vertical-align:-4px;margin-right:4px}
+.savenote{font-size:12px;color:var(--warn);display:flex;align-items:center;gap:6px}
+.savenote .ms{font-size:16px;color:var(--warn-ic)}
+.stat{display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid var(--line)}
+.stat b{font-variant-numeric:tabular-nums}
+.empty{padding:40px 16px;text-align:center;color:var(--g2);font-family:var(--f-body);font-weight:500}
+.empty .btn{margin-top:12px}
+
+/* secondary table */
+.tablecard{padding:12px 20px}
+.tablecard summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px;font-weight:600;font-size:14px;padding:6px 0}
+.tablecard summary::-webkit-details-marker{display:none}
+.tablecard summary .ms{font-size:20px;transition:transform .15s}
+.tablecard[open] summary .ms{transform:rotate(90deg)}
+.tablecard summary small{font-weight:500;color:var(--g4);font-size:12px}
+.tbl-wrap{overflow-x:auto;margin-top:8px}
+table{border-collapse:separate;border-spacing:0 6px;width:100%;min-width:760px;font-size:13px}
+th{font-size:11px;font-weight:500;color:var(--g4);text-align:left;padding:0 10px}
+td{background:var(--bg);padding:7px 10px;font-variant-numeric:tabular-nums}
+td:first-child{border-radius:8px 0 0 8px}
+td:last-child{border-radius:0 8px 8px 0;width:36px;text-align:center}
+tr.on td{background:var(--coral-soft)}
+tbody tr{cursor:pointer}
+.typestrip{display:inline-flex;gap:1px;vertical-align:middle}
+.typestrip i{width:5px;height:12px;border-radius:1px;display:inline-block}
+.warnpill{display:inline-flex;align-items:center;gap:4px;color:var(--warn);font-size:12px}
+.warnpill .ms{font-size:16px;color:var(--warn-ic)}
+.kebab{border:0;background:var(--white);border-radius:6px;width:24px;height:24px;display:grid;place-items:center}
+.kebab .ms{font-size:16px}
+.menu{position:fixed;z-index:40;background:var(--white);border-radius:10px;box-shadow:0 8px 30px rgba(8,14,70,.14);padding:6px;min-width:160px}
+.menu button{display:flex;align-items:center;gap:8px;width:100%;border:0;background:none;padding:8px 10px;border-radius:6px;font-size:13px;text-align:left}
+.menu button:hover{background:var(--bg)}
+.menu .ms{font-size:18px}
+
+/* window popover */
+.pop{position:fixed;z-index:45;background:var(--white);border-radius:12px;box-shadow:0 8px 30px rgba(8,14,70,.16);padding:10px;font-size:12px;min-width:180px}
+.pop .t{font-weight:600;margin-bottom:8px}
+.pop .types{display:flex;gap:6px}
+.pop .types button{width:34px;height:34px;border-radius:8px;border:2px solid transparent;font-weight:700;color:var(--white)}
+.pop .types button.cur{border-color:var(--navy)}
+.pop .reset{margin-top:8px;border:0;background:none;font-size:12px;color:var(--g2);padding:2px 0;text-decoration:underline}
+
+/* overlay drawer + dialog (existing patterns) */
+.overlay{position:fixed;inset:0;background:rgba(40,40,48,.28);z-index:50}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--white);z-index:51;display:flex;flex-direction:column;padding:24px 24px calc(20px + env(safe-area-inset-bottom,0px));padding-right:max(24px, env(safe-area-inset-right,0px));gap:18px;box-shadow:-12px 0 40px rgba(8,14,70,.08)}
+.drawer h3{margin:0;font-size:16px;font-weight:600}
+.drawer .end{margin-top:auto;display:flex;justify-content:flex-end;gap:8px}
+.preview-mini{display:flex;gap:4px;align-items:flex-end;height:64px;background:var(--bg);border-radius:10px;padding:10px}
+.preview-mini i{flex:0 0 10px;border-radius:2px;background:var(--tA);height:100%}
+.preview-mini i.src{background:var(--navy)}
+.preview-mini i.new{background:var(--coral)}
+.dialog{position:fixed;z-index:61;left:50%;top:50%;transform:translate(-50%,-50%);width:min(380px,calc(100% - 32px));background:var(--white);border-radius:16px;padding:24px;text-align:center;box-shadow:0 20px 60px rgba(8,14,70,.18)}
+.dialog h3{margin:0 0 8px;font-size:15px;font-weight:600}
+.dialog p{margin:0 0 20px;font-size:13px;color:var(--g2);font-family:var(--f-body);font-weight:500}
+.dialog .row{display:flex;gap:12px;justify-content:center}
+.dialog .btn{min-width:110px}
+.overlay.top{z-index:60}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--navy);color:var(--white);padding:10px 16px;border-radius:10px;font-size:13px;z-index:70;display:flex;gap:8px;align-items:center;max-width:calc(100% - 32px)}
+.toast .ms{font-size:18px}
+
+@media (max-width:1100px){.work{grid-template-columns:minmax(0,1fr)}.side{position:static;max-height:none}}
+@media (max-width:760px){.app{grid-template-columns:minmax(0,1fr)}.rail{display:none}.grid2{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="app">
+  <aside class="rail" aria-label="Main navigation">
+    <div class="logo" aria-label="SRS">S<i></i>RS</div>
+    <button class="search" aria-label="Search"><span class="ms">search</span></button>
+    <nav>
+      <button aria-label="Overview"><span class="ms">dashboard</span></button>
+      <button aria-label="Monitoring"><span class="ms">monitoring</span></button>
+      <button aria-label="Reports"><span class="ms">summarize</span></button>
+      <button aria-label="Customers"><span class="ms">groups</span></button>
+      <button aria-label="Users"><span class="ms">manage_accounts</span></button>
+      <button class="on" aria-label="Buildings" aria-current="page"><span class="ms">domain_add</span></button>
+    </nav>
+    <div class="avatar" aria-label="Signed in user">OP</div>
+  </aside>
+
+  <main>
+
+    <div class="topbar">
+      <div class="crumbs">
+        <button class="back" id="backBtn"><span class="ms">chevron_left</span>Back</button>
+        <span class="muted">Building</span><span class="sep">/</span><span>Add New Building - Customer name</span>
+      </div>
+      <div class="updated">Last Update: <span id="lastUpdate">Oct 22nd 2026 11:09 AM</span></div>
+    </div>
+
+    <div class="titlerow">
+      <div>
+        <h1><span id="bName" contenteditable="true" spellcheck="false">Add Building Name</span><span class="ms">edit</span></h1>
+        <p class="sub">Provide the details to add a new building. You can edit this information later if needed.</p>
+      </div>
+    </div>
+
+    <section id="details" aria-label="Building details"></section>
+    <div id="tabs"></div>
+    <div id="facadeFields"></div>
+
+    <div class="work">
+      <section class="card" aria-label="Facade schematic">
+        <div class="cardhead">
+          <div class="titlewrap"><div><h2 id="schemTitle">Facade 1</h2><p id="schemSub"></p></div><div id="facActions"></div></div>
+          <div class="headtools"><div class="plan" id="plan"></div></div>
+        </div>
+        <div class="legend" id="legend" style="margin:4px 0 6px"></div>
+        <div class="schem-wrap" id="schem"></div>
+      </section>
+      <aside class="card side" id="side" aria-label="Drop editor"></aside>
+    </div>
+
+    <details class="card tablecard" id="tableCard">
+      <summary><span class="ms">chevron_right</span>Drop details table <small id="tableCount"></small></summary>
+      <div class="tbl-wrap" id="table"></div>
+    </details>
+  </main>
+</div>
+<div id="layer"></div>
+
+<script>
+const TYPES=['A','B','C','D'];
+const TCOL={A:'var(--tA)',B:'var(--tB)',C:'var(--tC)',D:'var(--tD)','?':'var(--tX)'};
+const FIELDS=['windows','w','h','fh','start','pattern','repeat','exceptions'];
+let uid=1, gseq=1;
+const newGid=()=>'g'+(gseq++);
+const mk=o=>Object.assign({id:'d'+(uid++),gid:newGid(),windows:50,w:1.2,h:2.4,fh:3,start:0,pattern:'A',repeat:true,exceptions:[]},o);
+const clone=o=>JSON.parse(JSON.stringify(o));
+/* Every drop is its own record. Copies share a gid, so a copy remembers where it came
+   from; when a drop with copies is saved, the operator chooses how far the change goes. */
+const copyOf=(d,o)=>Object.assign(clone(d),{id:'d'+(uid++)},o||{});
+const makeFacade=o=>Object.assign({display:'',dir:'',iid:'',bottom:1,top:50,copyOf:null,drops:[]},o);
+
+/* sample building: corner drop at both ends, the same drop in between */
+const C=mk({w:0.9}), T=mk({pattern:'A-B-C-B',exceptions:[{floor:1,type:'C'}]});
+const row=(n,extra)=>{const a=[copyOf(C)];for(let i=0;i<n-2;i++)a.push(copyOf(T));a.push(copyOf(C));(extra||[]).forEach(([k,o])=>{a[k]=Object.assign(copyOf(T),{gid:newGid()},o)});return a};
+const S={
+  b:{org:'Meridian Realty Group',customer:'One Harbor Plaza',address:'120 Harbor Blvd',floors:50,height:150},
+  facades:[
+    makeFacade({name:'Facade 1',display:'North',dir:'N',iid:'F-01',drops:row(12,[[5,{w:12}]])}),
+    makeFacade({name:'Facade 2',display:'East',dir:'E',iid:'F-02',copyOf:0,drops:row(6)}),
+    makeFacade({name:'Facade 3',display:'South',dir:'S',iid:'F-03',copyOf:0,drops:row(12,[[7,{windows:54}]])})
+  ],
+  active:0, sel:null, draft:null, dirty:false, detailsOpen:true
+};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fac=()=>S.facades[S.active];
+const num=v=>{const n=parseFloat(v);return isFinite(n)?n:NaN};
+const fmt=n=>isFinite(n)?(Math.round(n*100)/100).toString():'–';
+const plural=(n,w)=>`${n} ${w}${n===1?'':'s'}`;
+const selIdx=()=>S.sel?fac().drops.findIndex(x=>x.id===S.sel):-1;
+/* "2–5, 7 and 9" */
+function ranges(ix){
+  ix=[...ix].sort((a,b)=>a-b);const out=[];
+  for(let i=0;i<ix.length;i++){let j=i;while(j+1<ix.length&&ix[j+1]===ix[j]+1)j++;out.push(j>i?`${ix[i]}–${ix[j]}`:`${ix[i]}`);i=j}
+  return out.length>1?out.slice(0,-1).join(', ')+' and '+out[out.length-1]:out[0]||'';
+}
+const dropsLabel=ix=>(ix.length>1?'Drops ':'Drop ')+ranges(ix);
+const facList=fs=>{const n=fs.map(x=>x.name.replace('Facade ',''));return fs.length>1?'Facade '+n.slice(0,-1).join(', ')+' and '+n[n.length-1]:fs[0]?.name||''};
+
+/* ---------- domain ---------- */
+/* Free-form sequence: any length, any order. "A-B-C-B", "ABCB", "A B C B" and the
+   shorthand "3A-B" (= A-A-A-B) all work. */
+function seq(p){
+  const raw=String(p||'').toUpperCase().trim();
+  const out=[];
+  raw.split(/[\s,\-–·\/|]+/).filter(Boolean).forEach(tok=>{
+    let m;
+    if((m=tok.match(/^(\d+)\s*[X×*]?\s*([A-Z])$/))||(m=tok.match(/^([A-Z])\s*[X×*]\s*(\d+)$/))){
+      const n=Math.min(400,parseInt(isNaN(m[1])?m[2]:m[1])), t=isNaN(m[1])?m[1]:m[2];
+      for(let i=0;i<n;i++) out.push(t);
+    } else if(/^[A-Z]+$/.test(tok)) out.push(...tok.split(''));
+    else out.push(tok);
+  });
+  return out.slice(0,400);
+}
+function typesFor(d){
+  const s=seq(d.pattern).map(t=>TYPES.includes(t)?t:'?');
+  const n=Math.max(0,Math.min(400,Math.round(num(d.windows))||0));
+  const out=[];
+  for(let i=0;i<n;i++){
+    let t='A';
+    if(s.length) t=d.repeat?s[i%s.length]:(i<s.length?s[i]:s[s.length-1]);
+    out.push(t);
+  }
+  (d.exceptions||[]).forEach(e=>{const f=Math.round(num(e.floor));if(f>=1&&f<=n&&TYPES.includes(e.type))out[f-1]=e.type});
+  return out;
+}
+const topOf=d=>num(d.start)+num(d.windows)*num(d.fh);
+function checks(d){
+  const B=num(S.b.height), out=[];
+  const range=(key,label,lo,hi,typLo,typHi)=>{
+    const v=num(d[key]);
+    if(!isFinite(v)){out.push({field:key,msg:`${label} is empty. Add a value so the robot can plan this drop.`});return}
+    if(v<lo||v>hi){
+      let guess=null;
+      for(const f of [10,100,0.1,0.01]){const g=Math.round(v/f*100)/100;if(g>=typLo&&g<=typHi){guess=g;break}}
+      out.push({field:key,msg:`${fmt(v)} m is unusual for ${label.toLowerCase()}. Typical values are ${typLo}–${typHi} m.${guess!=null?` Did you mean ${guess} m?`:''}`,
+        fix:guess!=null?{label:`Use ${guess} m`,apply:dd=>{dd[key]=guess}}:null});
+    }
+  };
+  range('w','Window width',0.4,4,0.6,3);
+  range('h','Window height',0.4,5,0.8,4);
+  range('fh','Floor-to-floor height',2.5,6,2.8,4.5);
+  if(num(d.h)>num(d.fh)) out.push({field:'h',msg:`Windows are taller than the floor-to-floor height, so neighbouring windows overlap.`});
+  const n=num(d.windows);
+  if(!isFinite(n)||n<1) out.push({field:'windows',msg:'Add how many windows this drop has.'});
+  const top=topOf(d);
+  if(isFinite(top)&&isFinite(B)&&Math.abs(top-B)>0.5){
+    const suggest=Math.round((B-num(d.start))/num(d.fh));
+    const diff=Math.abs(top-B);
+    out.push({field:'total',msg:`This drop ends at ${fmt(top)} m, but the building is ${fmt(B)} m tall (${fmt(diff)} m ${top>B?'above the roof':'short of the roof'}).`,
+      fix:suggest>0&&suggest!==n?{label:`Set ${suggest} windows`,apply:dd=>{dd.windows=suggest}}:null});
+  }
+  const bad=seq(d.pattern).filter(t=>!TYPES.includes(t));
+  if(bad.length) out.push({field:'pattern',msg:`"${esc(bad[0])}" isn't a window type. Use A, B, C or D, separated by dashes.`});
+  if(!seq(d.pattern).length) out.push({field:'pattern',msg:'No sequence yet, so every window shows as type A.'});
+  (d.exceptions||[]).forEach(e=>{const f=num(e.floor);if(isFinite(f)&&(f<1||f>n))out.push({field:'exc',msg:`Floor ${fmt(f)} is outside this drop (floors 1–${fmt(n)}).`})});
+  return out;
+}
+const live=d=>(S.draft&&d.id===S.sel)?S.draft:d;
+/* copies of a drop: on its own facade and on the others */
+function copiesOf(d,f){
+  const here=f.drops.map((x,k)=>x!==d&&x.gid===d.gid?k+1:0).filter(Boolean);
+  const away=S.facades.filter(z=>z!==f).map(z=>({f:z,ix:z.drops.map((x,k)=>x.gid===d.gid?k+1:0).filter(Boolean)})).filter(o=>o.ix.length);
+  return {here,away,awayCount:away.reduce((a,o)=>a+o.ix.length,0)};
+}
+const firstOfGroup=(f,i)=>f.drops.findIndex(x=>x.gid===f.drops[i].gid);
+/* change a facade's number of drops: the drops at both ends stay, the middle changes */
+function resize(list,n){
+  const arr=list.slice();
+  while(arr.length>n&&arr.length>1) arr.splice(Math.floor((arr.length-1)/2),1);
+  const mid=arr[Math.floor((arr.length-1)/2)];
+  while(arr.length<n&&mid) arr.splice(Math.ceil(arr.length/2),0,mid);
+  return arr;
+}
+
+/* ---------- details ---------- */
+function renderDetails(){
+  const b=S.b, el=$('#details');
+  if(!S.detailsOpen){
+    el.innerHTML=`<div class="details"><div class="summary">
+      <span class="chip"><b>${esc(b.org)}</b></span><span class="chip">${esc(b.customer)}</span><span class="chip">${esc(b.address)}</span>
+      <span class="chip"><b>${esc(b.floors)}</b> floors</span><span class="chip"><b>${esc(b.height)} m</b> high</span><span class="chip"><b>${S.facades.length}</b> facades</span></div>
+      <button class="linkbtn" id="tglDetails">Show details<span class="ms">expand_more</span></button></div>`;
+  } else {
+    el.innerHTML=`<div class="details"><div class="fieldrow">
+      <label class="fld" style="width:180px"><span>Organization</span><select class="pill sel" id="bOrg"><option>Meridian Realty Group</option><option>Northline Properties</option></select></label>
+      <label class="fld" style="width:180px"><span>Customer</span><select class="pill sel" id="bCust"><option>One Harbor Plaza</option><option>Eastgate Center</option></select></label>
+      <label class="fld" style="width:200px"><span>Address</span><input class="pill" id="bAddr" value="${esc(b.address)}"></label>
+      <label class="fld" style="width:110px"><span>Floors</span><input class="pill" id="bFloors" inputmode="numeric" value="${esc(b.floors)}"></label>
+      <label class="fld" style="width:140px"><span>Building Height (m)</span><input class="pill" id="bHeight" inputmode="decimal" value="${esc(b.height)}"></label>
+      <div class="fld" style="width:110px"><span>Facades</span><div class="pill ro">${S.facades.length}</div></div>
+      </div><button class="linkbtn" id="tglDetails">Hide details<span class="ms">expand_less</span></button></div>`;
+    $('#bAddr').oninput=e=>b.address=e.target.value;
+    $('#bFloors').oninput=e=>b.floors=e.target.value;
+    $('#bHeight').oninput=e=>{b.height=e.target.value;renderSchem();renderSide(true);renderTabs();renderTable()};
+    $('#bOrg').onchange=e=>b.org=e.target.value;
+    $('#bCust').onchange=e=>b.customer=e.target.value;
+  }
+  $('#tglDetails').onclick=()=>{S.detailsOpen=!S.detailsOpen;renderDetails()};
+}
+
+/* ---------- tabs + facade fields ---------- */
+function goFacade(i){if(i===S.active)return;guard(()=>{S.active=i;closeEditor(true);renderAll()})}
+function renderTabs(){
+  $('#tabs').innerHTML=`<div class="tabs" role="tablist">${S.facades.map((f,i)=>{
+    const w=f.drops.some(d=>checks(live(d)).length);
+    return `<button class="tab ${i===S.active?'on':''}" role="tab" aria-selected="${i===S.active}" data-i="${i}">${esc(f.name)}${w?'<span class="dot" title="Some drops need a look"></span>':''}</button>`}).join('')}
+    <button class="tab add" id="addFacade"><span class="ms">add</span>Add New Facade</button></div>`;
+  document.querySelectorAll('.tab[data-i]').forEach(t=>t.onclick=()=>goFacade(+t.dataset.i));
+  $('#addFacade').onclick=()=>guard(openAddFacade);
+}
+function renderFacadeFields(){
+  const f=fac();
+  $('#facadeFields').innerHTML=`<div class="fieldrow">
+    <label class="fld" style="width:150px"><span>Display Name</span><input class="pill" id="fName" value="${esc(f.display)}" placeholder="Display Name"></label>
+    <label class="fld" style="width:150px"><span>Facade Direction</span><select class="pill sel" id="fDir">${['','N','NE','E','SE','S','SW','W','NW'].map(d=>`<option ${d===f.dir?'selected':''} value="${d}">${d||'Select'}</option>`).join('')}</select></label>
+    <label class="fld" style="width:150px"><span>Internal ID</span><input class="pill" id="fIid" value="${esc(f.iid)}" placeholder="Internal ID"></label>
+    <label class="fld" style="width:130px"><span>Bottom Floor</span><input class="pill" id="fBot" value="${esc(f.bottom)}" inputmode="numeric"></label>
+    <label class="fld" style="width:130px"><span>Top Floor</span><input class="pill" id="fTop" value="${esc(f.top)}" inputmode="numeric"></label>
+    </div>`;
+  $('#fName').oninput=e=>{f.display=e.target.value;renderSchemHead()};
+  $('#fDir').onchange=e=>{f.dir=e.target.value;renderSchemHead()};
+  $('#fIid').oninput=e=>f.iid=e.target.value;
+  $('#fBot').oninput=e=>f.bottom=e.target.value;
+  $('#fTop').oninput=e=>f.top=e.target.value;
+}
+
+/* ---------- schematic ---------- */
+function renderSchemHead(){
+  const f=fac(), n=f.drops.length, w=f.drops.reduce((a,d)=>a+typesFor(live(d)).length,0);
+  $('#schemTitle').textContent=f.name+(f.display?` · ${f.display}`:'');
+  $('#schemSub').textContent=n?`${plural(n,'drop')} · ${w} windows · click a drop to edit it, drag to reorder`:'No drops yet';
+  const hasCopies=f.drops.some((d,i)=>firstOfGroup(f,i)<i);
+  $('#legend').innerHTML=TYPES.map(t=>`<span><i style="background:${TCOL[t]}"></i>Type ${t}</span>`).join('')+(hasCopies?`<span><b class="tagdemo">=N</b>Copy of Drop N</span>`:'');
+  renderPlan();
+  $('#facActions').innerHTML=n&&S.facades.length>1?`<button class="btn small" id="dupFacade"><span class="ms">content_copy</span>Duplicate Facade</button>`:'';
+  if($('#dupFacade')) $('#dupFacade').onclick=()=>guard(openDupFacade);
+}
+/* plan view: the building footprint, each side drawn by its number of drops */
+function renderPlan(){
+  const el=$('#plan'), side={};
+  S.facades.forEach((f,i)=>{if(['N','E','S','W'].includes(f.dir)&&!side[f.dir])side[f.dir]={f,i,n:f.drops.length}});
+  if(!Object.keys(side).length){el.innerHTML='';return}
+  const nOf=d=>side[d]?.n||0;
+  let h=Math.max(nOf('N'),nOf('S')), v=Math.max(nOf('E'),nOf('W'));
+  if(!h) h=v||1; if(!v) v=h;
+  const k=Math.min(110/h,56/v), w=h*k, ht=v*k, ox=58, oy=30;
+  const pts={N:[ox,oy,ox+w,oy],S:[ox,oy+ht,ox+w,oy+ht],W:[ox,oy,ox,oy+ht],E:[ox+w,oy,ox+w,oy+ht]};
+  const lab={N:[ox+w/2,oy-6,'middle'],S:[ox+w/2,oy+ht+14,'middle'],W:[ox-6,oy+ht/2+4,'end'],E:[ox+w+6,oy+ht/2+4,'start']};
+  const svgW=ox+w+60, svgH=oy+ht+22;
+  el.innerHTML=`<svg width="${svgW}" height="${svgH}" viewBox="0 0 ${svgW} ${svgH}" role="img" aria-label="Plan view of the building footprint">
+    <text x="0" y="10" font-size="10" font-weight="600" letter-spacing=".06em" fill="var(--g4)">FOOTPRINT · DROPS PER SIDE</text>
+    <rect x="${ox}" y="${oy}" width="${w}" height="${ht}" fill="var(--bg)"/>
+    ${['N','E','S','W'].map(d=>{const s=side[d],[x1,y1,x2,y2]=pts[d],[lx,ly,a]=lab[d];
+      if(!s) return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="var(--g7)" stroke-dasharray="3 3" stroke-width="1.5"/><text x="${lx}" y="${ly}" text-anchor="${a}" font-size="10" fill="var(--g7)">${d} · none</text>`;
+      const on=s.i===S.active;
+      return `<g class="side" data-i="${s.i}"><title>${esc(s.f.name)} · ${s.n} drops</title><line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${on?'var(--coral)':'var(--navy)'}" stroke-width="${on?5:2}" stroke-linecap="round"/>
+        <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="transparent" stroke-width="14"/>
+        <text x="${lx}" y="${ly}" text-anchor="${a}" font-size="10" font-weight="${on?700:500}" fill="var(--navy)">F${s.i+1} · ${s.n}</text></g>`}).join('')}
+  </svg>`;
+  el.querySelectorAll('.side').forEach(g=>g.onclick=()=>goFacade(+g.dataset.i));
+}
+let LAYOUT=null;
+function renderSchem(){
+  renderSchemHead();
+  const f=fac(), el=$('#schem'), B=num(S.b.height)||0;
+  if(!f.drops.length){
+    el.innerHTML=`<div class="empty">This facade has no drops yet.<br>Add the first drop, then duplicate it across the facade.<br><button class="btn primary" id="firstDrop"><span class="ms">add</span>Add the first drop</button></div>`;
+    $('#firstDrop').onclick=addDrop;return;
+  }
+  const si=selIdx(), selD=si>=0?f.drops[si]:null;
+  const drops=f.drops.map(live);
+  const tops=drops.map(topOf).filter(isFinite);
+  const maxM=Math.max(B,...tops,1)*1.07;
+  const P={l:62,r:28,t:30,b:62}, H=520;
+  const ky=H/maxM, y=m=>P.t+H-m*ky;
+  /* one horizontal scale for the whole building: the widest facade fills the card and a
+     shorter facade is drawn shorter. All drops are drawn the same width. */
+  const maxN=Math.max(...S.facades.map(x=>x.drops.length),1);
+  const avail=Math.max(el.clientWidth,420)-P.l-16-P.r-48;
+  const slot=avail/maxN;
+  const Wc=Math.max(12,Math.min(64,slot*0.6)), gap=Math.max(14,slot-Wc);
+  const fullW=maxN*(Wc+gap)-gap;
+  let x=P.l+8, cols='';
+  const xs=[];
+  drops.forEach((d,i)=>{
+    const ref=f.drops[i], main=i===si, sib=!main&&selD&&ref.gid===selD.gid;
+    const ch=checks(d), ts=typesFor(d), first=firstOfGroup(f,i);
+    const fh=num(d.fh), wh=num(d.h), st=num(d.start)||0;
+    xs.push(x);
+    let wins='';
+    ts.forEach((tt,k)=>{
+      const yb=st+k*fh, rh=Math.max(1.4,(isFinite(wh)?Math.min(wh,fh*0.96):fh*0.8)*ky);
+      if(!isFinite(yb)) return;
+      wins+=`<rect class="win" data-f="${k+1}" x="${x}" y="${(y(yb)-rh).toFixed(1)}" width="${Wc}" height="${rh.toFixed(1)}" rx="1.5" fill="${TCOL[tt]}"><title>Drop ${i+1} · floor ${k+1} · type ${tt}</title></rect>`;
+    });
+    const marks=[];
+    if(first<i) marks.push({w:Math.max(22,String(first+1).length*7+14),svg:w=>`<rect width="${w}" height="16" rx="5" fill="var(--white)" stroke="var(--g5)"/><text x="${w/2}" y="12" text-anchor="middle" font-size="10" font-weight="600" fill="var(--g2)"><title>Copy of Drop ${first+1}</title>=${first+1}</text>`});
+    if(ch.length) marks.push({w:16,svg:()=>`<circle cx="8" cy="8" r="8" fill="var(--warn-bg)" stroke="var(--warn-bd)"/><text x="8" y="12" text-anchor="middle" font-size="11" font-weight="700" fill="var(--warn)">!</text>`});
+    const mw=marks.reduce((a,m)=>a+m.w,0)+(marks.length-1)*3;
+    let mx=x+Wc/2-mw/2;
+    cols+=`<g class="col ${main?'on main':''} ${sib?'sib':''} ${ch.length?'warned':''}" data-i="${i}" tabindex="0" role="button" aria-label="Drop ${i+1}${first<i?`, copy of Drop ${first+1}`:''}${ch.length?', needs a look':''}">
+      <rect class="hit" x="${x-6}" y="${P.t-14}" width="${Wc+12}" height="${H+14+44}" rx="10"/>
+      ${wins}
+      <text x="${x+Wc/2}" y="${P.t+H+24}" text-anchor="middle" font-size="12" font-weight="${main||sib?700:500}" fill="${main?'var(--orange)':'var(--navy)'}">${i+1}</text>
+      ${marks.map(m=>{const g=`<g transform="translate(${mx.toFixed(1)},${P.t+H+32})">${m.svg(m.w)}</g>`;mx+=m.w+3;return g}).join('')}
+    </g>`;
+    x+=Wc+gap;
+  });
+  const facEnd=x-gap+8;
+  const addX=x;
+  x+=34+P.r;
+  const ghostEnd=P.l+8+fullW+8;
+  const Wsvg=Math.max(x,ghostEnd+P.r,520);
+  const widest=S.facades.find(z=>z.drops.length===maxN);
+  const outline=`<rect x="${P.l}" y="${y(B)}" width="${facEnd-P.l}" height="${y(0)-y(B)}" fill="var(--bg)" stroke="var(--g5)"/>`
+    +(facEnd<ghostEnd-4?`<rect x="${P.l}" y="${y(B)}" width="${ghostEnd-P.l}" height="${y(0)-y(B)}" fill="none" stroke="var(--g7)" stroke-dasharray="4 5"/>
+      <text x="${ghostEnd-6}" y="${y(0)-8}" text-anchor="end" font-size="11" fill="var(--g4)">${esc(widest.name)} width · ${maxN} drops</text>`:'');
+  let axis='';
+  const step=maxM>200?50:25;
+  for(let m=0;m<=maxM;m+=step){axis+=`<line x1="${P.l}" x2="${Wsvg-P.r}" y1="${y(m)}" y2="${y(m)}" stroke="var(--line)"/><text x="${P.l-10}" y="${y(m)+4}" text-anchor="end" font-size="11" fill="var(--g4)">${m} m</text>`}
+  const over=tops.some(t=>t>B+0.5);
+  el.innerHTML=`<svg id="schemSvg" width="${Wsvg}" height="${P.t+H+P.b+10}" viewBox="0 0 ${Wsvg} ${P.t+H+P.b+10}" role="img" aria-label="Facade schematic">
+    ${over?`<rect x="${P.l}" y="${P.t}" width="${Wsvg-P.l-P.r}" height="${y(B)-P.t}" fill="var(--warn-bg)"/>`:''}
+    ${axis}
+    ${outline}
+    <line x1="${P.l}" x2="${Wsvg-P.r}" y1="${y(0)}" y2="${y(0)}" stroke="var(--navy)" stroke-width="1.5"/>
+    ${cols}
+    <line x1="${P.l}" x2="${Wsvg-P.r}" y1="${y(B)}" y2="${y(B)}" stroke="var(--navy)" stroke-dasharray="5 4" stroke-width="1.2"/>
+    <text x="${Wsvg-P.r}" y="${y(B)-6}" text-anchor="end" font-size="11" font-weight="600" fill="var(--navy)">Roof · ${fmt(B)} m</text>
+    <g class="addcol" id="addCol"><title>Add a new drop</title><rect x="${addX}" y="${y(B)}" width="30" height="${y(0)-y(B)}" rx="8" fill="var(--white)" stroke="var(--g7)" stroke-dasharray="4 4"/>
+      <text x="${addX+15}" y="${(y(B)+y(0))/2+6}" text-anchor="middle" font-size="20" fill="var(--g4)">+</text>
+      <text x="${addX+15}" y="${P.t+H+24}" text-anchor="middle" font-size="11" fill="var(--g4)">Add</text></g>
+    <line id="dropMarker" x1="0" x2="0" y1="${P.t-10}" y2="${P.t+H+40}" stroke="var(--orange)" stroke-width="3" stroke-linecap="round" visibility="hidden"/>
+    <text x="${P.l-10}" y="${P.t+H+24}" text-anchor="end" font-size="11" fill="var(--g4)">Drop</text>
+  </svg>`;
+  LAYOUT={xs,Wc,gap};
+  el.querySelectorAll('.col').forEach(g=>{
+    const i=+g.dataset.i;
+    g.addEventListener('pointerdown',e=>startDrag(e,g,i));
+    g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectDrop(i)}});
+  });
+  $('#addCol').onclick=addDrop;
+}
+
+/* ---------- drag to reorder ---------- */
+function startDrag(e,g,i){
+  if(e.button!==0) return;
+  const svg=$('#schemSvg'), x0=e.clientX, win=e.target.closest('.win');
+  let dragging=false, target=i;
+  const svgX=cx=>cx-svg.getBoundingClientRect().left;
+  const slotFor=sx=>{const {xs,Wc,gap}=LAYOUT;let t=xs.length;for(let k=0;k<xs.length;k++){if(sx<xs[k]+Wc/2){t=k;break}}return t};
+  const move=ev=>{
+    const dx=ev.clientX-x0;
+    if(!dragging&&Math.abs(dx)>6){dragging=true;g.classList.add('dragging');document.body.classList.add('grabbing');closePop()}
+    if(!dragging) return;
+    g.setAttribute('transform',`translate(${dx},0)`);
+    target=slotFor(svgX(ev.clientX));
+    const {xs,Wc,gap}=LAYOUT, mk=$('#dropMarker');
+    const mx=target<xs.length?xs[target]-gap/2:xs[xs.length-1]+Wc+gap/2;
+    mk.setAttribute('x1',mx);mk.setAttribute('x2',mx);
+    mk.setAttribute('visibility',(target===i||target===i+1)?'hidden':'visible');
+  };
+  const up=ev=>{
+    removeEventListener('pointermove',move);removeEventListener('pointerup',up);removeEventListener('pointercancel',up);
+    document.body.classList.remove('grabbing');
+    if(!dragging){
+      if(g.classList.contains('main')&&win&&S.draft){openPop(ev,+win.dataset.f);return}
+      selectDrop(i);return;
+    }
+    let to=target>i?target-1:target;
+    if(to===i){renderSchem();return}
+    const f=fac(), list=f.drops, [d]=list.splice(i,1);
+    list.splice(to,0,d);
+    stamp();renderAll();
+    toast(`Drop ${i+1} moved to position ${to+1}`,{label:'Undo',fn:()=>{const [x]=list.splice(to,1);list.splice(i,0,x);renderAll()}});
+  };
+  addEventListener('pointermove',move);addEventListener('pointerup',up);addEventListener('pointercancel',up);
+}
+
+/* ---------- side panel ---------- */
+function renderSide(partial){
+  const el=$('#side'), f=fac();
+  if(!S.draft){
+    const groups=[...new Set(f.drops.map(d=>d.gid))];
+    const warnDrops=f.drops.map((d,k)=>checks(d).length?k+1:0).filter(Boolean);
+    const warnGroups=groups.map(gid=>f.drops.map((d,k)=>d.gid===gid&&checks(d).length?k+1:0).filter(Boolean)).filter(a=>a.length);
+    el.innerHTML=`<div class="scroll"><h3>Facade overview</h3><div class="meta">${esc(f.name)}${f.display?' · '+esc(f.display):''}</div>
+      ${f.drops.length===1?`<div class="sect"><h4>Duplicate this drop</h4>
+        <div class="hint">Most facades repeat the same drop. How many copies of Drop 1 do you need?</div>
+        <div style="display:flex;gap:8px;align-items:flex-end"><div class="inp" style="flex:1"><input id="fillN" inputmode="numeric" placeholder="e.g. 11" aria-label="Number of copies"></div><button class="btn primary" id="fillGo">Duplicate</button></div></div>`:''}
+      <div class="sect" style="gap:0">
+        ${f.copyOf!=null?`<div class="stat"><span>Copied from</span><b>${esc(S.facades[f.copyOf].name)}</b></div>`:''}
+        <div class="stat"><span>Drops</span><b>${f.drops.length}</b></div>
+        <div class="stat"><span>Unique drops</span><b>${groups.length}</b></div>
+        <div class="stat"><span>Windows</span><b>${f.drops.reduce((a,d)=>a+typesFor(d).length,0)}</b></div>
+        <div class="stat"><span>Building height</span><b>${fmt(num(S.b.height))} m</b></div>
+        <div class="stat" style="border:0"><span>Drops to double-check</span><b style="color:${warnDrops.length?'var(--warn)':'inherit'}">${warnDrops.length}</b></div>
+      </div>
+      ${warnGroups.length?`<div class="sect"><h4>Worth a second look</h4>${warnGroups.map(ix=>`<button class="soft" style="text-align:left;cursor:pointer;width:100%" data-go="${ix[0]-1}"><span class="ms">warning</span><span><b>${dropsLabel(ix)}</b> · ${checks(f.drops[ix[0]-1])[0].msg}</span></button>`).join('')}<div class="hint">These are reminders only. You can save the building as it is.</div></div>`:''}
+      <div class="sect"><div class="hint">Click a drop to edit it or duplicate it. Drag a drop to move it.</div></div></div>`;
+    el.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>selectDrop(+b.dataset.go));
+    if($('#fillGo')){const go=()=>{const n=parseInt($('#fillN').value);if(n>0)dupDrop(0,Math.min(60,n),'after')};$('#fillGo').onclick=go;$('#fillN').onkeydown=e=>{if(e.key==='Enter')go()}}
+    return;
+  }
+  if(partial){renderChecks();return}
+  const d=S.draft, i=selIdx(), ref=f.drops[i], cp=copiesOf(ref,f);
+  el.innerHTML=`<div class="scroll">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+      <div><h3>Edit Drop ${i+1}</h3><div class="meta">${esc(f.name)}${f.display?' · '+esc(f.display):''}</div>
+        ${cp.here.length||cp.away.length?`<div class="shared"><span class="ms">content_copy</span>${cp.here.length?`Same as ${dropsLabel(cp.here)}${cp.away.length?` · also on ${facList(cp.away.map(o=>o.f))}`:''}`:`Copies on ${facList(cp.away.map(o=>o.f))}`}</div>`:''}</div>
+      <button class="close" id="closeEd" aria-label="Close editor"><span class="ms">close</span></button>
+    </div>
+    <button class="btn dupmain" id="dupBtn"><span class="ms">content_copy</span>Duplicate Drop</button>
+    <div class="sect"><h4>Windows</h4>
+      <div class="grid2">
+        ${inp('windows','Windows in this drop',d.windows,'numeric')}
+        ${inp('start','Drop starts at (m)',d.start)}
+        ${inp('w','Window width (m)',d.w)}
+        ${inp('h','Window height (m)',d.h)}
+        ${inp('fh','Floor-to-floor (m)',d.fh)}
+        <div></div>
+      </div>
+      <div class="runline" id="runline"></div>
+      <div id="chk-total"></div>
+    </div>
+    <div class="sect"><h4>Window types</h4>
+      <div class="inp"><label for="e-pattern">Window sequence, from the bottom up</label>
+        <input id="e-pattern" class="patterninput" value="${esc(d.pattern)}" placeholder="Type your sequence" autocomplete="off" spellcheck="false"></div>
+      <div class="hint">Type any sequence, any length. One letter means every window is the same. 3A-B is short for A-A-A-B.</div>
+      <div class="typekeys"><span>Add</span>${TYPES.map(t=>`<button data-add="${t}" style="background:${TCOL[t]}" aria-label="Add type ${t}">${t}</button>`).join('')}<button class="bk" id="seqBack" aria-label="Remove last type"><span class="ms">backspace</span></button></div>
+      <div id="chk-pattern"></div>
+      <div class="radio" role="radiogroup" aria-label="How the sequence runs">
+        <label><input type="radio" name="rep" value="1" ${d.repeat?'checked':''}> Repeat to the top</label>
+        <label><input type="radio" name="rep" value="0" ${!d.repeat?'checked':''}> Use once, then repeat the last type</label>
+      </div>
+      <div class="seqprev" id="seqPrev"></div>
+    </div>
+    <div class="sect"><h4>Exceptions</h4>
+      <div class="hint">Single windows that break the sequence, like a lobby floor. You can also click a window on the facade.</div>
+      <div class="exc" id="exc"></div>
+      <div id="chk-exc"></div>
+      <div><button class="linkbtn" id="addExc"><span class="ms">add</span>Add exception</button></div>
+    </div>
+  </div>
+  <div class="foot">
+    <div id="saveNote"></div>
+    <div class="row"><span style="flex:1"></span><button class="btn ghost" id="cancelEd">Cancel</button><button class="btn primary" id="saveEd">Save</button></div>
+  </div>`;
+  ['windows','start','w','h','fh'].forEach(k=>{$('#e-'+k).oninput=e=>{d[k]=e.target.value;touch()}});
+  $('#e-pattern').oninput=e=>{d.pattern=e.target.value;touch()};
+  el.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>{
+    const cur=String(d.pattern||'').trim().replace(/[-\s]+$/,'');
+    d.pattern=cur?cur+'-'+b.dataset.add:b.dataset.add;$('#e-pattern').value=d.pattern;touch()});
+  $('#seqBack').onclick=()=>{
+    d.pattern=String(d.pattern||'').trim().replace(/[-\s]*[^-\s]+$/,'');$('#e-pattern').value=d.pattern;touch()};
+  el.querySelectorAll('input[name=rep]').forEach(r=>r.onchange=()=>{d.repeat=r.value==='1';touch()});
+  $('#addExc').onclick=()=>{d.exceptions.push({floor:'',type:'D'});renderExc();touch();const ins=$('#exc').querySelectorAll('input');ins[ins.length-1]?.focus()};
+  $('#closeEd').onclick=()=>guard(()=>closeEditor(true));
+  $('#cancelEd').onclick=()=>{closeEditor(true)};
+  $('#saveEd').onclick=()=>save();
+  $('#dupBtn').onclick=()=>{const k=selIdx();if(S.dirty)save(()=>openDup(k));else{closeEditor(true);openDup(k)}};
+  renderExc();renderChecks();
+}
+const inp=(k,label,v,mode)=>`<div class="inp" id="w-${k}"><label for="e-${k}">${label}</label><input id="e-${k}" inputmode="${mode||'decimal'}" value="${esc(v)}" autocomplete="off"><div id="chk-${k}"></div></div>`;
+function renderExc(){
+  const d=S.draft, el=$('#exc');
+  el.innerHTML=d.exceptions.map((e,i)=>`<div class="excrow"><span>Floor</span><input data-i="${i}" data-k="floor" inputmode="numeric" value="${esc(e.floor)}" aria-label="Floor"><span>is type</span>
+    <select data-i="${i}" data-k="type" aria-label="Window type">${TYPES.map(t=>`<option ${t===e.type?'selected':''}>${t}</option>`).join('')}</select>
+    <button class="rm" data-rm="${i}" aria-label="Remove exception"><span class="ms">close</span></button></div>`).join('')||'';
+  el.querySelectorAll('[data-k]').forEach(x=>x.oninput=x.onchange=()=>{d.exceptions[+x.dataset.i][x.dataset.k]=x.value;touch()});
+  el.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{d.exceptions.splice(+b.dataset.rm,1);renderExc();touch()});
+}
+function softHTML(c){return `<div class="soft"><span class="ms">warning</span><div>${c.msg}${c.fix?`<br><button data-fix="${c.field}">${c.fix.label}</button>`:''}</div></div>`}
+function renderChecks(){
+  const d=S.draft, cs=checks(d);
+  ['windows','start','w','h','fh','total','pattern','exc'].forEach(k=>{
+    const box=$('#chk-'+k); if(!box) return;
+    const mine=cs.filter(c=>c.field===k);
+    box.innerHTML=mine.map(softHTML).join('');
+    const w=$('#w-'+k); if(w) w.classList.toggle('warned',mine.length>0);
+  });
+  document.querySelectorAll('[data-fix]').forEach(b=>b.onclick=()=>{
+    const c=checks(S.draft).find(x=>x.field===b.dataset.fix&&x.fix); if(!c) return;
+    c.fix.apply(S.draft);
+    ['windows','w','h','fh'].forEach(k=>{const i=$('#e-'+k);if(i)i.value=S.draft[k]});
+    touch();
+  });
+  const top=topOf(d), B=num(S.b.height), okH=isFinite(top)&&Math.abs(top-B)<=0.5;
+  $('#runline').innerHTML=`<span class="ms ${okH?'ok':''}">${okH?'check_circle':'height'}</span>Runs from <b>${fmt(num(d.start)||0)} m</b> to <b>${fmt(top)} m</b>${okH?', matching the building height':''}`;
+  const s=seq(d.pattern).map(t=>TYPES.includes(t)?t:'?'), n=typesFor(d).length, exc=d.exceptions.filter(e=>isFinite(num(e.floor))&&e.floor!=='').length;
+  let line;
+  if(!s.length) line='No sequence yet. Every window shows as type A.';
+  else if(s.length===1) line=`All ${n} windows are type ${s[0]}`;
+  else if(d.repeat) line=`${s.length} windows per round, repeated ${fmt(n/s.length)} times up ${n} windows`;
+  else line=`Floors 1–${Math.min(s.length,n)} follow the sequence, then type ${s[s.length-1]} to the top`;
+  if(exc) line+=` · ${plural(exc,'exception')}`;
+  $('#seqPrev').innerHTML=`<div class="unit">${s.slice(0,24).map(t=>`<i style="background:${TCOL[t]}">${t}</i>`).join('')}${s.length>24?`<i class="more">+${s.length-24}</i>`:''}</div><p>${line}</p>`;
+  $('#saveNote').innerHTML=cs.length?`<div class="savenote"><span class="ms">info</span>${plural(cs.length,'thing')} to double-check. You can still save.</div>`:'';
+}
+function touch(){S.dirty=true;renderSchem();renderChecks();renderTabs();renderTable()}
+
+/* ---------- selection / editing ---------- */
+function selectDrop(i){
+  const f=fac(), d=f.drops[i]; if(!d) return;
+  if(S.draft&&S.sel===d.id) return;
+  guard(()=>{
+    S.sel=d.id;S.draft=clone(d);S.dirty=false;
+    renderSchem();renderSide();renderTable();
+  });
+}
+function closeEditor(silent){S.sel=null;S.draft=null;S.dirty=false;closePop();if(silent!==false){renderSchem();renderSide();renderTable();renderTabs()}}
+/* save: if the drop has copies, ask how far the change goes */
+function save(after){
+  const f=fac(), i=selIdx(), ref=f.drops[i]; if(!ref) return;
+  const d=S.draft;
+  ['windows','w','h','fh','start'].forEach(k=>{const v=num(d[k]);if(isFinite(v))d[k]=v});
+  d.exceptions=d.exceptions.filter(e=>e.floor!==''&&isFinite(num(e.floor))).map(e=>({floor:num(e.floor),type:e.type}));
+  const cp=copiesOf(ref,f);
+  if(!S.dirty){closeEditor(true);if(after)after();return}
+  if(!cp.here.length&&!cp.away.length){apply('one');return}
+  const L=$('#layer');
+  const hereN=cp.here.length+1;
+  L.innerHTML=`<div class="overlay top" id="scOv"></div><div class="dialog scope" role="dialog" aria-modal="true" aria-labelledby="scT">
+    <h3 id="scT">Apply this change to</h3>
+    <div class="radio">
+      <label><input type="radio" name="sc" value="one"> Only Drop ${i+1}</label>
+      ${cp.here.length?`<label><input type="radio" name="sc" value="facade" ${cp.away.length?'':'checked'}> All ${hereN} copies on ${esc(f.name)} (${esc(dropsLabel([i+1,...cp.here]))})</label>`:''}
+      ${cp.away.length?`<label><input type="radio" name="sc" value="all" checked> All copies on ${esc(facList([f,...cp.away.map(o=>o.f)]))} (${hereN+cp.awayCount} drops)</label>`:''}
+    </div>
+    <p class="hint" id="scHint"></p>
+    <div class="row"><button class="btn ghost" id="scCancel">Cancel</button><button class="btn primary" id="scGo">Save</button></div></div>`;
+  const hint=()=>{const v=document.querySelector('input[name=sc]:checked').value;
+    $('#scHint').textContent=v==='one'?`Drop ${i+1} will no longer count as a copy.`:v==='facade'&&cp.away.length?`The copies on ${facList(cp.away.map(o=>o.f))} stay as they are.`:''};
+  document.querySelectorAll('input[name=sc]').forEach(r=>r.onchange=hint);hint();
+  const done=()=>L.innerHTML='';
+  $('#scOv').onclick=$('#scCancel').onclick=done;
+  $('#scGo').onclick=()=>{const v=document.querySelector('input[name=sc]:checked').value;done();apply(v)};
+  $('#scGo').focus();
+  function apply(scope){
+    const n=checks(d).length, fields=clone(Object.fromEntries(FIELDS.map(k=>[k,d[k]])));
+    let targets=[ref], msg=`Drop ${i+1} saved`;
+    if(scope==='one'){ if(cp.here.length||cp.away.length) ref.gid=newGid(); }
+    else if(scope==='facade'){
+      targets=f.drops.filter(x=>x.gid===ref.gid);
+      if(cp.away.length){const g=newGid();targets.forEach(x=>x.gid=g)}
+      msg=`${targets.length} drops on ${f.name} updated`;
+    } else if(scope==='all'){
+      targets=S.facades.flatMap(z=>z.drops.filter(x=>x.gid===ref.gid));
+      msg=`${targets.length} drops updated on ${facList([f,...cp.away.map(o=>o.f)])}`;
+    }
+    targets.forEach(x=>Object.assign(x,clone(fields)));
+    S.dirty=false;stamp();
+    toast(n?`${msg}, with ${plural(n,'thing')} to double-check`:msg);
+    closeEditor(true);renderTabs();
+    if(after) after();
+  }
+}
+function addDrop(){
+  guard(()=>{
+    const f=fac(), last=f.drops[f.drops.length-1];
+    const d=mk({windows:last?last.windows:Math.round((num(S.b.height)||150)/3),fh:last?last.fh:3});
+    f.drops.push(d);stamp();renderFacadeFields();renderTabs();
+    closeEditor(false);selectDrop(f.drops.length-1);
+    toast(`Drop ${f.drops.length} added`);
+  });
+}
+function dupDrop(i,n,place){
+  const f=fac(), src=f.drops[i], copies=Array.from({length:n},()=>copyOf(src));
+  if(place==='after')f.drops.splice(i+1,0,...copies);else f.drops.push(...copies);
+  stamp();closeEditor(true);renderAll();
+  toast(`Added ${n} cop${n>1?'ies':'y'} of Drop ${i+1}`,{label:'Undo',fn:()=>{copies.forEach(c=>{const k=f.drops.indexOf(c);if(k>=0)f.drops.splice(k,1)});closeEditor(true);renderAll()}});
+}
+function stamp(){
+  const n=new Date();
+  const m=n.toLocaleString('en-US',{month:'short'}), dd=n.getDate();
+  const sfx=(dd%10===1&&dd!==11)?'st':(dd%10===2&&dd!==12)?'nd':(dd%10===3&&dd!==13)?'rd':'th';
+  $('#lastUpdate').textContent=`${m} ${dd}${sfx} ${n.getFullYear()} ${n.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}`;
+}
+
+/* ---------- unsaved changes guard ---------- */
+function guard(fn){
+  if(!S.dirty){fn();return}
+  const L=$('#layer');
+  L.innerHTML=`<div class="overlay top" id="dlgOv"></div><div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="dlgT">
+    <h3 id="dlgT">You have unsaved changes.</h3><p>Would you like to save before leaving or discard them?</p>
+    <div class="row"><button class="btn" id="dlgSave">Save</button><button class="btn danger" id="dlgDiscard">Discard</button></div></div>`;
+  const done=()=>L.innerHTML='';
+  $('#dlgSave').onclick=()=>{done();save(fn)};
+  $('#dlgDiscard').onclick=()=>{done();closeEditor(true);fn()};
+  $('#dlgOv').onclick=done;
+  $('#dlgSave').focus();
+}
+
+/* ---------- window popover ---------- */
+function openPop(e,floor){
+  closePop();
+  const d=S.draft, cur=typesFor(d)[floor-1], hasExc=d.exceptions.some(x=>num(x.floor)===floor);
+  const p=document.createElement('div');p.className='pop';p.id='pop';
+  p.innerHTML=`<div class="t">Floor ${floor} window</div><div class="types">${TYPES.map(t=>`<button data-t="${t}" class="${t===cur?'cur':''}" style="background:${TCOL[t]}" aria-label="Type ${t}">${t}</button>`).join('')}</div>
+    ${hasExc?'<button class="reset" id="popReset">Back to the sequence</button>':''}`;
+  document.body.appendChild(p);
+  const r=p.getBoundingClientRect();
+  p.style.left=Math.min(e.clientX+12,innerWidth-r.width-12)+'px';
+  p.style.top=Math.min(e.clientY-10,innerHeight-r.height-12)+'px';
+  p.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{
+    d.exceptions=d.exceptions.filter(x=>num(x.floor)!==floor);
+    d.exceptions.push({floor,type:b.dataset.t});
+    d.exceptions.sort((a,b)=>num(a.floor)-num(b.floor));
+    closePop();renderExc();touch();
+  });
+  const rs=$('#popReset'); if(rs) rs.onclick=()=>{d.exceptions=d.exceptions.filter(x=>num(x.floor)!==floor);closePop();renderExc();touch()};
+  setTimeout(()=>document.addEventListener('mousedown',outsidePop),0);
+}
+function outsidePop(e){if(!e.target.closest('#pop')&&!e.target.closest('.win'))closePop()}
+function closePop(){const p=$('#pop');if(p)p.remove();document.removeEventListener('mousedown',outsidePop)}
+
+/* ---------- drawers ---------- */
+const drawerHead=(id,title)=>`<div style="display:flex;justify-content:space-between;align-items:center"><h3 id="${id}">${title}</h3><button class="close dx" aria-label="Close" style="border:0;background:var(--field);width:30px;height:30px;border-radius:8px;display:grid;place-items:center"><span class="ms" style="font-size:18px">close</span></button></div>`;
+function openDrawer(html,onClose){
+  const L=$('#layer');
+  L.innerHTML=`<div class="overlay" id="drOv"></div><div class="drawer" role="dialog" aria-modal="true">${html}</div>`;
+  const close=()=>{L.innerHTML='';onClose&&onClose()};
+  $('#drOv').onclick=close;L.querySelectorAll('.dx,.dcancel').forEach(b=>b.onclick=close);
+  return close;
+}
+function openDup(idx){
+  const f=fac(); let src=idx??0; if(!f.drops[src]) return;
+  const close=openDrawer(`${drawerHead('dupT','Duplicate Drop')}
+    <div class="inp"><label for="dupSrc">Drop to copy</label><select id="dupSrc">${f.drops.map((d,k)=>`<option value="${k}" ${k===src?'selected':''}>Drop ${k+1} · ${typesFor(d).length} windows · ${esc(d.pattern||'A')}</option>`).join('')}</select></div>
+    <div class="inp"><label for="dupN">How many copies?</label><input id="dupN" inputmode="numeric" value="${Math.max(1,f.drops.length===1?11:3)}"></div>
+    <div class="radio"><label><input type="radio" name="place" value="after" checked> Right after the drop</label><label><input type="radio" name="place" value="end"> At the end of the facade</label></div>
+    <div><div class="preview-mini" id="dupPrev" aria-hidden="true"></div><div class="hint" id="dupSum" style="margin-top:6px"></div></div>
+    <div class="end"><button class="btn ghost dcancel">Cancel</button><button class="btn primary" id="dupGo">Duplicate</button></div>`);
+  const draw=()=>{
+    const copies=Math.max(0,Math.min(60,parseInt($('#dupN').value)||0));
+    const place=document.querySelector('input[name=place]:checked').value;
+    let prev=[];f.drops.forEach((_,k)=>{prev.push(k===src?'src':'');if(place==='after'&&k===src)for(let c=0;c<copies;c++)prev.push('new')});
+    if(place==='end')for(let c=0;c<copies;c++)prev.push('new');
+    $('#dupPrev').innerHTML=prev.slice(0,72).map(c=>`<i class="${c}"></i>`).join('');
+    $('#dupSum').textContent=`${f.name} will have ${f.drops.length+copies} drops. You can drag any drop to a new position afterwards.`;
+  };
+  $('#dupSrc').onchange=e=>{src=+e.target.value;draw()};
+  $('#dupN').oninput=draw;
+  document.querySelectorAll('input[name=place]').forEach(r=>r.onchange=draw);
+  $('#dupGo').onclick=()=>{const n=Math.max(0,Math.min(60,parseInt($('#dupN').value)||0));const place=document.querySelector('input[name=place]:checked').value;close();if(n)dupDrop(src,n,place)};
+  draw();$('#dupN').focus();$('#dupN').select();
+}
+function copyDropsTo(src,target,n){
+  const list=resize(src.drops,n).map(d=>copyOf(d));
+  target.drops=list;target.copyOf=S.facades.indexOf(src);
+}
+function openDupFacade(){
+  const f=fac(), others=S.facades.map((z,i)=>[z,i]).filter(([z])=>z!==f);
+  const close=openDrawer(`${drawerHead('dfT','Duplicate Facade')}
+    <div class="hint">Copy the drops of ${esc(f.name)} (${plural(f.drops.length,'drop')}) to other facades. Each copy remembers where it came from.</div>
+    <div class="sect" style="margin-top:0"><h4>Copy to</h4>
+      <div class="dftable">${others.map(([z,i])=>`<label class="dfrow"><input type="checkbox" data-t="${i}" ${z.drops.length?'':'checked'}>
+        <span><b>${esc(z.name)}</b>${z.display?' · '+esc(z.display):''}<br><small>${z.drops.length?`Replaces its ${plural(z.drops.length,'drop')}`:'Empty'}</small></span>
+        <span class="dfn"><input inputmode="numeric" data-n="${i}" value="${z.drops.length||f.drops.length}" aria-label="Number of drops on ${esc(z.name)}"><small>drops</small></span></label>`).join('')}</div>
+      <div class="hint">For a shorter or longer side, change the number of drops. The drops at both ends stay and the middle changes.</div>
+    </div>
+    <div class="end"><button class="btn ghost dcancel">Cancel</button><button class="btn primary" id="dfGo">Copy Drops</button></div>`);
+  $('#dfGo').onclick=()=>{
+    const picks=[...document.querySelectorAll('[data-t]:checked')].map(c=>+c.dataset.t);
+    if(!picks.length){close();return}
+    const snap=S.facades.map(z=>({drops:z.drops,copyOf:z.copyOf}));
+    picks.forEach(i=>{const n=Math.max(1,Math.min(80,parseInt(document.querySelector(`[data-n="${i}"]`).value)||f.drops.length));copyDropsTo(f,S.facades[i],n)});
+    close();stamp();closeEditor(true);renderAll();
+    toast(`Drops copied to ${facList(picks.map(i=>S.facades[i]))}`,{label:'Undo',fn:()=>{S.facades.forEach((z,k)=>{z.drops=snap[k].drops;z.copyOf=snap[k].copyOf});closeEditor(true);renderAll()}});
+  };
+}
+function openAddFacade(){
+  const withDrops=S.facades.map((x,i)=>[x,i]).filter(([x])=>x.drops.length);
+  const n=S.facades.length+1;
+  const close=openDrawer(`${drawerHead('afT','Add New Facade')}
+    <div class="grid2">
+      <div class="inp"><label for="afName">Display Name</label><input id="afName" placeholder="e.g. West"></div>
+      <div class="inp"><label for="afDir">Facade Direction</label><select id="afDir">${['','N','NE','E','SE','S','SW','W','NW'].map(d=>`<option value="${d}">${d||'Select'}</option>`).join('')}</select></div>
+    </div>
+    <div class="sect" style="margin-top:0"><h4>Drops</h4>
+      <div class="radio" role="radiogroup" aria-label="How to start">
+        ${withDrops.length?`<label><input type="radio" name="afMode" value="copy" checked> Copy the drops of another facade</label>`:''}
+        <label><input type="radio" name="afMode" value="empty" ${withDrops.length?'':'checked'}> Start empty</label>
+      </div>
+      ${withDrops.length?`<div class="grid2" id="afCopy"><div class="inp"><label for="afSrc">Copy from</label><select id="afSrc">${withDrops.map(([x,i])=>`<option value="${i}">${esc(x.name)} · ${plural(x.drops.length,'drop')}</option>`).join('')}</select></div>
+        <div class="inp"><label for="afCount">Number of drops</label><input id="afCount" inputmode="numeric" value="${withDrops[0][0].drops.length}"></div></div>`:''}
+      <div class="hint" id="afHint"></div>
+    </div>
+    <div class="end"><button class="btn ghost dcancel">Cancel</button><button class="btn primary" id="afGo">Add Facade</button></div>`);
+  const hint=()=>{const m=document.querySelector('input[name=afMode]:checked').value;
+    if($('#afCopy'))$('#afCopy').hidden=m!=='copy';
+    $('#afHint').textContent=m==='copy'?'Most towers repeat the same facade. For a shorter side, lower the number of drops: the drops at both ends stay and the middle changes.':'Add the first drop, then duplicate it across the facade.'};
+  document.querySelectorAll('input[name=afMode]').forEach(r=>r.onchange=hint);
+  if($('#afSrc'))$('#afSrc').onchange=()=>{$('#afCount').value=S.facades[+$('#afSrc').value].drops.length};
+  hint();
+  $('#afGo').onclick=()=>{
+    const m=document.querySelector('input[name=afMode]:checked').value;
+    const f=makeFacade({name:'Facade '+n,display:$('#afName').value,dir:$('#afDir').value,top:S.b.floors});
+    if(m==='copy'){const k=+$('#afSrc').value, c=parseInt($('#afCount').value);copyDropsTo(S.facades[k],f,isFinite(c)&&c>0?Math.min(80,c):S.facades[k].drops.length)}
+    S.facades.push(f);S.active=S.facades.length-1;
+    close();stamp();closeEditor(true);renderAll();renderDetails();
+    toast(`Facade ${n} added`);
+  };
+  $('#afName').focus();
+}
+
+/* ---------- secondary table ---------- */
+function renderTable(){
+  const f=fac(), si=selIdx(), selD=si>=0?f.drops[si]:null;
+  $('#tableCount').textContent=`· ${plural(f.drops.length,'drop')}`;
+  if(!f.drops.length){$('#table').innerHTML='<div class="hint" style="padding:8px 0">No drops on this facade yet.</div>';return}
+  $('#table').innerHTML=`<table><thead><tr><th>Drop</th><th>Same as</th><th>Windows</th><th>Window size (m)</th><th>Floor-to-floor (m)</th><th>Window types</th><th>Ends at</th><th>Checks</th><th></th></tr></thead><tbody>
+    ${f.drops.map((d0,i)=>{const d=live(d0),ts=typesFor(d),c=checks(d),first=firstOfGroup(f,i),on=i===si||(selD&&d0.gid===selD.gid);return `<tr data-i="${i}" class="${on?'on':''}">
+      <td><b>Drop ${i+1}</b></td><td>${first<i?`Drop ${first+1}`:'<span style="color:var(--g7)">–</span>'}</td><td>${fmt(num(d.windows))}</td><td>${fmt(num(d.w))} × ${fmt(num(d.h))}</td><td>${fmt(num(d.fh))}</td>
+      <td><span class="typestrip">${ts.slice(0,16).map(t=>`<i style="background:${TCOL[t]}"></i>`).join('')}</span> <span style="color:var(--g2);margin-left:4px">${esc(String(d.pattern||'A').toUpperCase())}${d.exceptions.length?` + ${plural(d.exceptions.length,'exception')}`:''}</span></td>
+      <td>${fmt(topOf(d))} m</td>
+      <td>${c.length?`<span class="warnpill"><span class="ms">warning</span>${c.length}</span>`:'<span class="ok">✓</span>'}</td>
+      <td><button class="kebab" data-menu="${i}" aria-label="Drop ${i+1} actions"><span class="ms">more_vert</span></button></td></tr>`}).join('')}</tbody></table>`;
+  document.querySelectorAll('#table tbody tr').forEach(r=>r.onclick=e=>{if(e.target.closest('.kebab'))return;selectDrop(+r.dataset.i)});
+  document.querySelectorAll('[data-menu]').forEach(b=>b.onclick=e=>{e.stopPropagation();openMenu(b,+b.dataset.menu)});
+}
+function openMenu(btn,i){
+  closeMenu();
+  const f=fac();
+  const m=document.createElement('div');m.className='menu';m.id='menu';
+  m.innerHTML=`<button data-a="edit"><span class="ms">edit</span>Edit</button><button data-a="dup"><span class="ms">content_copy</span>Duplicate</button><button data-a="move"><span class="ms">swap_horiz</span>Move to position</button><button data-a="del"><span class="ms">delete</span>Delete</button>`;
+  document.body.appendChild(m);
+  const place=()=>{const r=btn.getBoundingClientRect(), mr=m.getBoundingClientRect();
+    m.style.left=Math.max(12,r.right-mr.width)+'px';
+    m.style.top=(r.bottom+mr.height+8>innerHeight?r.top-mr.height-4:r.bottom+4)+'px'};
+  place();
+  m.querySelector('[data-a=edit]').onclick=()=>{closeMenu();selectDrop(i)};
+  m.querySelector('[data-a=dup]').onclick=()=>{closeMenu();guard(()=>openDup(i))};
+  m.querySelector('[data-a=move]').onclick=()=>{
+    m.innerHTML=`<div class="movebox"><label for="mvTo">Move Drop ${i+1} to position</label><div style="display:flex;gap:6px"><input id="mvTo" inputmode="numeric" value="${f.drops.length}"><button class="btn primary small" id="mvGo">Move</button></div><small>1 to ${f.drops.length}</small></div>`;
+    place();$('#mvTo').focus();$('#mvTo').select();
+    const go=()=>{const to=Math.max(1,Math.min(f.drops.length,parseInt($('#mvTo').value)||i+1))-1;closeMenu();if(to===i)return;
+      const [d]=f.drops.splice(i,1);f.drops.splice(to,0,d);stamp();renderAll();
+      toast(`Drop ${i+1} moved to position ${to+1}`,{label:'Undo',fn:()=>{const [x]=f.drops.splice(to,1);f.drops.splice(i,0,x);renderAll()}})};
+    $('#mvGo').onclick=go;$('#mvTo').onkeydown=e=>{if(e.key==='Enter')go()};
+  };
+  m.querySelector('[data-a=del]').onclick=()=>{closeMenu();guard(()=>{const was=f.drops[i];f.drops.splice(i,1);closeEditor(false);stamp();renderAll();
+    toast(`Drop ${i+1} deleted`,{label:'Undo',fn:()=>{f.drops.splice(i,0,was);closeEditor(false);renderAll()}})})};
+  setTimeout(()=>document.addEventListener('mousedown',outsideMenu),0);
+}
+function outsideMenu(e){if(!e.target.closest('#menu'))closeMenu()}
+function closeMenu(){const m=$('#menu');if(m)m.remove();document.removeEventListener('mousedown',outsideMenu)}
+
+/* ---------- misc ---------- */
+let tt;
+function toast(msg,action){
+  document.querySelector('.toast')?.remove();
+  const t=document.createElement('div');t.className='toast';t.setAttribute('role','status');
+  t.innerHTML=`<span class="ms">check_circle</span><span>${esc(msg)}</span>${action?`<button class="act">${esc(action.label)}</button>`:''}`;
+  if(action) t.querySelector('.act').onclick=()=>{t.remove();action.fn()};
+  document.body.appendChild(t);clearTimeout(tt);tt=setTimeout(()=>t.remove(),action?6000:2600);
+}
+$('#backBtn').onclick=()=>guard(()=>toast('Back would return to the buildings list'));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closePop();closeMenu();const L=$('#layer');if(L.innerHTML)L.innerHTML=''}});
+function renderAll(){renderTabs();renderFacadeFields();renderSchem();renderSide();renderTable()}
+renderDetails();renderAll();
+let lastW=0;
+try{new ResizeObserver(es=>{const w=Math.round(es[0].contentRect.width);if(Math.abs(w-lastW)>4){lastW=w;renderSchem()}}).observe($('#schem'))}catch(e){addEventListener('resize',()=>renderSchem())}
+selectDrop(1);
+</script>
+
+</body></html>
