@@ -27,7 +27,7 @@
 <main id="main">
 <div class="wrap case-hero">
   <a class="back" href="/skyline"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/></svg> Back to Skyline Robotics</a>
-  <div class="hero-grid"><div><h1>Building Onboarding</h1><p class="subtitle">Redesigning how new buildings get into the system</p><div class="lede"><p>Before a robot can clean a single window, every building has to be mapped with millimeter-level precision: facades by orientation, vertical drops, and the dimensions of every window.</p><p>I redesigned a two-person, three-tool workflow into a single operator interface. The operator who measures the building now enters the data directly, without a developer in between.</p></div><ul class="chips" aria-label="Topics"><li>B2B SaaS</li><li>Admin UX</li><li>Workflow redesign</li><li>Process automation</li></ul><dl class="overview" style="--cols: 4"><div><dt>Role</dt><dd>Lead Product Designer</dd></div><div><dt>Timeline</dt><dd>2025</dd></div><div><dt>Users</dt><dd>Field operators</dd></div><div><dt>Platform</dt><dd>Web (desktop)</dd></div></dl></div></div>
+  <div class="hero-grid"><div><p class="company">Skyline Robotics</p><h1>Building Onboarding</h1><p class="subtitle">Redesigning how new buildings get into the system</p><div class="lede"><p>Before a robot can clean a single window, every building has to be mapped with millimeter-level precision: facades by orientation, vertical drops, and the dimensions of every window.</p><p>I redesigned a two-person, three-tool workflow into a single operator interface. The operator who measures the building now enters the data directly, without a developer in between.</p></div><ul class="chips" aria-label="Topics"><li>B2B SaaS</li><li>Admin UX</li><li>Workflow redesign</li><li>Process automation</li></ul><dl class="overview" style="--cols: 4"><div><dt>Role</dt><dd>Lead Product Designer</dd></div><div><dt>Timeline</dt><dd>2025</dd></div><div><dt>Users</dt><dd>Field operators</dd></div><div><dt>Platform</dt><dd>Web (desktop)</dd></div></dl></div></div>
 </div>
 <div class="wrap" style="padding-bottom: clamp(24px, 4vw, 48px)"><div class="shot"><img src="/img/building-onboarding/facade-view.jpg" alt="Add New Building screen: facade tabs, a schematic of Facade 1 with twelve drops drawn as columns of windows, and an Edit Drop panel" width="2400" height="1506"></div></div><section class="section">
   <div class="wrap">
@@ -37,7 +37,7 @@
     <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><ul class="cards" style="--cols: 4"><li class="card"><span class="num">01</span><h3>The operator maps the building on-site</h3><p>At least a full day: facades by orientation, drops counted, window patterns verified with the building’s cradle.</p></li><li class="card"><span class="num">02</span><h3>Pen, paper, then Excel</h3><p>Field notes are typed into a spreadsheet template, disconnected from the system it was meant to feed.</p></li><li class="card"><span class="num">03</span><h3>A developer re-enters everything</h3><p>Another full day copying Excel rows into the Engineer UI. No engineering knowledge needed, but engineering time spent.</p></li><li class="card"><span class="num">04</span><h3>Errors surface at deployment</h3><p>If the robot’s scan doesn’t match the data, it crashes. A few cm off makes it run much slower. Fixes need remote intervention from Israel.</p></li></ul></div>
   </div>
 </section>
-<section class="section tint">
+<section class="section">
   <div class="wrap">
     <p class="eyebrow">The problem</p>
     <h2>Two people. Three tools. One point of failure.</h2>
@@ -53,7 +53,7 @@
     <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><ul class="cards" style="--cols: 2"><li class="card"><span class="tag">Insight 01</span><h3>Most buildings are uniform. Some have patterns.</h3><p>Most drops have identical windows. Some repeat a sequence, some have exceptions on certain floors. The old workflow treated every window as a unique entry anyway.</p></li><li class="card"><span class="tag">Insight 02</span><h3>Time loss compounds across the relay</h3><p>One day to measure, another day of developer transcription: a two-day minimum, not because the data was complex, but because two people did sequential manual entry.</p></li><li class="card"><span class="tag">Insight 03</span><h3>Operators think in facades, not row numbers</h3><p>On-site, operators map by orientation, with setbacks treated as sub-facades. The spreadsheet forced them to translate that into abstract rows with no visual anchor.</p></li><li class="card"><span class="tag">Insight 04</span><h3>The developer was a relay, not a contributor</h3><p>Developers rarely changed the operator’s data; they copied it. Removing them from the loop wasn’t risky. It was the fix.</p></li></ul><div class="keybox"><p>The key insight</p><p>The fix wasn’t smarter validation. It was giving the operator direct access to the system they were already feeding.</p></div></div>
   </div>
 </section>
-<section class="section tint">
+<section class="section">
   <div class="wrap">
     <p class="eyebrow">Key design decisions</p>
     <h2>One interface. One person. No middleman.</h2>
@@ -90,7 +90,7 @@
     <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><ul class="cards" style="--cols: 3"><li class="card"><span class="tag">People in the loop</span><p class="stat">2 → 1</p><p>The operator who measured the building enters the data. No developer relay.</p></li><li class="card"><span class="tag">Entry per drop</span><p class="stat">1×</p><p>A drop is defined once; duplicates and window sequences handle the repetition.</p></li><li class="card"><span class="tag">Developer data entry</span><p class="stat">0 hours</p><p>Developers are out of the data-entry loop and back on product work.</p></li></ul><ul class="cards" style="--cols: 2"><li class="card"><h3>Before</h3><ul class="checklist no"><li>Operator measures on-site with pen and paper</li><li>Data typed into an Excel sheet</li><li>Handoff to a developer</li><li>Developer re-enters it into the Engineer UI</li><li>Errors discovered at deployment</li></ul></li><li class="card"><h3>After</h3><ul class="checklist yes"><li>Operator measures on-site</li><li>Operator enters data directly in the Admin UI</li><li>A visual of the facade confirms the structure</li><li>Duplicates and sequences handle repetition</li><li>Operator saves, and the building is ready</li></ul></li></ul><div><p class="subhead">What I’d measure next</p></div><ul class="cards" style="--cols: 4"><li class="card"><h3>Time to configure</h3><p>From the operator’s arrival to a saved, system-ready building. Baseline: at least two days. Target: same day.</p></li><li class="card"><h3>Duplicate adoption</h3><p>The share of buildings set up mostly with Duplicate Drop and Duplicate Facade.</p></li><li class="card"><h3>Deployment incidents</h3><p>Robot crashes and slowdowns caused by mismatches between the scan and the data, before vs. after.</p></li><li class="card"><h3>Developer hours reclaimed</h3><p>Engineering hours per quarter no longer spent on data entry.</p></li></ul></div>
   </div>
 </section>
-<section class="section tint">
+<section class="section">
   <div class="wrap">
     <p class="eyebrow">Reflection</p>
     <h2>The interface was never the blocker. The relay was.</h2>
@@ -100,15 +100,17 @@
 </section>
 <nav class="wrap prevnext" aria-label="More case studies"><a class="prev" href="/skyline"><img src="/img/home/skyline.jpg" alt="" width="1800" height="1106" loading="lazy" decoding="async"><span><small>Previous</small><b>Skyline Robotics – Fleet Monitoring Platform</b></span></a><a class="next" href="/stealth"><img src="/img/home/stealth.jpg" alt="" width="1440" height="900" loading="lazy" decoding="async"><span><small>Next</small><b>Stealth – Development Intelligence Platform</b></span></a></nav>
 </main>
-<footer class="case-footer" id="contact">
-  <div class="wrap">
-    <span>© 2026 Neta-lee Artzi</span>
-    <ul aria-label="Contact">
+<section class="wrap" id="contact" aria-labelledby="contact-h">
+  <div class="contact">
+    <h2 id="contact-h">Let’s talk</h2>
+    <p>Open to product design roles in B2B and complex systems. Happy to talk.</p>
+    <ul>
       <li><a href="mailto:nnetalee@gmail.com">nnetalee@gmail.com</a></li>
       <li><a href="tel:+972508726662">+972 50-872-6662</a></li>
       <li><a href="https://www.linkedin.com/in/neta-leeartzi/" target="_blank" rel="noopener">LinkedIn</a></li>
     </ul>
   </div>
-</footer>
+</section>
+<footer class="site-footer"><div class="wrap"><span>© 2026 Neta-lee Artzi</span></div></footer>
 </body>
 </html>
