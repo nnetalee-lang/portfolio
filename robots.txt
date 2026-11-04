@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://neta-leeartzi.com/sitemap.xml
+Sitemap: https://www.neta-leeartzi.com/sitemap.xml
