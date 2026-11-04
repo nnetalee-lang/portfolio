@@ -65,7 +65,7 @@ h1, h2, h3 { text-wrap: balance; }
 .tools { margin: 32px 0 0; display: flex; flex-wrap: wrap; gap: 12px; padding: 0; list-style: none; }
 .tools li { position: relative; }
 .tools .ico { width: 44px; height: 44px; border-radius: 11px; display: grid; place-items: center; background: #fff; border: 1px dashed var(--line-strong); color: #94a3b8; font-size: 10px; font-weight: 600; transition: transform .2s ease; }
-.tools .ico img { width: 100%; height: 100%; object-fit: contain; border-radius: 11px; }
+.tools .ico img { display: block; width: 36px; height: 36px; object-fit: contain; }
 .tools .ico:has(img) { border: 0; background: none; }
 .tools li:hover .ico { transform: translateY(-2px); }
 .tools .tip { position: absolute; left: 50%; top: calc(100% + 8px); transform: translateX(-50%); background: var(--ink); color: #fff; font-size: 12px; line-height: 1; padding: 6px 8px; border-radius: 4px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .15s ease; z-index: 3; }
