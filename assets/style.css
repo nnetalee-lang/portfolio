@@ -98,7 +98,7 @@ h1, h2, h3 { text-wrap: balance; }
 .project .text { order: 2; display: grid; gap: 20px; justify-items: start; min-width: 0; }
 .project:nth-of-type(even) .text { order: 0; }
 .visual-col { min-width: 0; }
-.ptitle { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.ptitle { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
 .plogo { height: 28px; min-width: 28px; padding: 0 8px; display: grid; place-items: center; border: 1px dashed var(--line-strong); border-radius: 6px; font-size: 11px; font-weight: 600; color: var(--faint); background: var(--panel); }
 .plogo:has(img) { border: 0; padding: 0; background: none; }
 .plogo img { height: 28px; width: auto; }
