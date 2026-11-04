@@ -234,9 +234,13 @@
 
 
   /* ---------- Start ---------- */
-  if (document.querySelector(".grain")) {
-    grainRun();
-    document.addEventListener("visibilitychange", grainRun);
+  /* The grain only moves while the hero is on screen, so it never runs in the background */
+  const grainEl = document.querySelector(".grain");
+  if (grainEl) {
+    let heroVisible = true;
+    const sync = () => { if (heroVisible && !document.hidden) grainRun(); else clearInterval(grainTimer); };
+    new IntersectionObserver(([e]) => { heroVisible = e.isIntersecting; sync(); }).observe(grainEl);
+    document.addEventListener("visibilitychange", sync);
   }
   const slot = document.querySelector("[data-hobbies]");
   if (slot) {
