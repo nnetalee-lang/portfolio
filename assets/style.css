@@ -142,6 +142,11 @@ h1, h2, h3 { text-wrap: balance; }
 
 /* ---------- Contact + footer (all pages) ---------- */
 .contact { border-top: 1px solid var(--line); padding-block: 96px 40px; display: grid; gap: 16px; }
+.contact { position: relative; }
+.contact .ink { position: absolute; right: 0; top: 28px; width: min(24%, 250px); height: auto; pointer-events: none;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 16%, #000 88%, transparent 100%); mask-image: linear-gradient(to right, transparent 0, #000 16%, #000 88%, transparent 100%); }
+.contact > :not(.ink) { position: relative; }
+@media (max-width: 880px) { .contact .ink { display: none; } }
 .contact h2 { font-size: clamp(28px, 3.4vw, 36px); font-weight: 600; letter-spacing: -.02em; }
 .contact p { color: var(--muted); font-size: 17px; }
 .contact ul { list-style: none; padding: 0; margin: 12px 0 0; display: flex; flex-wrap: wrap; gap: 10px 36px; font-size: 16px; }
