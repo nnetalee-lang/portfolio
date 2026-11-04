@@ -55,7 +55,7 @@ h1, h2, h3 { text-wrap: balance; }
           mask-image: linear-gradient(to bottom, #000 0%, #000 60%, transparent 100%); }
 .hero .wrap { position: relative; padding-block: 64px 72px; }
 /* Neta-lee's own ink painting, kept soft so it never competes with the text */
-.hero .ink { position: absolute; right: max(0px, calc(20px - 2vw)); top: 28px; width: min(44%, 560px); height: auto; opacity: .82; pointer-events: none;
+.hero .ink { position: absolute; right: 60px; top: 0; width: min(25%, 320px); height: auto; opacity: .9; pointer-events: none;
   -webkit-mask-image: radial-gradient(120% 110% at 55% 45%, #000 55%, transparent 100%);
           mask-image: radial-gradient(120% 110% at 55% 45%, #000 55%, transparent 100%); }
 .hero .wrap > :not(.ink) { position: relative; }

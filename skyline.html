@@ -37,7 +37,7 @@
     <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><div class="split"><div class="panel"><h3>Lacking an interface, stakeholders were “blind” to operations, hindering oversight and granular control.</h3><p>While robots cleaned buildings across the city, stakeholders remained operationally blind in the office. Without a high-level view of the fleet, they couldn’t detect performance deviations or provide the proof of work needed to justify robotics over manual labor.</p><p class="listlabel">Pain points</p><ul class="dots"><li>No big-picture view of fleet activity, leading to total reliance on verbal reports.</li><li>Inability to detect recurring issues or deviations from the cleaning schedule.</li><li>No data-driven evidence to prove the robots’ efficiency compared to manual labor.</li><li>Critical business data was trapped in engineering logs, inaccessible to decision-makers.</li></ul></div><div class="media"><img src="/img/skyline/problem.jpg" alt="Two terminal windows full of raw Skyline log lines, the only place the data lived" width="1240" height="652" loading="lazy" decoding="async"></div></div></div>
   </div>
 </section>
-<section class="section">
+<section class="section tint">
   <div class="wrap">
     <p class="eyebrow">The solution</p>
     <h2>Solution</h2>
@@ -53,9 +53,17 @@
     <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><ol class="levels"><li><p class="lnum"><span>1</span>Entry point</p><p class="lname">Global Fleet Overview</p><p class="lmeta">Owner KPI view • High-level business metrics</p></li><li><p class="lnum"><span>2</span>Regional</p><p class="lname">NYC map & building list</p><p class="lmeta">Filter by region • Spatial context</p></li><li><p class="lnum"><span>3</span>Building detail</p><p class="lname">Window-by-window progress</p><p class="lmeta">Operational view • Real-time data</p></li><li><p class="lnum"><span>4</span>Management</p><p class="lname">Analytics & fleet KPIs</p><p class="lmeta">Operational KPIs • Resource trends</p></li></ol><div class="diagram"><img src="/img/skyline/information-architecture.png" alt="Flow diagram: the business stakeholder enters at the global fleet overview, filters by region and selects a building; the ops manager works at building level, analyses anomalies or keeps monitoring, and exports completion reports" width="2098" height="2142" loading="lazy" decoding="async"></div></div>
   </div>
 </section>
+<section class="section tint">
+  <div class="wrap">
+    <p class="eyebrow">The way in</p>
+    <h2>Setting the tone: Facade Analytics</h2>
+    <p class="lead">The entry point to the platform puts data access first. The branding and illustration carry the core idea: clarity and visibility beyond the four walls of building management.</p>
+    <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><div><div class="frame"><img src="/img/skyline/login.jpg" alt="Login screen: “Welcome to Skyline’s Facade Analytics. Data, outside the four walls” next to the sign-in form" width="2400" height="1467" loading="lazy" decoding="async"></div></div><ul class="callouts" style="--cols: 3"><li><h3>Brand identity</h3><p>Clean Skyline Robotics branding builds trust from the first interaction.</p></li><li><h3>Visual metaphor</h3><p>An AI-generated illustration communicates the mission: data visibility beyond traditional boundaries.</p></li><li><h3>Minimalist UX</h3><p>A streamlined sign-in removes friction while keeping enterprise security standards.</p></li></ul></div>
+  </div>
+</section>
 <section class="section">
   <div class="wrap">
-    <p class="eyebrow">Overview area</p>
+    <p class="eyebrow">Level 1 · Entry point</p>
     <h2>Global Fleet Overview</h2>
     <p class="lead">The owner’s entry point: fleet health, active jobs and savings at a glance. Owners drill down only when something needs attention.</p>
     <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><div><div class="frame"><img src="/img/skyline/fleet.jpg" alt="Fleet overview: estimated savings, hours saved, fleet totals and a list of areas with alerts and wind" width="2400" height="1475" loading="lazy" decoding="async"></div><p class="note">Figures shown are sample data.</p></div><ul class="callouts" style="--cols: 3"><li><h3>KPI cards</h3><p>Total robots, active jobs and resource savings, highlighted for an immediate read of business value.</p></li><li><h3>City distribution</h3><p>A breakdown of the fleet across locations, with status indicators.</p></li><li><h3>Performance trends</h3><p>Historical data showing efficiency over time.</p></li></ul></div>
@@ -63,7 +71,7 @@
 </section>
 <section class="section tint">
   <div class="wrap">
-    <p class="eyebrow">Overview specific area</p>
+    <p class="eyebrow">Level 2 · Regional</p>
     <h2>Regional Drill-Down (NYC)</h2>
     <p class="lead">The area manager’s entry point: every building in the region with its live status, on a 3D map with weather and wind alongside.</p>
     <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><div><div class="frame"><img src="/img/skyline/region.jpg" alt="New York region: building list with online, warning and offline states next to a 3D city map with status pins" width="2400" height="1475" loading="lazy" decoding="async"></div></div><ul class="callouts" style="--cols: 2"><li><h3>Weather widget</h3><p>Temperature, wind speed and operational safety thresholds, right next to the buildings.</p></li><li><h3>Status indicators</h3><p>A color-coded building list with online, warning and issue states.</p></li></ul></div>
@@ -71,7 +79,7 @@
 </section>
 <section class="section">
   <div class="wrap">
-    <p class="eyebrow">Single building</p>
+    <p class="eyebrow">Level 3 · Building detail</p>
     <h2>Building Deep-Dive</h2>
     <p class="lead">Window-by-window progress for a single building, with facade switching and a cleaning log that records every cycle, including weather stops.</p>
     <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><div><div class="frame"><img src="/img/skyline/building.jpg" alt="Single building view: cleaning log with a heavy-winds stop and a window grid of the north facade" width="2400" height="1475" loading="lazy" decoding="async"></div></div><ul class="callouts" style="--cols: 3"><li><h3>Historic cycles</h3><p>A timeline of past cleaning cycles and their completion, for performance tracking.</p></li><li><h3>Facade switching</h3><p>Toggle between north, south, east and west facades to follow work on every side.</p></li><li><h3>Window grid</h3><p>The facade as a grid, with the live cleaning status of every window.</p></li></ul></div>
@@ -87,7 +95,7 @@
 </section>
 <section class="section">
   <div class="wrap">
-    <p class="eyebrow">Analytics</p>
+    <p class="eyebrow">Level 4 · Management</p>
     <h2>Granular analytics and anomaly detection</h2>
     <p class="lead">Operational KPIs for a single building, compared against historical averages to surface anomalies.</p>
     <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><div><div class="frame"><img src="/img/skyline/analytics.jpg" alt="Building analytics: savings and hours-saved cards, completed drops, and resource use compared with historical averages" width="2400" height="1475" loading="lazy" decoding="async"></div><p class="note">Figures shown are sample data.</p></div><ul class="callouts" style="--cols: 2"><li><h3>Granular fleet management</h3><p>A macro-to-micro workflow: managers move from the fleet overview to the analysis of a specific building.</p><ul><li>Real-time, location-based filtering</li></ul></li><li><h3>Business value KPIs</h3><p>Top cards for estimated annual savings and operational hours saved, with year-over-year indicators.</p><ul><li>Comparison with traditional cleaning</li></ul></li><li><h3>Performance benchmarking</h3><p>Current resource use compared with historical averages, to keep operations consistent.</p><ul><li>Spotting spikes in resource use</li><li>Real-time threshold monitoring</li></ul></li><li><h3>Progress tracking</h3><p>A completed-drops widget shows progress against the plan, with daily averages for immediate situational awareness.</p><ul><li>Total vs. daily average</li><li>Trends over time</li></ul></li></ul></div>
@@ -95,21 +103,13 @@
 </section>
 <section class="section tint">
   <div class="wrap">
-    <p class="eyebrow">Reports</p>
+    <p class="eyebrow">Level 4 · Reports</p>
     <h2>Operational analytics</h2>
     <p class="lead">Performance scores, completed drops and water consumption per building, for client and sustainability reporting.</p>
     <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><div><div class="frame"><img src="/img/skyline/reports.jpg" alt="Report view with performance scores, completed drops and water consumption per building" width="2400" height="1475" loading="lazy" decoding="async"></div><p class="note">Figures shown are sample data.</p></div><ul class="callouts" style="--cols: 3"><li><h3>Performance scores</h3><p>Automated scoring that compares actual and expected performance per building.</p></li><li><h3>Completed drops</h3><p>Historical data on completed operations, with efficiency metrics.</p></li><li><h3>Water consumption</h3><p>Real-time monitoring, with anomaly alerts for unusual usage.</p></li></ul></div>
   </div>
 </section>
 <section class="section">
-  <div class="wrap">
-    <p class="eyebrow">Login</p>
-    <h2>Setting the tone: Facade Analytics</h2>
-    <p class="lead">The entry point to the platform puts data access first. The branding and illustration carry the core idea: clarity and visibility beyond the four walls of building management.</p>
-    <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><div><div class="frame"><img src="/img/skyline/login.jpg" alt="Login screen: “Welcome to Skyline’s Facade Analytics. Data, outside the four walls” next to the sign-in form" width="2400" height="1467" loading="lazy" decoding="async"></div></div><ul class="callouts" style="--cols: 3"><li><h3>Brand identity</h3><p>Clean Skyline Robotics branding builds trust from the first interaction.</p></li><li><h3>Visual metaphor</h3><p>An AI-generated illustration communicates the mission: data visibility beyond traditional boundaries.</p></li><li><h3>Minimalist UX</h3><p>A streamlined sign-in removes friction while keeping enterprise security standards.</p></li></ul></div>
-  </div>
-</section>
-<section class="section tint">
   <div class="wrap">
     <p class="eyebrow">Results</p>
     <h2>Impact and outcomes</h2>
