@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Space Court – Tennis Partner App | Neta-lee Artzi</title>
+<meta name="description" content="Case study: a mobile app that helps tennis players find partners at their level and track their progress.">
+<!-- While the site lives on the temporary Vercel address, keep search engines away. Remove this line when neta-leeartzi.com points here. -->
+<meta name="robots" content="noindex">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Space Court – Tennis Partner App | Neta-lee Artzi">
+<meta property="og:description" content="Case study: a mobile app that helps tennis players find partners at their level and track their progress.">
+<link rel="icon" href="/assets/na-logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header plain">
+  <div class="wrap">
+    <a class="brand" href="/"><img src="/assets/na-logo.svg" width="23" height="24" alt=""><span><b>Neta-lee Artzi</b><small>Product Designer</small></span></a>
+    <nav class="topnav" aria-label="Main"><a href="/#work">Work</a><a href="#contact">Contact</a></nav>
+  </div>
+</header>
+<main id="main">
+<div class="wrap case-hero">
+  <a class="back" href="/#work"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/></svg> All work</a>
+  <p class="company">Space Court</p>
+  <h1>Tennis Partner App</h1>
+  <p class="subtitle">Tennis partner matching and performance analytics</p>
+  <div class="lede"><p>Space Court is a mobile app for a problem tennis players keep running into: finding compatible playing partners. It combines skill-based matchmaking with location, performance tracking and access to coaches, all in one place.</p></div>
+  <ul class="chips" aria-label="Topics"><li>Mobile app</li><li>Tennis &amp; sports</li><li>Social matchmaking</li><li>Performance analytics</li></ul>
+  <dl class="overview"><div><dt>Role</dt><dd>Product Designer</dd></div><div><dt>Type</dt><dd>Student project</dd></div><div><dt>Timeline</dt><dd>4 months</dd></div><div><dt>Platform</dt><dd>iOS</dd></div></dl>
+  <div class="hero-shot"><img src="/img/space-court/hero.jpg" alt="Four iPhone screens of Space Court: player profile with stats, find courts on a map, upcoming games, and a list of open games" width="2400" height="1800"></div>
+</div>
+<section class="section">
+  <div class="wrap">
+    <p class="label">Executive summary</p>
+    <h2>The challenge and the solution</h2>
+    
+    <div class="fig-grid block" style="--cols: 2"><div class="card"><h3>The problem</h3><p>Tennis players struggle to find partners who match their skill level, location and availability. Existing options are spread across social media groups, club message boards and informal networks, which creates friction and missed games.</p><ul><li>No central place to find tennis partners</li><li>Hard to match players by skill level</li><li>Little visibility into nearby courts and availability</li><li>No objective performance tracking or improvement metrics</li></ul></div><div class="card"><h3>The solution</h3><p>Space Court connects players by skill level, distance and schedule. It adds performance analytics, court discovery and access to coaches.</p><dl><div><dt>Smart matchmaking</dt><dd>Partner matching by skill and location</dd></div><div><dt>Performance tracking</dt><dd>Statistics and progress over time</dd></div><div><dt>Court discovery</dt><dd>Nearby courts with availability and ratings</dd></div><div><dt>Coaching</dt><dd>Connect with certified trainers for lessons</dd></div></dl></div></div><div class="block"><figure class="fig"><img src="/img/space-court/onboarding-illustrations.jpg" alt="Grid of onboarding screens with space-themed tennis illustrations: book a court, find a match, find a trainer, record your performance" width="1800" height="1200" loading="lazy" decoding="async"></figure></div>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <p class="label">Insights</p>
+    <h2>User research</h2>
+    <p class="lead">To understand what players need from a partner-finding app, I ran a survey with 18 tennis players (16 men and 2 women) about their challenges and preferences.</p>
+    <ul class="cards block" style="--cols: 3"><li class="card"><p class="stat">85%</p><p>struggle to find games with suitable partners, because of coordinating schedules and finding available courts.</p></li><li class="card"><p class="stat">75%</p><p>are looking for tennis partners but find it hard to find suitable matches.</p></li><li class="card"><p class="stat">45%</p><p>are concerned about small player pools and mismatched skill levels.</p></li></ul>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <p class="label">The matchmaking logic</p>
+    <h2>Finding the right partner</h2>
+    <p class="lead">Matchmaking looks at several factors to connect players: skill rating, distance, schedule availability and playing style.</p>
+    <div class="block"><figure class="fig bare"><img src="/img/space-court/flows.png" alt="Three flows with app screens: onboarding with skill self-assessment, partner discovery with match scores, and match scheduling with court selection" width="2734" height="858" loading="lazy" decoding="async"></figure></div><div class="block"><p class="subhead">Compatibility algorithm (design hypothesis)</p><p class="lead">A proposed weighting for this student project. It was not validated with users.</p></div><ul class="cards block" style="--cols: 4"><li class="card"><p class="stat">35%</p><h3>Skill rating</h3><p>NTRP-based skill matching within ±0.5</p></li><li class="card"><p class="stat">30%</p><h3>Location</h3><p>Distance with a customizable radius (1–25 miles)</p></li><li class="card"><p class="stat">20%</p><h3>Availability</h3><p>Overlap in preferred playing times</p></li><li class="card"><p class="stat">15%</p><h3>Play style</h3><p>Competitive level, game format and surface preference</p></li></ul>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <p class="label">Performance analytics</p>
+    <h2>Seeing how you improve</h2>
+    <p class="lead">An analytics dashboard that tracks game statistics, performance trends and skill progression, so players can see how they improve over time.</p>
+    <div class="block"><figure class="fig bare"><img src="/img/space-court/performance.png" alt="Profile and statistics screens next to a list of tracked metrics: match outcomes, opponent skill levels, surfaces, session duration, skill rating progression and more" width="2736" height="920" loading="lazy" decoding="async"></figure></div>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <p class="label">User flow</p>
+    <h2>Adding a game and challenging a player</h2>
+    
+    <div class="fig-grid block" style="--cols: 2"><figure class="fig bare"><img src="/img/space-court/add-game-flow.jpg" alt="Flow diagram from My Games through Add a Game, choosing a friend or a game type, scheduling, participants and skill level, to Challenge Sent" width="1440" height="1034" loading="lazy" decoding="async"></figure><figure class="fig bare"><img src="/img/space-court/add-game-screens.jpg" alt="App screens for adding a game: game type, schedule, player filters and the Challenge sent confirmation" width="1440" height="1461" loading="lazy" decoding="async"></figure></div>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <p class="label">Visuals</p>
+    <h2>Illustrations created with AI tools</h2>
+    <p class="lead">The app’s illustrations were generated with AI image tools and then edited to fit the visual language.</p>
+    <div class="block"><figure class="fig bare"><img src="/img/space-court/ai-visuals.jpg" alt="Space-themed tennis illustrations: astronaut players, planets and rackets" width="2400" height="1502" loading="lazy" decoding="async"></figure></div>
+  </div>
+</section>
+<nav class="wrap prevnext" aria-label="More case studies"><a class="prev" href="/stealth"><small>Previous</small><b>Development Intelligence Platform</b><span>Stealth</span></a><a class="next" href="/skyline"><small>Next</small><b>Fleet Monitoring Platform</b><span>Skyline Robotics</span></a></nav>
+</main>
+<section class="wrap" id="contact" aria-labelledby="contact-h">
+  <div class="contact">
+    <h2 id="contact-h">Let’s talk</h2>
+    <p>Open to product design roles in B2B and complex systems. Happy to talk.</p>
+    <ul>
+      <li><a href="mailto:nnetalee@gmail.com">nnetalee@gmail.com</a></li>
+      <li><a href="tel:+972508726662">+972 50-872-6662</a></li>
+      <li><a href="https://www.linkedin.com/in/neta-leeartzi/" target="_blank" rel="noopener">LinkedIn</a></li>
+    </ul>
+  </div>
+</section>
+<footer class="site-footer"><div class="wrap"><span>© 2026 Neta-lee Artzi</span></div></footer>
+</body>
+</html>
