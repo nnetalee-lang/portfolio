@@ -272,7 +272,7 @@ h1, h2, h3 { text-wrap: balance; }
    Skyline and Building Onboarding keep the default orange. */
 .p-skyline { --tint: #fbf8f6; }
 .p-stealth { --accent: #3aa197; --accent-text: #0f766e; --frame: #84c4be; --tint: #f4faf9; }
-.p-space-court { --accent: #7c6aa0; --accent-text: #5b4b78; --frame: #534766; --tint: #f7f5fa; }
+.p-space-court { --accent: #d9653b; --accent-text: #b4471f; --frame: #d9653b; --tint: #fbf7f4; }
 
 /* Generic cards */
 .cards { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr)); gap: 16px; }
@@ -322,7 +322,7 @@ h1, h2, h3 { text-wrap: balance; }
 
 /* Figures */
 .fig img { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--line); background: #fff; }
-.fig.bare img { border: 0; border-radius: 0; background: none; }
+.fig.bare img { border: 0; border-radius: 12px; background: none; }
 .fig figcaption { margin-top: 12px; font-size: 14px; color: var(--faint); max-width: 70ch; }
 .fig-grid { display: grid; grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr)); gap: 24px; align-items: start; }
 
@@ -390,6 +390,18 @@ h1, h2, h3 { text-wrap: balance; }
 .link-card span { color: var(--muted); font-size: 15px; }
 .case .contact { margin-top: clamp(64px, 8vw, 104px); }
 
+
+/* Decisions with the image beside the text */
+.decision.side { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(32px, 5vw, 72px); align-items: center; }
+.decision.side .dbody { display: block; }
+.decision.side .fig { margin-top: 0; }
+/* No single words left alone on the last line */
+p, li, dd, h2, h3 { text-wrap: pretty; }
+.section { padding-block: clamp(72px, 8vw, 120px); }
+.case-hero + .hero-shot, .case-hero + .wrap.hero-shot { margin-top: 0; }
+.case-hero:has(+ .hero-shot) { padding-bottom: 40px; }
+.card ul { list-style: disc; }
+
 @media (max-width: 1080px) {
   .levels { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .cards[style*="--cols: 4"], .callouts[style*="--cols: 4"] { --cols: 2 !important; }
@@ -415,7 +427,7 @@ h1, h2, h3 { text-wrap: balance; }
   .overview { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .overview div:nth-child(3) { border-left: 0; }
   .overview div:nth-child(n+3) { border-top: 1px solid var(--line); }
-  .split, .features, .dbody, .learnings ul { grid-template-columns: 1fr; }
+  .split, .features, .dbody, .learnings ul, .decision.side { grid-template-columns: 1fr; }
   .split .media { order: -1; }
   .feature .fimg, .feature:nth-child(even) .fimg { order: 0; }
   .levels, .cards, .callouts, .fig-grid { grid-template-columns: 1fr !important; }
