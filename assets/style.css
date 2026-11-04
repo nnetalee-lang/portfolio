@@ -341,6 +341,9 @@ h1, h2, h3 { text-wrap: balance; }
 .dashlist li::before { content: "—"; color: var(--faint); flex: none; }
 
 /* Previous / next with thumbnails */
+.also-wrap { padding-top: clamp(72px, 8vw, 112px); }
+.also-wrap .also-card { order: 0; }
+.also-wrap + .prevnext { padding-top: 32px; }
 .prevnext { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding-block: clamp(72px, 8vw, 112px) 0; }
 .prevnext a { display: grid; gap: 14px; text-decoration: none; }
 .prevnext img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; object-position: top left; border-radius: 10px; border: 1px solid var(--line); transition: transform .4s cubic-bezier(.2,.7,.2,1); }
