@@ -289,6 +289,8 @@ h1, h2, h3 { text-wrap: balance; }
 .card dl { margin: 4px 0 0; display: grid; gap: 14px; }
 .card dt { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
 .card dd { margin: 4px 0 0; font-size: 15px; color: var(--ink-2); }
+.card:has(> .foot) { display: flex; flex-direction: column; gap: 10px; }
+.card:has(> .foot) > .foot { margin-top: auto; }
 .card .foot { margin-top: 6px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 14px; color: var(--muted); }
 .card .stat, .stat { font-size: clamp(32px, 3.4vw, 42px); font-weight: 400; letter-spacing: -.02em; line-height: 1.1; color: var(--ink); }
 .card .ico-sq { margin-bottom: 6px; }
