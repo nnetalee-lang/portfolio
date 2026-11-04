@@ -53,7 +53,7 @@ h1, h2, h3 { text-wrap: balance; }
 .grain { position: absolute; inset: 0; pointer-events: none; background-size: 180px 180px;
   -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 60%, transparent 100%);
           mask-image: linear-gradient(to bottom, #000 0%, #000 60%, transparent 100%); }
-.hero .wrap { position: relative; padding-block: 64px 72px; }
+.hero .wrap { position: relative; padding-block: 64px 156px; }
 
 .nowrap { white-space: nowrap; }
 .hero h1 { font-weight: 600; font-size: clamp(34px, 5.4vw, 60px); line-height: 1.05; letter-spacing: -.03em; }
@@ -90,7 +90,7 @@ h1, h2, h3 { text-wrap: balance; }
 .hobbies .cap { margin: 0; min-height: 1.3em; font: italic 400 18px/1.3 var(--font-cap); color: #16171b; transition: opacity .35s ease; }
 
 /* ---------- Home: project rows ---------- */
-.project { position: relative; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: clamp(32px, 6vw, 96px); row-gap: 48px; align-items: start; padding-block: clamp(48px, 6vw, 80px); }
+.project { position: relative; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: clamp(32px, 6vw, 96px); row-gap: 48px; align-items: start; padding-block: clamp(56px, 7vw, 96px); }
 .project > .text { padding-top: 48px; }
 .project + .project { border-top: 1px solid var(--line); }
 .work .project:first-of-type { padding-top: clamp(24px, 4vw, 48px); }
@@ -404,14 +404,10 @@ p, li, dd, h2, h3 { text-wrap: pretty; }
 .card ul { list-style: disc; }
 
 
-/* Building Onboarding: the live prototype instead of a screenshot */
+/* Building Onboarding: a recorded walkthrough of the prototype */
 .proto { padding-bottom: clamp(24px, 4vw, 48px); }
-.proto-frame { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: #f9f9f9; }
-.proto-frame iframe { display: block; width: 100%; height: min(920px, 82vh); border: 0; }
-.proto-note { margin-top: 12px; font-size: 14px; color: var(--faint); }
-.proto-note a { color: var(--ink); }
-.proto-fallback { display: none; }
-@media (max-width: 880px) { .proto-frame, .proto-note { display: none; } .proto-fallback { display: block; } }
+.proto-video { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: #f9f9f9; }
+.proto-video video { display: block; width: 100%; height: auto; }
 /* Lists that draw their own dots */
 .card ul.dots, ul.dots { list-style: none; padding-left: 0; }
 /* Blocks inside a section sit a little closer */
@@ -419,6 +415,14 @@ p, li, dd, h2, h3 { text-wrap: pretty; }
 .section { padding-block: clamp(64px, 7.5vw, 112px); }
 .stack.stack > .callouts { margin-top: 24px; }
 .stack.stack > :has(> .subhead) + * { margin-top: 24px; }
+
+
+/* Space Court opening image: phones on a soft panel, same corners as other images */
+.phones { background: linear-gradient(180deg, #eef3f2, #f7f8f7); border-radius: 12px; padding: clamp(24px, 5vw, 64px) clamp(16px, 6vw, 96px); }
+.phones img { display: block; width: 100%; height: auto; }
+/* Overview values never break inside a phrase, the column grows instead */
+.overview { grid-template-columns: repeat(var(--cols, 4), auto); justify-content: stretch; }
+.overview dd { white-space: nowrap; }
 
 @media (max-width: 1080px) {
   .levels { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -443,6 +447,7 @@ p, li, dd, h2, h3 { text-wrap: pretty; }
   .hero-art.radar { order: -1; }
   .hero-art.radar img { max-width: 150px; margin-inline: 0; }
   .overview { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .overview dd { white-space: normal; }
   .overview div:nth-child(3) { border-left: 0; }
   .overview div:nth-child(n+3) { border-top: 1px solid var(--line); }
   .split, .features, .dbody, .learnings ul, .decision.side { grid-template-columns: 1fr; }
