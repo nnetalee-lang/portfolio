@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 319 443" width="319" height="443" role="img" aria-label="Radar chart illustration">
+  <path stroke="#E5E5E5" d="M161.5 11v315" fill="none"/>
+  <path stroke="#E5E5E5" d="M298.508 89.61 25.232 247.384" fill="none"/>
+  <path stroke="#E5E5E5" d="M298.516 247.383 25.24 89.607" fill="none"/>
+  <path stroke="#E5E5E5" d="M195.574 146.538v39.923L161 206.423l-34.574-19.962v-39.923L161 126.576z" fill="none"/>
+  <path stroke="#E5E5E5" d="M231.403 126.286v81.427l-69.766 40.708-69.767-40.708v-81.427l69.767-40.708z" fill="none"/>
+  <path stroke="#E5E5E5" d="M266.789 105.788v120.423L162.5 286.423 58.21 226.211V105.788L162.5 45.576z" fill="none"/>
+  <path stroke="#E5E5E5" d="M297.631 89.038v158.923L160 327.423 22.37 247.961V89.038L160 9.576z" fill="none"/>
+  <path stroke-dasharray="4 4" stroke-width="2" stroke="#84C4BE" d="M69.5 115.438 161.627 75 292.5 91.347l-29.274 135.079L161.627 303 69.5 219.543z" fill="none"/>
+  <path fill="#EAF5F4" d="M69.5 89.936 131.469 44 219.5 62.57l-19.691 153.445L131.469 303 69.5 208.196z"/>
+  <path stroke="#EAF5F4" d="M69.5 89.936 131.469 44 219.5 62.57l-19.691 153.445L131.469 303 69.5 208.196z" fill="none"/>
+</svg>

@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="/assets/style.css">
 </head>
-<body>
+<body class="case p-building-onboarding">
 <a class="skip" href="#main">Skip to content</a>
 <header class="site-header plain">
   <div class="wrap">
@@ -26,45 +26,39 @@
 </header>
 <main id="main">
 <div class="wrap case-hero">
-  <a class="back" href="/#work"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/></svg> All work</a>
-  <p class="company">Skyline Robotics</p>
-  <h1>Building Onboarding</h1>
-  <p class="subtitle">Redesigning how new buildings get into the system</p>
-  <div class="lede"><p>Before a robot can clean a single window, every building has to be mapped with millimeter-level precision: facades by orientation, vertical drops, and the dimensions of every window.</p><p>I redesigned a two-person, three-tool workflow into a single operator interface. The operator who measures the building now enters the data directly, without a developer in between.</p></div>
-  <ul class="chips" aria-label="Topics"><li>B2B SaaS</li><li>Admin UX</li><li>Workflow redesign</li><li>Process automation</li></ul>
-  <dl class="overview"><div><dt>Role</dt><dd>Lead Product Designer</dd></div><div><dt>Timeline</dt><dd>2025</dd></div><div><dt>Users</dt><dd>Field operators</dd></div><div><dt>Platform</dt><dd>Web (desktop)</dd></div></dl>
-  <div class="hero-shot"><img src="/img/building-onboarding/facade-view.jpg" alt="Add New Building screen: facade tabs, a schematic of Facade 1 with twelve drops drawn as columns of windows, and an Edit Drop panel" width="2400" height="1506"></div>
+  <a class="back" href="/skyline"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/></svg> Back to Skyline Robotics</a>
+  <div class="hero-grid"><div><h1>Building Onboarding</h1><p class="subtitle">Redesigning how new buildings get into the system</p><div class="lede"><p>Before a robot can clean a single window, every building has to be mapped with millimeter-level precision: facades by orientation, vertical drops, and the dimensions of every window.</p><p>I redesigned a two-person, three-tool workflow into a single operator interface. The operator who measures the building now enters the data directly, without a developer in between.</p></div><ul class="chips" aria-label="Topics"><li>B2B SaaS</li><li>Admin UX</li><li>Workflow redesign</li><li>Process automation</li></ul><div class="overview"><p>Project overview</p><dl><div><dt>Role</dt><dd>Lead Product Designer</dd></div><div><dt>Timeline</dt><dd>2025</dd></div><div><dt>Users</dt><dd>Field operators</dd></div><div><dt>Platform</dt><dd>Web (desktop)</dd></div></dl></div></div></div>
 </div>
-<section class="section">
+<div class="wrap" style="padding-bottom: clamp(24px, 4vw, 48px)"><div class="shot"><img src="/img/building-onboarding/facade-view.jpg" alt="Add New Building screen: facade tabs, a schematic of Facade 1 with twelve drops drawn as columns of windows, and an Edit Drop panel" width="2400" height="1506"></div></div><section class="section">
   <div class="wrap">
-    <p class="label">Context</p>
+    <p class="eyebrow">Context</p>
     <h2>The existing workflow</h2>
     <p class="lead">The problem wasn’t the robot. It was the multi-day process of turning a physical building into data the system could read.</p>
-    <ul class="cards block" style="--cols: 4"><li class="card"><span class="num">01</span><h3>The operator maps the building on-site</h3><p>At least a full day: facades by orientation, drops counted, window patterns verified with the building’s cradle.</p></li><li class="card"><span class="num">02</span><h3>Pen, paper, then Excel</h3><p>Field notes are typed into a spreadsheet template, disconnected from the system it was meant to feed.</p></li><li class="card"><span class="num">03</span><h3>A developer re-enters everything</h3><p>Another full day copying Excel rows into the Engineer UI. No engineering knowledge needed, but engineering time spent.</p></li><li class="card"><span class="num">04</span><h3>Errors surface at deployment</h3><p>If the robot’s scan doesn’t match the data, it crashes. A few cm off makes it run much slower. Fixes need remote intervention from Israel.</p></li></ul>
+    <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><ul class="cards" style="--cols: 4"><li class="card"><span class="num">01</span><h3>The operator maps the building on-site</h3><p>At least a full day: facades by orientation, drops counted, window patterns verified with the building’s cradle.</p></li><li class="card"><span class="num">02</span><h3>Pen, paper, then Excel</h3><p>Field notes are typed into a spreadsheet template, disconnected from the system it was meant to feed.</p></li><li class="card"><span class="num">03</span><h3>A developer re-enters everything</h3><p>Another full day copying Excel rows into the Engineer UI. No engineering knowledge needed, but engineering time spent.</p></li><li class="card"><span class="num">04</span><h3>Errors surface at deployment</h3><p>If the robot’s scan doesn’t match the data, it crashes. A few cm off makes it run much slower. Fixes need remote intervention from Israel.</p></li></ul></div>
   </div>
 </section>
-<section class="section">
+<section class="section tint">
   <div class="wrap">
-    <p class="label">The problem</p>
+    <p class="eyebrow">The problem</p>
     <h2>Two people. Three tools. One point of failure.</h2>
     <p class="lead">Every handoff was another chance for error, and none of them were caught until the robot was already on the building.</p>
-    <ul class="cards block" style="--cols: 3"><li class="card"><h3>Data entry errors</h3><p>Copying from Excel into the Engineer UI by hand invited mistakes. A misplaced decimal, 1.2 becoming 12, could send the robot on the wrong trajectory.</p></li><li class="card"><h3>Developer bottleneck</h3><p>Every new building needed a full day of developer time for a task that required no engineering skill.</p></li><li class="card"><h3>No direct ownership</h3><p>The operator, the person who physically measured the building, had no access to the system. Their data passed through two handoffs before it reached the robot.</p></li></ul>
+    <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><ul class="cards" style="--cols: 3"><li class="card"><h3>Data entry errors</h3><p>Copying from Excel into the Engineer UI by hand invited mistakes. A misplaced decimal, 1.2 becoming 12, could send the robot on the wrong trajectory.</p></li><li class="card"><h3>Developer bottleneck</h3><p>Every new building needed a full day of developer time for a task that required no engineering skill.</p></li><li class="card"><h3>No direct ownership</h3><p>The operator, the person who physically measured the building, had no access to the system. Their data passed through two handoffs before it reached the robot.</p></li></ul></div>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <p class="label">Research and insights</p>
+    <p class="eyebrow">Research and insights</p>
     <h2>What the research showed</h2>
     <p class="lead">I analyzed the full data chain, from operators’ field notes to the Excel files developers received, and interviewed developers and field operators to map the edge cases. Four insights came out of it.</p>
-    <ul class="cards block" style="--cols: 2"><li class="card"><span class="tag">Insight 01</span><h3>Most buildings are uniform. Some have patterns.</h3><p>Most drops have identical windows. Some repeat a sequence, some have exceptions on certain floors. The old workflow treated every window as a unique entry anyway.</p></li><li class="card"><span class="tag">Insight 02</span><h3>Time loss compounds across the relay</h3><p>One day to measure, another day of developer transcription: a two-day minimum, not because the data was complex, but because two people did sequential manual entry.</p></li><li class="card"><span class="tag">Insight 03</span><h3>Operators think in facades, not row numbers</h3><p>On-site, operators map by orientation, with setbacks treated as sub-facades. The spreadsheet forced them to translate that into abstract rows with no visual anchor.</p></li><li class="card"><span class="tag">Insight 04</span><h3>The developer was a relay, not a contributor</h3><p>Developers rarely changed the operator’s data; they copied it. Removing them from the loop wasn’t risky. It was the fix.</p></li></ul><div class="keybox block"><p>The key insight</p><p>The fix wasn’t smarter validation. It was giving the operator direct access to the system they were already feeding.</p></div>
+    <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><ul class="cards" style="--cols: 2"><li class="card"><span class="tag">Insight 01</span><h3>Most buildings are uniform. Some have patterns.</h3><p>Most drops have identical windows. Some repeat a sequence, some have exceptions on certain floors. The old workflow treated every window as a unique entry anyway.</p></li><li class="card"><span class="tag">Insight 02</span><h3>Time loss compounds across the relay</h3><p>One day to measure, another day of developer transcription: a two-day minimum, not because the data was complex, but because two people did sequential manual entry.</p></li><li class="card"><span class="tag">Insight 03</span><h3>Operators think in facades, not row numbers</h3><p>On-site, operators map by orientation, with setbacks treated as sub-facades. The spreadsheet forced them to translate that into abstract rows with no visual anchor.</p></li><li class="card"><span class="tag">Insight 04</span><h3>The developer was a relay, not a contributor</h3><p>Developers rarely changed the operator’s data; they copied it. Removing them from the loop wasn’t risky. It was the fix.</p></li></ul><div class="keybox"><p>The key insight</p><p>The fix wasn’t smarter validation. It was giving the operator direct access to the system they were already feeding.</p></div></div>
   </div>
 </section>
-<section class="section">
+<section class="section tint">
   <div class="wrap">
-    <p class="label">Key design decisions</p>
+    <p class="eyebrow">Key design decisions</p>
     <h2>One interface. One person. No middleman.</h2>
     <p class="lead">Three decisions turned the relay into a direct connection between the operator and the system.</p>
-    <article class="decision">
+    <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><article class="decision">
   <div class="dhead"><span class="dnum">01</span><h3>The facade is the main view</h3></div>
   <div class="dbody">
     <div><p><b>Problem:</b> Operators map buildings by facade and drop, but the Engineer UI was a flat table of row numbers, with database names like “Ws.Width.Height”.</p><p><b>Decision:</b> A large schematic of the selected facade sits at the center, with every drop drawn as a column of windows. Clicking a drop opens it in a side panel with plain labels, like “Window width (m)”. Facade tabs match the physical orientations, and the building details stay on top and collapse when they’re done.</p></div>
@@ -77,46 +71,44 @@
     <div><p><b>Problem:</b> On most facades every drop is the same, apart from the corners. Some drops repeat a window sequence (A-B-C-B), and some have single exceptions, like a lobby floor.</p><p><b>Decision:</b> The operator enters one drop, types its window sequence and clicks a window to mark an exception. “Duplicate Drop” adds as many copies as needed, and any drop can be dragged to a new position, so a corner drop is copied and moved to the other end. Copies remember their source: when a drop with copies is saved, the operator chooses how far the change goes.</p></div>
     <div><p><b>Why:</b> A 12-drop facade is one drop, a few duplicates and one drag. A typo found after duplicating is fixed once, not twelve times.</p><div class="tradeoff"><p>Trade-off</p><p>Copies that remember their source add a concept to learn. To keep it light, the question appears only when a drop has copies; a single drop saves without it.</p></div></div>
   </div>
-  <div class="fig-grid block" style="--cols: 3"><figure class="fig bare"><img src="/img/building-onboarding/sequence.png" alt="Window sequence field and a window marked as an exception" width="822" height="570" loading="lazy" decoding="async"><figcaption>The operator types any window sequence and clicks a window to mark an exception.</figcaption></figure><figure class="fig bare"><img src="/img/building-onboarding/duplicate-drop.png" alt="Duplicate Drop dialog: drop to copy, number of copies, and where to place them" width="822" height="570" loading="lazy" decoding="async"><figcaption>Duplicate Drop adds copies right after the drop. Any drop can then be dragged to a new position.</figcaption></figure><figure class="fig bare"><img src="/img/building-onboarding/apply-change.png" alt="Dialog asking which linked copies a change should apply to" width="822" height="570" loading="lazy" decoding="async"><figcaption>When a drop has copies, the operator chooses how far a change goes.</figcaption></figure></div>
+  <div class="fig-grid" style="--cols: 3"><figure class="fig bare"><img src="/img/building-onboarding/sequence.png" alt="Window sequence field and a window marked as an exception" width="822" height="570" loading="lazy" decoding="async"><figcaption>The operator types any window sequence and clicks a window to mark an exception.</figcaption></figure><figure class="fig bare"><img src="/img/building-onboarding/duplicate-drop.png" alt="Duplicate Drop dialog: drop to copy, number of copies, and where to place them" width="822" height="570" loading="lazy" decoding="async"><figcaption>Duplicate Drop adds copies right after the drop. Any drop can then be dragged to a new position.</figcaption></figure><figure class="fig bare"><img src="/img/building-onboarding/apply-change.png" alt="Dialog asking which linked copies a change should apply to" width="822" height="570" loading="lazy" decoding="async"><figcaption>When a drop has copies, the operator chooses how far a change goes.</figcaption></figure></div>
 </article><article class="decision">
   <div class="dhead"><span class="dnum">03</span><h3>Soft checks, and whole facades copied</h3></div>
   <div class="dbody">
     <div><p><b>Problem:</b> A misplaced decimal, 1.2 becoming 12, could send the robot on the wrong trajectory, and it was only caught at deployment. The facades of a building usually repeat, but each one was built from scratch.</p><p><b>Decision:</b> Soft checks flag a value far out of range, or a drop that doesn’t reach the roof, and offer the likely fix. They never block the save. A finished facade is copied to the other sides with “Duplicate Facade”, each side with its own number of drops.</p></div>
     <div><p><b>Why:</b> The operator is the expert on site. A gentle check catches the typo without second-guessing a building that really is unusual, and a whole tower is set up from one facade.</p><div class="tradeoff"><p>Trade-off</p><p>Because the checks never block, an operator can still save a wrong value. The warning stays on the drop and on its facade tab until someone looks at it.</p></div></div>
   </div>
-  <div class="fig-grid block" style="--cols: 3"><figure class="fig bare"><img src="/img/building-onboarding/soft-check.png" alt="A soft check: “12 m is unusual for window width. Did you mean 1.2 m?” with a Use 1.2 m button" width="822" height="564" loading="lazy" decoding="async"><figcaption>A 12 m window width is flagged, with the likely fix one click away.</figcaption></figure><figure class="fig bare"><img src="/img/building-onboarding/duplicate-facade.png" alt="Duplicate Facade dialog copying drops to the other sides" width="822" height="570" loading="lazy" decoding="async"><figcaption>Duplicate Facade copies the drops to the other sides, each with its own number of drops.</figcaption></figure><figure class="fig bare"><img src="/img/building-onboarding/shorter-side.png" alt="A shorter facade drawn shorter in the schematic and in the building footprint" width="822" height="564" loading="lazy" decoding="async"><figcaption>A shorter side is drawn shorter, on the facade and in the footprint.</figcaption></figure></div>
-</article>
+  <div class="fig-grid" style="--cols: 3"><figure class="fig bare"><img src="/img/building-onboarding/soft-check.png" alt="A soft check: “12 m is unusual for window width. Did you mean 1.2 m?” with a Use 1.2 m button" width="822" height="564" loading="lazy" decoding="async"><figcaption>A 12 m window width is flagged, with the likely fix one click away.</figcaption></figure><figure class="fig bare"><img src="/img/building-onboarding/duplicate-facade.png" alt="Duplicate Facade dialog copying drops to the other sides" width="822" height="570" loading="lazy" decoding="async"><figcaption>Duplicate Facade copies the drops to the other sides, each with its own number of drops.</figcaption></figure><figure class="fig bare"><img src="/img/building-onboarding/shorter-side.png" alt="A shorter facade drawn shorter in the schematic and in the building footprint" width="822" height="564" loading="lazy" decoding="async"><figcaption>A shorter side is drawn shorter, on the facade and in the footprint.</figcaption></figure></div>
+</article></div>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <p class="label">Outcome</p>
+    <p class="eyebrow">Outcome</p>
     <h2>What changed</h2>
     <p class="lead">The new flow is in use: operators now onboard buildings directly, on desktop. The changes below come from the redesigned flow itself; the metrics after them are what I’d track to confirm it works over time.</p>
-    <ul class="cards block" style="--cols: 3"><li class="card"><span class="tag">People in the loop</span><p class="stat">2 → 1</p><p>The operator who measured the building enters the data. No developer relay.</p></li><li class="card"><span class="tag">Entry per drop</span><p class="stat">1×</p><p>A drop is defined once; duplicates and window sequences handle the repetition.</p></li><li class="card"><span class="tag">Developer data entry</span><p class="stat">0 hours</p><p>Developers are out of the data-entry loop and back on product work.</p></li></ul><div class="fig-grid block" style="--cols: 2"><div class="card"><h3>Before</h3><ul class="checklist no"><li>Operator measures on-site with pen and paper</li><li>Data typed into an Excel sheet</li><li>Handoff to a developer</li><li>Developer re-enters it into the Engineer UI</li><li>Errors discovered at deployment</li></ul></div><div class="card"><h3>After</h3><ul class="checklist yes"><li>Operator measures on-site</li><li>Operator enters data directly in the Admin UI</li><li>A visual of the facade confirms the structure</li><li>Duplicates and sequences handle repetition</li><li>Operator saves, and the building is ready</li></ul></div></div><div class="block"><p class="subhead">What I’d measure next</p></div><ul class="cards block" style="--cols: 4"><li class="card"><h3>Time to configure</h3><p>From the operator’s arrival to a saved, system-ready building. Baseline: at least two days. Target: same day.</p></li><li class="card"><h3>Duplicate adoption</h3><p>The share of buildings set up mostly with Duplicate Drop and Duplicate Facade.</p></li><li class="card"><h3>Deployment incidents</h3><p>Robot crashes and slowdowns caused by mismatches between the scan and the data, before vs. after.</p></li><li class="card"><h3>Developer hours reclaimed</h3><p>Engineering hours per quarter no longer spent on data entry.</p></li></ul>
+    <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><ul class="cards" style="--cols: 3"><li class="card"><span class="tag">People in the loop</span><p class="stat">2 → 1</p><p>The operator who measured the building enters the data. No developer relay.</p></li><li class="card"><span class="tag">Entry per drop</span><p class="stat">1×</p><p>A drop is defined once; duplicates and window sequences handle the repetition.</p></li><li class="card"><span class="tag">Developer data entry</span><p class="stat">0 hours</p><p>Developers are out of the data-entry loop and back on product work.</p></li></ul><ul class="cards" style="--cols: 2"><li class="card"><h3>Before</h3><ul class="checklist no"><li>Operator measures on-site with pen and paper</li><li>Data typed into an Excel sheet</li><li>Handoff to a developer</li><li>Developer re-enters it into the Engineer UI</li><li>Errors discovered at deployment</li></ul></li><li class="card"><h3>After</h3><ul class="checklist yes"><li>Operator measures on-site</li><li>Operator enters data directly in the Admin UI</li><li>A visual of the facade confirms the structure</li><li>Duplicates and sequences handle repetition</li><li>Operator saves, and the building is ready</li></ul></li></ul><div><p class="subhead">What I’d measure next</p></div><ul class="cards" style="--cols: 4"><li class="card"><h3>Time to configure</h3><p>From the operator’s arrival to a saved, system-ready building. Baseline: at least two days. Target: same day.</p></li><li class="card"><h3>Duplicate adoption</h3><p>The share of buildings set up mostly with Duplicate Drop and Duplicate Facade.</p></li><li class="card"><h3>Deployment incidents</h3><p>Robot crashes and slowdowns caused by mismatches between the scan and the data, before vs. after.</p></li><li class="card"><h3>Developer hours reclaimed</h3><p>Engineering hours per quarter no longer spent on data entry.</p></li></ul></div>
   </div>
 </section>
-<section class="section">
+<section class="section tint">
   <div class="wrap">
-    <p class="label">Reflection</p>
+    <p class="eyebrow">Reflection</p>
     <h2>The interface was never the blocker. The relay was.</h2>
     <p class="lead">The most important decision wasn’t a UI component. It was changing who enters the data, and designing the interface to make that safe. The data model didn’t change; the workflow did.</p>
-    <div class="block"><p class="subhead">What I’d explore next</p></div><ul class="dashlist block"><li>Whether operators find drag to reorder on their own, or need arrows on the selected drop.</li><li>Whether copies should stay linked after duplicating, based on how often operators fix a value afterwards.</li><li>How the soft checks feel on a building that really is unusual, so they help without nagging.</li><li>Design for tablets in the field, the planned next step. Today the flow runs on desktop.</li></ul>
+    <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><div><p class="subhead">What I’d explore next</p></div><ul class="dashlist"><li>Whether operators find drag to reorder on their own, or need arrows on the selected drop.</li><li>Whether copies should stay linked after duplicating, based on how often operators fix a value afterwards.</li><li>How the soft checks feel on a building that really is unusual, so they help without nagging.</li><li>Design for tablets in the field, the planned next step. Today the flow runs on desktop.</li></ul></div>
   </div>
 </section>
-<nav class="wrap prevnext" aria-label="More case studies"><a class="prev" href="/skyline"><small>Previous</small><b>Fleet Monitoring Platform</b><span>Skyline Robotics</span></a><a class="next" href="/stealth"><small>Next</small><b>Development Intelligence Platform</b><span>Stealth</span></a></nav>
+<nav class="wrap prevnext" aria-label="More case studies"><a class="prev" href="/skyline"><img src="/img/home/skyline.jpg" alt="" width="1800" height="1106" loading="lazy" decoding="async"><span><small>Previous</small><b>Skyline Robotics – Fleet Monitoring Platform</b></span></a><a class="next" href="/stealth"><img src="/img/home/stealth.jpg" alt="" width="1440" height="900" loading="lazy" decoding="async"><span><small>Next</small><b>Stealth – Development Intelligence Platform</b></span></a></nav>
 </main>
-<section class="wrap" id="contact" aria-labelledby="contact-h">
-  <div class="contact">
-    <h2 id="contact-h">Let’s talk</h2>
-    <p>Open to product design roles in B2B and complex systems. Happy to talk.</p>
-    <ul>
+<footer class="case-footer" id="contact">
+  <div class="wrap">
+    <span>© 2026 Neta-lee Artzi</span>
+    <ul aria-label="Contact">
       <li><a href="mailto:nnetalee@gmail.com">nnetalee@gmail.com</a></li>
       <li><a href="tel:+972508726662">+972 50-872-6662</a></li>
       <li><a href="https://www.linkedin.com/in/neta-leeartzi/" target="_blank" rel="noopener">LinkedIn</a></li>
     </ul>
   </div>
-</section>
-<footer class="site-footer"><div class="wrap"><span>© 2026 Neta-lee Artzi</span></div></footer>
+</footer>
 </body>
 </html>
