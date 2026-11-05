@@ -23,8 +23,8 @@ There is no build step: what you see in these files is exactly what goes live.
 3. **Push**: send the commit to GitHub.
 4. Vercel sees the new commit and updates the site within about a minute.
 
-## Before going live on neta-leeartzi.com
+## Live site
 
-- Done: search engines can now index the site (404 page excluded).
-- Add the tool logos to `img/tools/` and the project logos, then replace the `logo` placeholders.
-- Connect the domain in Vercel (Project → Settings → Domains), then update DNS at the domain provider.
+- The site is live at https://www.neta-leeartzi.com (neta-leeartzi.com redirects to www).
+- The domain is registered at Wix. Its DNS points to Vercel: an A record `@` → `216.198.79.1` and a CNAME `www` → the value shown in Vercel (Project → Settings → Domains).
+- `sitemap.xml` and `robots.txt` help search engines find the pages.
