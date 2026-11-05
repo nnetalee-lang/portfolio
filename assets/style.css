@@ -394,7 +394,7 @@ h1, h2, h3 { text-wrap: balance; }
 .steplabel { font-size: 14px; font-weight: 500; color: var(--accent-text); }
 .step .subhead { margin-top: 6px; }
 .step .lead { margin-top: 10px; max-width: 66ch; color: var(--muted); }
-.step .shot { margin-top: 28px; }
+.step .shot, .step .proto-video { margin-top: 28px; }
 .step .callouts { margin-top: 16px; }
 .step .link-card { margin-top: 16px; }
 .stack.stack > .step + .step { margin-top: clamp(80px, 9vw, 128px); }
