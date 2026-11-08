@@ -1,4 +1,10 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "functions": { "api/**/*.js": { "maxDuration": 60 } },
+  "crons": [{ "path": "/api/cron/snapshot", "schedule": "30 0 * * *" }],
+  "headers": [
+    { "source": "/stats", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }, { "key": "Cache-Control", "value": "no-store" }] },
+    { "source": "/api/(.*)", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] }
+  ]
 }

@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Site stats · Neta-lee Artzi</title>
+<link rel="icon" href="/assets/na-logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+:root {
+  --bg: #f4f6f9; --card: #ffffff; --line: #e2e8f0; --line-2: #eef2f6;
+  --ink: #0f172b; --ink-2: #314158; --muted: #56677f;
+  --accent: #e8521a; --accent-2: #c2410c; --accent-soft: #fdeee7;
+  --good: #0f766e; --warn: #b45309;
+  --font: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 15px/1.5 var(--font); -webkit-font-smoothing: antialiased; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+h1, h2, h3, p { margin: 0; }
+button, input { font: inherit; color: inherit; }
+.wrap { max-width: 1200px; margin-inline: auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+[hidden] { display: none !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* top bar */
+.top { position: sticky; top: 0; z-index: 10; background: rgba(244,246,249,.9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; gap: 16px; padding-block: 14px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; margin-right: auto; text-decoration: none; color: var(--ink); }
+.brand img { width: 26px; height: 26px; }
+.brand b { font-weight: 600; }
+.brand span { color: var(--muted); }
+.seg { display: inline-flex; background: #e8edf3; border-radius: 10px; padding: 3px; }
+.seg button { border: 0; background: none; padding: 6px 12px; border-radius: 8px; cursor: pointer; color: var(--ink-2); font-weight: 500; font-size: 14px; }
+.seg button[aria-pressed="true"] { background: var(--card); color: var(--ink); box-shadow: 0 1px 2px rgba(15,23,43,.08); }
+.ghost { border: 1px solid var(--line); background: var(--card); border-radius: 9px; padding: 7px 12px; cursor: pointer; font-size: 14px; font-weight: 500; text-decoration: none; color: var(--ink-2); display: inline-flex; align-items: center; gap: 6px; }
+.ghost:hover { border-color: #cbd5e1; color: var(--ink); }
+
+main { padding-block: 28px 64px; display: grid; gap: 20px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px; min-width: 0; }
+.card h2 { font-size: 15px; font-weight: 600; }
+.card .sub { color: var(--muted); font-size: 13px; margin-top: 2px; }
+.head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+.src { font-size: 12px; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 2px 9px; white-space: nowrap; }
+
+/* KPI tiles */
+.kpis { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+.kpi { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 18px 16px; min-width: 0; }
+.kpi .label { font-size: 13px; color: var(--muted); }
+.kpi .value { font-size: 32px; font-weight: 600; letter-spacing: -.02em; line-height: 1.15; margin-top: 6px; font-variant-numeric: tabular-nums; }
+.kpi .note { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.kpi .value.na { color: #b6c0cd; }
+
+/* trend chart */
+.chart { position: relative; height: 240px; }
+.chart svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.chart .grid line { stroke: var(--line-2); }
+.chart .axis text { fill: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+.chart .bar { fill: var(--accent); }
+.chart .hit { fill: transparent; cursor: default; }
+.chart .hit:hover + .bar, .chart .bar.on { fill: var(--accent-2); }
+.tip { position: absolute; pointer-events: none; background: var(--ink); color: #fff; font-size: 12px; padding: 7px 10px; border-radius: 8px; white-space: nowrap; transform: translate(-50%, calc(-100% - 10px)); z-index: 5; }
+.tip b { font-weight: 600; }
+
+/* pages table */
+.tablewrap { overflow-x: auto; margin-inline: -4px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; font-variant-numeric: tabular-nums; }
+th { text-align: left; font-weight: 500; color: var(--muted); font-size: 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 11px 10px; border-bottom: 1px solid var(--line-2); white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+th.n, td.n { text-align: right; }
+td .path { color: var(--muted); font-size: 12px; margin-left: 6px; }
+.meter { display: inline-flex; align-items: center; gap: 8px; }
+.meter i { display: block; width: 72px; height: 6px; background: var(--line-2); border-radius: 3px; overflow: hidden; }
+.meter i s { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
+.dim { color: #b6c0cd; }
+
+/* bar lists */
+.trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.list { display: grid; gap: 10px; }
+.row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; font-size: 14px; }
+.row .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.row .val { font-variant-numeric: tabular-nums; color: var(--ink-2); }
+.row .track { grid-column: 1 / -1; height: 6px; background: var(--line-2); border-radius: 3px; overflow: hidden; }
+.row .track s { display: block; height: 100%; background: var(--accent); border-radius: 3px; min-width: 4px; }
+.empty { color: var(--muted); font-size: 14px; padding: 8px 0; }
+
+/* signals */
+.signals { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.sig { border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+.sig .t { font-weight: 600; font-size: 14px; display: flex; justify-content: space-between; gap: 8px; }
+.sig .t span { font-variant-numeric: tabular-nums; }
+.sig p { color: var(--muted); font-size: 13px; margin-top: 4px; }
+.links { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* setup + notes */
+.setup { border-color: #f5c9b5; background: #fffaf7; }
+.setup ul { margin: 10px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 14px; }
+.setup li::before { content: "○"; margin-right: 8px; color: var(--warn); }
+.setup li.ok::before { content: "●"; color: var(--good); }
+.foot { color: var(--muted); font-size: 12px; text-align: center; }
+.err { color: var(--warn); font-size: 13px; }
+
+/* login */
+.login { min-height: 100vh; display: grid; place-items: center; padding: 20px; }
+.login form { width: 100%; max-width: 340px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 28px; display: grid; gap: 14px; }
+.login h1 { font-size: 20px; font-weight: 600; }
+.login input { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: #fff; }
+.login button { border: 0; background: var(--ink); color: #fff; border-radius: 10px; padding: 10px; font-weight: 600; cursor: pointer; }
+.login .err { min-height: 1em; }
+
+@media (max-width: 980px) {
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .kpis .kpi:first-child { grid-column: 1 / -1; }
+  .trio, .signals { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .card { padding: 18px; }
+  .kpi .value { font-size: 26px; }
+  .top .wrap { gap: 10px; }
+  .seg button { padding: 6px 9px; }
+  td .path { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="login" id="login" hidden>
+  <form id="loginForm">
+    <h1>Site stats</h1>
+    <p class="sub" style="color:var(--muted)">Private dashboard for neta-leeartzi.com</p>
+    <label class="sr-only" for="pw">Password</label>
+    <input id="pw" type="password" autocomplete="current-password" placeholder="Password" required>
+    <button type="submit">Log in</button>
+    <p class="err" id="loginErr" role="alert"></p>
+  </form>
+</div>
+
+<div id="app" hidden>
+  <header class="top">
+    <div class="wrap">
+      <a class="brand" href="/"><img src="/assets/na-logo.svg" alt=""><b>Site stats</b><span>neta-leeartzi.com</span></a>
+      <div class="seg" role="group" aria-label="Date range">
+        <button data-range="7">7 days</button><button data-range="30">30 days</button><button data-range="90">90 days</button><button data-range="all">All</button>
+      </div>
+      <button class="ghost" id="logout">Log out</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="card setup" id="setup" hidden>
+      <h2>Setup checklist</h2>
+      <p class="sub">The dashboard fills in as each part is connected.</p>
+      <ul id="setupList"></ul>
+    </section>
+
+    <section class="kpis" id="kpis" aria-label="Key numbers"></section>
+
+    <section class="card">
+      <div class="head">
+        <div><h2 id="trendTitle">Visitors per day</h2><p class="sub" id="trendSub"></p></div>
+        <div class="seg" role="group" aria-label="Metric">
+          <button data-metric="visitors" aria-pressed="true">Visitors</button><button data-metric="views">Page views</button>
+        </div>
+      </div>
+      <div class="chart" id="chart"></div>
+    </section>
+
+    <section class="card">
+      <div class="head">
+        <div><h2>Pages</h2><p class="sub">Who opened which page, how long they read and how far they scrolled</p></div>
+        <span class="src">Vercel + Clarity</span>
+      </div>
+      <div class="tablewrap"><table id="pages"></table></div>
+    </section>
+
+    <section class="trio">
+      <div class="card"><div class="head"><div><h2>Where they came from</h2><p class="sub">By visitors</p></div><span class="src">Vercel</span></div><div class="list" id="refs"></div></div>
+      <div class="card"><div class="head"><div><h2>Countries</h2><p class="sub">By visitors</p></div><span class="src">Vercel</span></div><div class="list" id="countries"></div></div>
+      <div class="card"><div class="head"><div><h2>Devices</h2><p class="sub">By visitors</p></div><span class="src">Vercel</span></div><div class="list" id="devices"></div></div>
+    </section>
+
+    <section class="card">
+      <div class="head">
+        <div><h2>Behavior</h2><p class="sub">Moments where something may have frustrated a visitor</p></div>
+        <div class="links">
+          <a class="ghost" target="_blank" rel="noopener" href="https://clarity.microsoft.com/projects/view/zadvvgbm4c/heatmaps">Heatmaps ↗</a>
+          <a class="ghost" target="_blank" rel="noopener" href="https://clarity.microsoft.com/projects/view/zadvvgbm4c/impressions">Recordings ↗</a>
+          <a class="ghost" target="_blank" rel="noopener" href="https://clarity.microsoft.com/projects/view/zadvvgbm4c/dashboard">Clarity ↗</a>
+          <a class="ghost" target="_blank" rel="noopener" href="https://vercel.com/dashboard">Vercel ↗</a>
+        </div>
+      </div>
+      <div class="signals" id="signals"></div>
+    </section>
+
+    <p class="foot" id="foot"></p>
+  </main>
+</div>
+
+<script>
+(function () {
+  var MOCK = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) && /[?&]mock/.test(location.search);
+  var state = { range: '30', metric: 'visitors', data: null };
+  try { state.range = localStorage.getItem('stats-range') || '30'; } catch (e) {}
+
+  var PAGE_NAMES = { '/': 'Home', '/skyline': 'Skyline', '/stealth': 'Stealth', '/space-court': 'Space Court', '/building-onboarding': 'Building Onboarding', '/404': 'Not found (404)' };
+  var DEVICE_NAMES = { desktop: 'Desktop', mobile: 'Mobile', tablet: 'Tablet' };
+  var countryName = (function () { try { var dn = new Intl.DisplayNames(['en'], { type: 'region' }); return function (c) { try { return c && c.length === 2 ? dn.of(c.toUpperCase()) : c; } catch (e) { return c; } }; } catch (e) { return function (c) { return c; }; } })();
+
+  var $ = function (s) { return document.querySelector(s); };
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var fmt = function (n) { return n == null ? '–' : Math.round(n).toLocaleString('en-US'); };
+  var dur = function (s) { if (s == null || isNaN(s)) return '–'; s = Math.round(s); if (s < 60) return s + 's'; var m = Math.floor(s / 60), r = s % 60; return m + 'm' + (r ? ' ' + r + 's' : ''); };
+  var plural = function (n, w) { return fmt(n) + ' ' + w + (n === 1 ? '' : 's'); };
+  var pct = function (n) { return n == null || isNaN(n) ? '–' : Math.round(n) + '%'; };
+  var dayLabel = function (d, long) { var x = new Date(d + 'T00:00:00Z'); return x.toLocaleDateString('en-GB', long ? { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' } : { day: 'numeric', month: 'short', timeZone: 'UTC' }); };
+
+  // ---------- auth ----------
+  $('#loginForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    $('#loginErr').textContent = '';
+    fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: $('#pw').value }) })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+      .then(function (x) { if (x.ok) { $('#pw').value = ''; load(); } else $('#loginErr').textContent = x.j.error === 'wrong password' ? 'Wrong password.' : (x.j.error || 'Could not log in.'); })
+      .catch(function () { $('#loginErr').textContent = 'Could not reach the server.'; });
+  });
+  $('#logout').addEventListener('click', function () { fetch('/api/login', { method: 'DELETE' }).then(function () { show('login'); }); });
+  function show(which) { $('#login').hidden = which !== 'login'; $('#app').hidden = which !== 'app'; if (which === 'login') setTimeout(function () { $('#pw').focus(); }, 0); }
+
+  // ---------- controls ----------
+  document.querySelectorAll('[data-range]').forEach(function (b) {
+    b.addEventListener('click', function () { state.range = b.dataset.range; try { localStorage.setItem('stats-range', state.range); } catch (e) {} load(); });
+  });
+  document.querySelectorAll('[data-metric]').forEach(function (b) {
+    b.addEventListener('click', function () { state.metric = b.dataset.metric; document.querySelectorAll('[data-metric]').forEach(function (x) { x.setAttribute('aria-pressed', x === b); }); renderTrend(); });
+  });
+
+  function load() {
+    document.querySelectorAll('[data-range]').forEach(function (x) { x.setAttribute('aria-pressed', x.dataset.range === state.range); });
+    var p = MOCK ? Promise.resolve({ ok: true, j: mock(state.range) }) : fetch('/api/stats?range=' + state.range, { credentials: 'same-origin' }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, status: r.status, j: j }; }); });
+    p.then(function (x) {
+      if (x.status === 401) return show('login');
+      state.data = x.j; show('app'); render();
+    }).catch(function () { show('app'); $('#foot').innerHTML = '<span class="err">Could not load the data. Try again in a minute.</span>'; });
+  }
+
+  // ---------- render ----------
+  function render() {
+    var d = state.data, v = d.vercel || {}, c = d.clarity || {};
+    // setup checklist
+    var s = d.setup || {}, items = [
+      ['password', 'Password (DASH_PASSWORD)'], ['storage', 'Storage connected (Upstash)'], ['vercel', 'Vercel token and project ID'],
+      ['clarity', 'Clarity token'], ['cron', 'Nightly snapshot (CRON_SECRET)']
+    ];
+    var missing = items.filter(function (i) { return !s[i[0]]; });
+    $('#setup').hidden = !missing.length;
+    $('#setupList').innerHTML = items.map(function (i) { return '<li class="' + (s[i[0]] ? 'ok' : '') + '">' + esc(i[1]) + '</li>'; }).join('');
+
+    // KPIs
+    var clarityEmpty = !c.days;
+    var tiles = [
+      { label: 'Visitors', value: fmt(v.visitors), note: v.error ? 'Vercel not connected' : (d.range && !d.range.live ? 'Daily visitors added up' : 'Unique, in this range') },
+      { label: 'Page views', value: fmt(v.views), note: v.visitors ? (v.views / v.visitors).toFixed(1) + ' pages per visitor' : ' ' },
+      { label: 'Avg. reading time', value: clarityEmpty ? '–' : dur(c.activeTime), note: clarityEmpty ? 'From the first nightly snapshot' : 'Active time per visit' },
+      { label: 'Avg. scroll depth', value: clarityEmpty ? '–' : pct(c.scroll), note: clarityEmpty ? 'From the first nightly snapshot' : 'How far down they got' },
+      { label: 'Sessions', value: clarityEmpty ? '–' : fmt(c.sessions), note: clarityEmpty ? 'Clarity' : (c.bots ? 'Clarity · ' + fmt(c.bots) + ' flagged as bots' : 'Clarity') }
+    ];
+    $('#kpis').innerHTML = tiles.map(function (t) { return '<div class="kpi"><p class="label">' + esc(t.label) + '</p><p class="value' + (t.value === '–' ? ' na' : '') + '">' + esc(t.value) + '</p><p class="note">' + esc(t.note) + '</p></div>'; }).join('');
+
+    renderTrend();
+    renderPages();
+    list('#refs', v.referrers, function (k) { return k === 'Direct' || k === '(none)' ? 'Direct or unknown' : k.replace(/^www\./, ''); }, v.error);
+    list('#countries', v.countries, countryName, v.error);
+    list('#devices', v.devices, function (k) { return DEVICE_NAMES[k] || k; }, v.error);
+    renderSignals();
+
+    var lr = d.lastRun && d.lastRun.at ? 'Last nightly snapshot ' + new Date(d.lastRun.at).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }) : 'No nightly snapshot yet';
+    $('#foot').textContent = (d.range ? dayLabel(d.range.from, true) + ' – ' + dayLabel(d.range.to, true) + ' (UTC). ' : '') + lr + (c.firstDay ? '. Clarity history since ' + dayLabel(c.firstDay) + '.' : '.') + (MOCK ? ' Sample data.' : '');
+  }
+
+  function renderTrend() {
+    var d = state.data; if (!d) return;
+    var v = d.vercel || {}, el = $('#chart'), key = state.metric;
+    $('#trendTitle').textContent = key === 'views' ? 'Page views per day' : 'Visitors per day';
+    $('#trendSub').textContent = v.error ? 'Connect Vercel to see this chart' : 'Vercel Web Analytics';
+    var t = v.trend || [];
+    if (!t.length) { el.innerHTML = '<p class="empty">No data yet.</p>'; return; }
+    var W = el.clientWidth || 800, H = el.clientHeight || 240, padL = 28, padB = 24, padT = 8;
+    var max = Math.max(1, Math.max.apply(null, t.map(function (r) { return r[key]; })));
+    var step = max <= 5 ? 1 : max <= 10 ? 2 : max <= 25 ? 5 : Math.ceil(max / 5 / 5) * 5;
+    var top = Math.ceil(max / step) * step;
+    var y = function (n) { return padT + (H - padT - padB) * (1 - n / top); };
+    var bw = (W - padL) / t.length, gap = Math.min(6, Math.max(2, bw * 0.25)), w = Math.max(2, bw - gap);
+    var grid = '', axis = '';
+    for (var g = 0; g <= top; g += step) { grid += '<line x1="' + padL + '" x2="' + W + '" y1="' + y(g) + '" y2="' + y(g) + '"/>'; axis += '<text x="' + (padL - 8) + '" y="' + (y(g) + 4) + '" text-anchor="end">' + g + '</text>'; }
+    var every = Math.ceil(t.length / Math.max(2, Math.floor((W - padL) / 64)));
+    var bars = '';
+    t.forEach(function (r, i) {
+      var x = padL + i * bw + gap / 2, val = r[key], h = val ? Math.max(2, y(0) - y(val)) : 0, rr = Math.min(4, w / 2, h);
+      if (i % every === 0) axis += '<text x="' + (x + w / 2) + '" y="' + (H - 6) + '" text-anchor="middle">' + dayLabel(r.day) + '</text>';
+      var path = h ? 'M' + x + ',' + y(0) + 'V' + (y(0) - h + rr) + 'Q' + x + ',' + (y(0) - h) + ' ' + (x + rr) + ',' + (y(0) - h) + 'H' + (x + w - rr) + 'Q' + (x + w) + ',' + (y(0) - h) + ' ' + (x + w) + ',' + (y(0) - h + rr) + 'V' + y(0) + 'Z' : '';
+      bars += '<rect class="hit" data-i="' + i + '" x="' + (padL + i * bw) + '" y="' + padT + '" width="' + bw + '" height="' + (H - padT - padB) + '"/>' + (path ? '<path class="bar" d="' + path + '"/>' : '<path class="bar"/>');
+    });
+    el.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc($('#trendTitle').textContent) + '"><g class="grid">' + grid + '</g><g class="axis">' + axis + '</g><line x1="' + padL + '" x2="' + W + '" y1="' + y(0) + '" y2="' + y(0) + '" stroke="#cbd5e1"/>' + bars + '</svg><div class="tip" hidden></div>';
+    var tip = el.querySelector('.tip');
+    el.querySelectorAll('.hit').forEach(function (h) {
+      h.addEventListener('mouseenter', function () {
+        var r = t[+h.dataset.i]; tip.hidden = false;
+        tip.innerHTML = '<b>' + dayLabel(r.day, true) + '</b><br>' + plural(r.visitors, 'visitor') + ' · ' + plural(r.views, 'page view');
+        var x = (+h.getAttribute('x') + bw / 2) / W * el.clientWidth;
+        tip.style.left = Math.min(el.clientWidth - 90, Math.max(90, x)) + 'px';
+        tip.style.top = (r[key] ? y(r[key]) : y(0)) / H * el.clientHeight + 'px';
+        h.nextSibling.classList.add('on');
+      });
+      h.addEventListener('mouseleave', function () { tip.hidden = true; h.nextSibling.classList.remove('on'); });
+    });
+  }
+
+  function renderPages() {
+    var v = state.data.vercel || {}, c = state.data.clarity || {};
+    var cmap = {}; (c.pages || []).forEach(function (p) { cmap[p.key] = p; });
+    var keys = []; (v.pages || []).forEach(function (p) { keys.push(p.key); });
+    (c.pages || []).forEach(function (p) { if (keys.indexOf(p.key) < 0) keys.push(p.key); });
+    var vmap = {}; (v.pages || []).forEach(function (p) { vmap[p.key] = p; });
+    if (!keys.length) { $('#pages').innerHTML = '<tr><td class="empty">No page data yet.</td></tr>'; return; }
+    var rows = keys.map(function (k) {
+      var a = vmap[k] || {}, b = cmap[k] || {};
+      var name = PAGE_NAMES[k] || k;
+      var frus = (b.rage || 0) + (b.dead || 0) + (b.quickback || 0);
+      return '<tr><td>' + esc(name) + (PAGE_NAMES[k] && k !== '/' ? '<span class="path">' + esc(k) + '</span>' : '') + '</td>' +
+        '<td class="n">' + (a.visitors != null ? fmt(a.visitors) : '<span class="dim">–</span>') + '</td>' +
+        '<td class="n">' + (a.views != null ? fmt(a.views) : '<span class="dim">–</span>') + '</td>' +
+        '<td class="n">' + (b.activeTime != null ? dur(b.activeTime) : '<span class="dim">–</span>') + '</td>' +
+        '<td>' + (b.scroll != null ? '<span class="meter"><i><s style="width:' + Math.max(0, Math.min(100, b.scroll)) + '%"></s></i>' + pct(b.scroll) + '</span>' : '<span class="dim">–</span>') + '</td>' +
+        '<td class="n">' + (b.sessions != null ? fmt(frus) : '<span class="dim">–</span>') + '</td></tr>';
+    });
+    $('#pages').innerHTML = '<thead><tr><th>Page</th><th class="n">Visitors</th><th class="n">Views</th><th class="n">Reading time</th><th>Scroll depth</th><th class="n">Frustration</th></tr></thead><tbody>' + rows.join('') + '</tbody>';
+  }
+
+  function list(sel, items, label, err) {
+    var el = $(sel);
+    if (err) { el.innerHTML = '<p class="empty">Connect Vercel to see this.</p>'; return; }
+    items = (items || []).filter(function (r) { return r.visitors || r.views; }).slice(0, 8);
+    if (!items.length) { el.innerHTML = '<p class="empty">No visits in this range.</p>'; return; }
+    var max = Math.max.apply(null, items.map(function (r) { return r.visitors; })) || 1;
+    var total = items.reduce(function (s, r) { return s + r.visitors; }, 0) || 1;
+    el.innerHTML = items.map(function (r) {
+      return '<div class="row"><span class="name">' + esc(label(r.key)) + '</span><span class="val">' + fmt(r.visitors) + ' <span class="dim">· ' + Math.round(r.visitors / total * 100) + '%</span></span><span class="track"><s style="width:' + (r.visitors / max * 100) + '%"></s></span></div>';
+    }).join('');
+  }
+
+  function renderSignals() {
+    var c = state.data.clarity || {}, s = c.signals || {}, none = !c.days;
+    var defs = [
+      ['rage', 'Rage clicks', 'Several fast clicks in one spot, usually on something that did not respond.'],
+      ['dead', 'Dead clicks', 'A click on something that looks clickable but is not.'],
+      ['quickback', 'Quick backs', 'Opened a page and came straight back, so it was not what they expected.'],
+      ['excessiveScroll', 'Excessive scrolling', 'Scrolled up and down a lot, often while looking for something.'],
+      ['scriptErrors', 'Script errors', 'JavaScript errors on the page.'],
+      ['errorClicks', 'Error clicks', 'A click that triggered an error.']
+    ];
+    $('#signals').innerHTML = defs.map(function (x) {
+      return '<div class="sig"><p class="t">' + esc(x[1]) + '<span>' + (none ? '<span class="dim">–</span>' : fmt(s[x[0]])) + '</span></p><p>' + esc(x[2]) + '</p></div>';
+    }).join('');
+  }
+
+  var rt; addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(renderTrend, 120); });
+
+  // ---------- sample data (local preview only) ----------
+  function mock(range) {
+    var n = range === 'all' ? 60 : +range, out = [], seed = 7;
+    var rnd = function () { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+    var to = new Date(); to.setUTCHours(0, 0, 0, 0);
+    for (var i = n - 1; i >= 0; i--) { var d = new Date(to); d.setUTCDate(d.getUTCDate() - i); var vis = Math.floor(rnd() * rnd() * 9); out.push({ day: d.toISOString().slice(0, 10), visitors: vis, views: vis + Math.floor(rnd() * vis * 1.2) }); }
+    var V = out.reduce(function (s, r) { return s + r.visitors; }, 0), PV = out.reduce(function (s, r) { return s + r.views; }, 0);
+    return {
+      setup: { password: true, storage: true, vercel: true, clarity: true, cron: true },
+      range: { key: range, from: out[0].day, to: out[out.length - 1].day, days: n, live: n <= 30 },
+      lastRun: { at: new Date().toISOString() },
+      vercel: {
+        visitors: V, views: PV, trend: out,
+        pages: [{ key: '/', visitors: Math.round(V * .92), views: Math.round(V * .92 * 1.3) }, { key: '/skyline', visitors: Math.round(V * .38), views: Math.round(V * .38 * 1.2) }, { key: '/stealth', visitors: Math.round(V * .2), views: Math.round(V * .2 * 1.1) }, { key: '/space-court', visitors: Math.round(V * .12), views: Math.round(V * .12) }, { key: '/building-onboarding', visitors: Math.round(V * .07), views: Math.round(V * .07) }],
+        referrers: [{ key: 'Direct', visitors: Math.round(V * .62) }, { key: 'www.linkedin.com', visitors: Math.round(V * .24) }, { key: 'www.google.com', visitors: Math.round(V * .09) }, { key: 'mail.google.com', visitors: Math.round(V * .05) }],
+        countries: [{ key: 'IL', visitors: Math.round(V * .78) }, { key: 'US', visitors: Math.round(V * .12) }, { key: 'DE', visitors: Math.round(V * .06) }, { key: 'GB', visitors: Math.round(V * .04) }],
+        devices: [{ key: 'desktop', visitors: Math.round(V * .71) }, { key: 'mobile', visitors: Math.round(V * .29) }]
+      },
+      clarity: {
+        days: n - 1, firstDay: out[1].day, sessions: Math.round(V * 1.3), users: V, bots: 4, scroll: 54, activeTime: 71,
+        pages: [{ key: '/', sessions: Math.round(V * 1.1), scroll: 61, activeTime: 38, rage: 0, dead: 2, quickback: 1 }, { key: '/skyline', sessions: Math.round(V * .4), scroll: 47, activeTime: 142, rage: 1, dead: 0, quickback: 0 }, { key: '/stealth', sessions: Math.round(V * .22), scroll: 52, activeTime: 96, rage: 0, dead: 1, quickback: 1 }, { key: '/space-court', sessions: Math.round(V * .13), scroll: 66, activeTime: 74, rage: 0, dead: 0, quickback: 0 }, { key: '/building-onboarding', sessions: Math.round(V * .08), scroll: 71, activeTime: 118 }],
+        signals: { rage: 1, dead: 3, quickback: 2, excessiveScroll: 1, scriptErrors: 0, errorClicks: 0 }
+      }
+    };
+  }
+
+  load();
+})();
+</script>
+</body>
+</html>
