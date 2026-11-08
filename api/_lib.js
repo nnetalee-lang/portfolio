@@ -72,7 +72,8 @@ const num = (v) => { const n = Number(v); return Number.isFinite(n) ? n : 0; };
 async function vercelBreakdowns(sinceDay, untilDay, limit = 50) {
   const since = sinceDay + 'T00:00:00.000Z';
   const until = untilDay >= today() ? new Date().toISOString() : addDays(untilDay, 1) + 'T00:00:00.000Z';
-  const agg = (by) => vercelQuery('visits/aggregate', { since, until, by, limit: String(by === 'day' ? 400 : limit) }).then(rows);
+  // Only the live site counts, not preview deployments.
+  const agg = (by) => vercelQuery('visits/aggregate', { since, until, by, limit: String(by === 'day' ? 400 : limit), filter: "environment eq 'production'" }).then(rows);
   const [days, pages, refs, countries, devices] = await Promise.all([
     agg('day'), agg('requestPath'), agg('referrerHostname'), agg('country'), agg('deviceType'),
   ]);
