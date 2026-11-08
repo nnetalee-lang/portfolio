@@ -185,5 +185,5 @@ function send(res, status, body) {
 
 module.exports = {
   env, redis, getJSON, setJSON, mgetJSON, ymd, addDays, today, dayRange, normPath,
-  vercelBreakdowns, claritySnapshot, parseClarity, COOKIE, makeSession, isAuthed, safeEqual, send,
+  vercelBreakdowns, vercelQuery, claritySnapshot, parseClarity, COOKIE, makeSession, isAuthed, safeEqual, send,
 };

@@ -38,6 +38,13 @@ function mergeClarity(lists) {
 module.exports = async (req, res) => {
   if (!L.isAuthed(req)) return L.send(res, 401, { error: 'login' });
   const url = new URL(req.url, 'http://x');
+  if (url.searchParams.get('debug') === 'vercel') {
+    const since = L.addDays(L.today(), -6), until = L.today(), out = {};
+    for (const by of ['requestPath', 'path', 'referrerHostname', 'country', 'deviceType']) {
+      try { out[by] = await L.vercelQuery('visits/aggregate', { since, until, by, limit: '10' }); } catch (e) { out[by] = 'error: ' + e.message; }
+    }
+    return L.send(res, 200, out);
+  }
   const rangeArg = url.searchParams.get('range') || '30';
 
   const setup = {
