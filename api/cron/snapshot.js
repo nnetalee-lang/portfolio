@@ -33,6 +33,20 @@ module.exports = async (req, res) => {
     }
   } catch (e) { log.backfill = 'error: ' + e.message; }
 
+  // Manual test run (logged in, ?test=1): fetch Clarity once and show what came back,
+  // without saving it as a day, so the nightly run still gets a clean window.
+  const test = !fromCron && /[?&]test=1/.test(req.url || '');
+  if (test) {
+    try {
+      const s = await L.claritySnapshot(1);
+      await L.setJSON('craw:test', s.raw);
+      log.clarity = 'test only, not saved as a day';
+      log.clarityParsed = { pages: L.parseClarity(s.raw.URL, 'URL'), devices: L.parseClarity(s.raw.Device, 'Device') };
+      log.clarityRawSample = (s.raw.URL || []).map((m) => ({ metricName: m.metricName, first: (m.information || [])[0] || null }));
+    } catch (e) { log.clarity = 'error: ' + e.message; }
+    return L.send(res, 200, log);
+  }
+
   // Clarity: last 24 hours (≈ yesterday), 4 API calls of the 10 allowed per day
   try {
     if (!(await L.redis(['EXISTS', `c:${y}`]))) {
