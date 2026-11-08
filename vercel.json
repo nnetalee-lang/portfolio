@@ -1,10 +1,66 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
-  "functions": { "api/**/*.js": { "maxDuration": 60 } },
-  "crons": [{ "path": "/api/cron/snapshot", "schedule": "30 0 * * *" }],
+  "functions": {
+    "api/**/*.js": {
+      "maxDuration": 60
+    }
+  },
+  "crons": [
+    {
+      "path": "/api/cron/snapshot",
+      "schedule": "30 0 * * *"
+    }
+  ],
   "headers": [
-    { "source": "/stats", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }, { "key": "Cache-Control", "value": "no-store" }] },
-    { "source": "/api/(.*)", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] }
+    {
+      "source": "/stats",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/blank-2",
+      "destination": "/skyline",
+      "permanent": true
+    },
+    {
+      "source": "/blank-6",
+      "destination": "/stealth",
+      "permanent": true
+    },
+    {
+      "source": "/blank-7",
+      "destination": "/space-court",
+      "permanent": true
+    },
+    {
+      "source": "/homepage",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/blank-:rest",
+      "destination": "/",
+      "permanent": false
+    }
   ]
 }
