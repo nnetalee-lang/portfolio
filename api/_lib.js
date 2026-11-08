@@ -67,8 +67,12 @@ const rows = (j) => (Array.isArray(j && j.data) ? j.data : []);
 const num = (v) => { const n = Number(v); return Number.isFinite(n) ? n : 0; };
 
 // One day or a range, all breakdowns. since/until are inclusive YYYY-MM-DD.
-async function vercelBreakdowns(since, until, limit = 50) {
-  const agg = (by) => vercelQuery('visits/aggregate', { since, until, by, limit: String(limit) }).then(rows);
+// The API reads a bare date as midnight, so the end of the range is sent as the next
+// midnight (or "now" for today) to include the whole last day.
+async function vercelBreakdowns(sinceDay, untilDay, limit = 50) {
+  const since = sinceDay + 'T00:00:00.000Z';
+  const until = untilDay >= today() ? new Date().toISOString() : addDays(untilDay, 1) + 'T00:00:00.000Z';
+  const agg = (by) => vercelQuery('visits/aggregate', { since, until, by, limit: String(by === 'day' ? 400 : limit) }).then(rows);
   const [days, pages, refs, countries, devices] = await Promise.all([
     agg('day'), agg('requestPath'), agg('referrerHostname'), agg('country'), agg('deviceType'),
   ]);
@@ -115,35 +119,42 @@ function dimValue(o, dim) {
   for (const [k, v] of Object.entries(o)) if (typeof v === 'string' && !Number.isFinite(Number(v))) return v;
   return '(all)';
 }
+// Metric names come back without spaces ("ScrollDepth"), so compare them squashed.
+const squash = (x) => String(x || '').replace(/[^a-z]/gi, '').toLowerCase();
+const SITE = /(^|\.)neta-leeartzi\.com$/i;
 function parseClarity(resp, dim) {
   const by = new Map();
   const get = (key) => { if (!by.has(key)) by.set(key, { key }); return by.get(key); };
   for (const m of Array.isArray(resp) ? resp : []) {
-    const name = String(m.metricName || '');
+    const name = squash(m.metricName);
     for (const info of m.information || []) {
+      if (!info) continue;
       let key = dimValue(info, dim);
-      if (dim === 'URL') key = normPath(key);
+      if (dim === 'URL') {
+        try { if (!SITE.test(new URL(key).hostname)) continue; } catch (e) { /* relative URL, keep */ }
+        key = normPath(key);
+      }
       const o = get(key);
       switch (name) {
-        case 'Traffic':
+        case 'traffic':
           o.sessions = (o.sessions || 0) + (firstNum(info, ['totalSessionCount']) || 0);
           o.bots = (o.bots || 0) + (firstNum(info, ['totalBotSessionCount']) || 0);
-          o.users = (o.users || 0) + (firstNum(info, ['distantUserCount']) || 0);
-          o.pagesPerSession = firstNum(info, ['PagesPerSessionPercentage', 'pagesPerSessionPercentage']);
+          o.users = (o.users || 0) + (firstNum(info, ['distinctUserCount', 'distantUserCount']) || 0);
+          o.pagesPerSession = firstNum(info, ['pagesPerSessionPercentage', 'PagesPerSessionPercentage']);
           break;
-        case 'Scroll Depth':
+        case 'scrolldepth':
           o.scroll = firstNum(info, ['averageScrollDepth', 'AverageScrollDepth', 'scrollDepth']) ?? fuzzyNum(info, /scroll/i);
           break;
-        case 'Engagement Time':
+        case 'engagementtime':
           o.activeTime = firstNum(info, ['activeTime', 'ActiveTime']) ?? fuzzyNum(info, /active/i);
           o.totalTime = firstNum(info, ['totalTime', 'TotalTime']) ?? fuzzyNum(info, /total.*time|time/i);
           break;
-        case 'Rage Click Count': o.rage = signal(info); break;
-        case 'Dead Click Count': o.dead = signal(info); break;
-        case 'Quickback Click': o.quickback = signal(info); break;
-        case 'Excessive Scroll': o.excessiveScroll = signal(info); break;
-        case 'Script Error Count': o.scriptErrors = signal(info); break;
-        case 'Error Click Count': o.errorClicks = signal(info); break;
+        case 'rageclickcount': o.rage = (o.rage || 0) + signal(info); break;
+        case 'deadclickcount': o.dead = (o.dead || 0) + signal(info); break;
+        case 'quickbackclick': o.quickback = (o.quickback || 0) + signal(info); break;
+        case 'excessivescroll': o.excessiveScroll = (o.excessiveScroll || 0) + signal(info); break;
+        case 'scripterrorcount': o.scriptErrors = (o.scriptErrors || 0) + signal(info); break;
+        case 'errorclickcount': o.errorClicks = (o.errorClicks || 0) + signal(info); break;
         default: break;
       }
     }
