@@ -515,14 +515,16 @@ p, li, dd, h2, h3 { text-wrap: pretty; }
 .project .one { font-size: clamp(16px, 1.25vw, 18px); line-height: 1.6; max-width: 40ch; letter-spacing: 0; }
 .chips li { border-radius: 0; }
 .overview { border-radius: 0; }
-/* What I do: three capabilities, each tied to the work that shows it */
-.hero:has(+ .caps) .wrap { padding-bottom: 56px; }
-.caps { padding-block: 0 clamp(16px, 3vw, 32px); }
-.caps h2 { font-size: 14px; font-weight: 500; color: var(--muted); margin: 0 0 16px; }
-.caps-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.caps-grid li { border: 1px solid var(--line); background: #fff; padding: 24px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
-.caps-grid h3 { font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
-.caps-grid p { font-size: 15px; line-height: 1.55; color: var(--ink-2); margin: 0; }
-.caps-grid .seen { margin-top: auto; padding-top: 6px; font-size: 13px; color: var(--muted); }
-.caps-grid .seen a { color: var(--ink); text-underline-offset: 3px; }
-@media (max-width: 880px) { .caps-grid { grid-template-columns: 1fr; } }
+/* Capabilities: three skill cards */
+.hero:has(+ .caps) .wrap { padding-bottom: 72px; }
+.caps { padding-block: clamp(8px, 2vw, 24px) clamp(24px, 4vw, 48px); }
+.caps-eyebrow { display: flex; align-items: center; gap: 16px; font-size: 14px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); margin: 0; }
+.caps-eyebrow::before { content: ""; width: 56px; height: 1px; background: var(--line-strong); }
+.caps h2 { font-size: clamp(30px, 3vw, 40px); font-weight: 400; letter-spacing: -.02em; margin: 20px 0 clamp(28px, 3.5vw, 44px); }
+.caps-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.caps-grid > li { border: 1px solid var(--line); background: #fff; padding: 28px 28px 30px; display: flex; flex-direction: column; min-width: 0; }
+.cap-ico { width: 48px; height: 48px; background: var(--ink); color: #fff; display: grid; place-items: center; }
+.caps-grid h3 { font-size: 18px; font-weight: 500; letter-spacing: -.01em; margin: 24px 0 10px; }
+.caps-grid p { font-size: 15px; line-height: 1.6; color: var(--ink-2); margin: 0; }
+.caps-grid .chips { margin: auto 0 0; padding-top: 22px; }
+@media (max-width: 880px) { .caps-grid { grid-template-columns: 1fr; gap: 16px; } }
