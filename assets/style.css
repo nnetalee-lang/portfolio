@@ -509,3 +509,4 @@ p, li, dd, h2, h3 { text-wrap: pretty; }
   *, *::before, *::after { transition: none !important; }
 }
 
+.home-chips { margin: 0; }
