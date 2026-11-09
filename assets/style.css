@@ -515,3 +515,14 @@ p, li, dd, h2, h3 { text-wrap: pretty; }
 .project .one { font-size: clamp(16px, 1.25vw, 18px); line-height: 1.6; max-width: 40ch; letter-spacing: 0; }
 .chips li { border-radius: 0; }
 .overview { border-radius: 0; }
+/* What I do: three capabilities, each tied to the work that shows it */
+.hero:has(+ .caps) .wrap { padding-bottom: 56px; }
+.caps { padding-block: 0 clamp(16px, 3vw, 32px); }
+.caps h2 { font-size: 14px; font-weight: 500; color: var(--muted); margin: 0 0 16px; }
+.caps-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.caps-grid li { border: 1px solid var(--line); background: #fff; padding: 24px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.caps-grid h3 { font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
+.caps-grid p { font-size: 15px; line-height: 1.55; color: var(--ink-2); margin: 0; }
+.caps-grid .seen { margin-top: auto; padding-top: 6px; font-size: 13px; color: var(--muted); }
+.caps-grid .seen a { color: var(--ink); text-underline-offset: 3px; }
+@media (max-width: 880px) { .caps-grid { grid-template-columns: 1fr; } }
