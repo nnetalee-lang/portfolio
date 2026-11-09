@@ -72,9 +72,6 @@ h1, h2, h3 { text-wrap: balance; }
 .tools li:hover .tip, .tools li:focus-within .tip { opacity: 1; }
 .tools li[tabindex]:focus-visible { outline: none; }
 .tools li[tabindex]:focus-visible .ico { outline: 2px solid var(--accent); outline-offset: 2px; }
-.built { margin-top: 18px; font-size: 14px; color: var(--muted); }
-.built .dotmark { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-right: 10px; vertical-align: 1px; }
-.built a { color: var(--ink); text-underline-offset: 3px; }
 .hobbies-slot { margin-top: 36px; min-height: 58px; }
 
 /* Hobbies animation (Neta-lee's own component) */
