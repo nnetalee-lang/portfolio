@@ -510,3 +510,6 @@ p, li, dd, h2, h3 { text-wrap: pretty; }
 }
 
 .home-chips { margin: -8px 0 0; }
+/* home project text: title leads, description supports */
+.ptitle h3 { font-size: clamp(20px, 1.7vw, 24px); }
+.project .one { font-size: clamp(16px, 1.25vw, 18px); line-height: 1.6; max-width: 40ch; letter-spacing: 0; }
