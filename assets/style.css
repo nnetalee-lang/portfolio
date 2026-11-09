@@ -515,3 +515,8 @@ p, li, dd, h2, h3 { text-wrap: pretty; }
 .project .one { font-size: clamp(16px, 1.25vw, 18px); line-height: 1.6; max-width: 40ch; letter-spacing: 0; }
 .chips li { border-radius: 0; }
 .overview { border-radius: 0; }
+/* hero: what I do, one quiet line between the intro and the tools */
+.hero .skills { margin-top: 20px; max-width: 100%; font-size: 14px; line-height: 1.7; color: var(--ink-2); }
+.hero .skills .sk { white-space: nowrap; }
+.hero .skills .sep { color: var(--muted); margin-right: 3px; }
+.hero .skills + .tools { margin-top: 20px; }
