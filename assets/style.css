@@ -515,3 +515,9 @@ p, li, dd, h2, h3 { text-wrap: pretty; }
 .project .one { font-size: clamp(16px, 1.25vw, 18px); line-height: 1.6; max-width: 40ch; letter-spacing: 0; }
 .chips li { border-radius: 0; }
 .overview { border-radius: 0; }
+
+/* Home project titles: company beside its logo, product name as a one-line title */
+.pco { display: inline-flex; align-items: center; gap: 10px; }
+.pconame { font-size: 13px; font-weight: 500; letter-spacing: .01em; color: var(--muted); }
+.ptitle h3 { white-space: nowrap; }
+@media (max-width: 420px) { .ptitle h3 { white-space: normal; } }
