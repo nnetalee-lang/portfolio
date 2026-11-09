@@ -515,15 +515,3 @@ p, li, dd, h2, h3 { text-wrap: pretty; }
 .project .one { font-size: clamp(16px, 1.25vw, 18px); line-height: 1.6; max-width: 40ch; letter-spacing: 0; }
 .chips li { border-radius: 0; }
 .overview { border-radius: 0; }
-/* Capabilities: three cards, a dark rule on top */
-.hero:has(+ .caps) .wrap { padding-bottom: 64px; }
-.caps { padding-block: 0 clamp(24px, 4vw, 48px); }
-.caps-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
-.caps-grid > li { border: 1px solid var(--line); border-top: 2px solid var(--ink); background: #fff; padding: 32px; display: flex; flex-direction: column; min-width: 0; }
-.caps-grid h3 { font-size: 19px; font-weight: 600; letter-spacing: -.01em; margin: 0; }
-.caps-grid p { font-size: 15px; line-height: 1.6; color: var(--ink-2); margin: 12px 0 0; }
-.caps-grid .chips { margin: auto 0 0; padding-top: 24px; }
-@media (max-width: 880px) {
-  .caps-grid { grid-template-columns: 1fr; gap: 12px; }
-  .caps-grid > li { padding: 24px; }
-}
