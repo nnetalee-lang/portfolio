@@ -518,13 +518,13 @@ p, li, dd, h2, h3 { text-wrap: pretty; }
 /* Capabilities: three cards, a dark rule on top */
 .caps { padding-block: clamp(8px, 2vw, 24px) clamp(24px, 4vw, 48px); }
 .caps-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
-.caps-grid > li { border: 1px solid var(--line); border-top: 2px solid var(--ink); background: #fff; padding: 32px; display: flex; flex-direction: column; min-width: 0; }
-.caps-grid h3 { font-size: 19px; font-weight: 600; letter-spacing: -.01em; margin: 0; }
-.caps-grid p { font-size: 15px; line-height: 1.6; color: var(--ink-2); margin: 12px 0 0; }
+.caps-grid > li { border: 1px solid var(--line); border-top: 1px solid var(--ink-2); background: #fff; padding: 28px 28px 30px; display: flex; flex-direction: column; min-width: 0; }
+.caps-grid h3 { font-size: 17px; font-weight: 500; letter-spacing: -.005em; margin: 0; }
+.caps-grid p { font-size: 14.5px; line-height: 1.6; color: var(--muted); margin: 10px 0 0; }
 .caps-grid .chips { margin: auto 0 0; padding-top: 24px; }
 @media (max-width: 880px) {
   .caps-grid { grid-template-columns: 1fr; gap: 12px; }
   .caps-grid > li { padding: 24px; }
 }
 /* the hero fills the first screen on its own; the skill cards start below the fold */
-@media (min-width: 881px) { .hero:has(+ .caps) { min-height: calc(100svh - 72px); } }
+@media (min-width: 881px) { .hero:has(+ .caps) { min-height: calc(100svh - 72px - 84px); } }
