@@ -173,7 +173,7 @@ const visitNS = () => (env('VERCEL_ENV') === 'production' ? 'vis' : 'vistest');
 
 const BOT_UA = /bot\b|bot\/|crawl|spider|slurp|headless|lighthouse|pagespeed|preview|scanner|python|curl|wget|phantom|puppeteer|playwright|selenium|axios|node-fetch|go-http|java\/|okhttp|httpclient/i;
 // Places where big cloud data centers sit. A visit from here with no activity is a machine.
-const DC_CITY = /^(ashburn|sterling|leesburg|manassas|boardman|hillsboro|the dalles|council bluffs|quincy|prineville|moncks corner|lenoir|pryor|santa clara|north charleston|san antonio|des moines)$/i;
+const DC_CITY = /^(ashburn|dulles|sterling|leesburg|manassas|boardman|hillsboro|the dalles|council bluffs|quincy|prineville|moncks corner|lenoir|pryor|santa clara|north charleston|san antonio|des moines)$/i;
 
 function deviceOf(ua) {
   ua = ua || '';
@@ -216,8 +216,9 @@ function classify(v) {
     if (!v.ended && t.active < 15) return { kind: 'bot', why: 'Loaded the page and vanished' };
     if (t.active < 5) return { kind: 'bot', why: 'Gone within seconds, did nothing' };
   }
-  if (t.active >= 20) return { kind: 'person', why: `Stayed ${t.active}s` };
-  return { kind: 'unclear', why: interacted ? 'Brief activity' : 'Short visit, no scrolling or clicks' };
+  // Email scanners sit on a page for 15–30 seconds without touching it, so time alone never makes a person.
+  if (interacted) return { kind: 'unclear', why: 'Brief activity' };
+  return { kind: 'unclear', why: t.active >= 20 ? `Stayed ${t.active}s without scrolling or clicking` : 'Short visit, no scrolling or clicks' };
 }
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 

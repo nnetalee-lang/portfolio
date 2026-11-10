@@ -367,7 +367,7 @@ td .path { color: var(--muted); font-size: 12px; margin-left: 6px; }
   }
 
   var KINDS = {
-    person: ['People', 'Scrolled, clicked or stayed to read'],
+    person: ['People', 'Scrolled, clicked or moved around the site'],
     unclear: ['Unclear', 'Short visit with no clear sign either way'],
     bot: ['Bots', 'Email scanners, search engines and other machines']
   };
@@ -475,7 +475,7 @@ td .path { color: var(--muted); font-size: 12px; margin-left: 6px; }
           { at: now - 3 * h, kind: 'unclear', why: 'Short visit, no scrolling or clicks', country: 'IL', city: 'Herzliya', device: 'iPhone · Safari', ref: '', pages: ['/'], active: 9, depth: 22 },
           { at: now - 5 * h, kind: 'person', why: 'Scrolled, touched the screen', country: 'IL', city: 'Ramat Gan', device: 'iPhone · Safari', ref: 'mail.google.com', pages: ['/', '/stealth'], active: 71, depth: 64 },
           { at: now - 26 * h, kind: 'bot', why: 'Automated browser', country: 'US', city: 'Council Bluffs', device: 'Linux · Chrome', ref: '', pages: ['/'], active: 0, depth: 15 },
-          { at: now - 30 * h, kind: 'person', why: 'Stayed 41s', country: 'DE', city: 'Berlin', device: 'Windows · Edge', ref: '', pages: ['/'], active: 41, depth: 15 }
+          { at: now - 30 * h, kind: 'person', why: 'Moved the mouse, 2 pages', country: 'DE', city: 'Berlin', device: 'Windows · Edge', ref: '', pages: ['/'], active: 41, depth: 15 }
         ];
         var counts = { person: 0, unclear: 0, bot: 0 }; list.forEach(function (v) { counts[v.kind]++; });
         return { since: now - 9 * 864e5, counts: counts, list: list };
