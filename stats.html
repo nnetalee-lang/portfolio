@@ -97,6 +97,24 @@ td .path { color: var(--muted); font-size: 12px; margin-left: 6px; }
 .sig p { color: var(--muted); font-size: 13px; margin-top: 4px; }
 .links { display: flex; gap: 8px; flex-wrap: wrap; }
 
+/* people vs bots */
+.who { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.whobox { border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+.whobox .label { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+.whobox .value { font-size: 28px; font-weight: 600; letter-spacing: -.02em; line-height: 1.2; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.whobox .desc { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; flex: none; display: inline-block; }
+.k-person { background: var(--good); }
+.k-unclear { background: #94a3b8; }
+.k-bot { background: #d5dce5; }
+.whobox.person { border-color: #b7dcd6; background: #f6fbfa; }
+.vbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 22px 0 8px; flex-wrap: wrap; }
+.vbar .sub { margin: 0; }
+#visits td.why { color: var(--muted); font-size: 13px; white-space: normal; min-width: 180px; }
+#visits td.pgs { white-space: normal; min-width: 160px; }
+#visits .when { display: inline-flex; align-items: center; gap: 8px; }
+.more { margin-top: 12px; }
+
 /* setup + notes */
 .setup { border-color: #f5c9b5; background: #fffaf7; }
 .setup ul { margin: 10px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 14px; }
@@ -117,6 +135,12 @@ td .path { color: var(--muted); font-size: 12px; margin-left: 6px; }
   .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .kpis .kpi:first-child { grid-column: 1 / -1; }
   .trio, .signals { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .who { grid-template-columns: 1fr; }
+  .whobox { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .whobox .value { font-size: 22px; margin: 0 0 0 auto; order: 2; }
+  .whobox .desc { flex-basis: 100%; order: 3; }
 }
 @media (max-width: 560px) {
   .card { padding: 18px; }
@@ -159,6 +183,22 @@ td .path { color: var(--muted); font-size: 12px; margin-left: 6px; }
     </section>
 
     <section class="kpis" id="kpis" aria-label="Key numbers"></section>
+
+    <section class="card" aria-labelledby="whoTitle">
+      <div class="head">
+        <div><h2 id="whoTitle">People or bots?</h2><p class="sub">Each visit is checked for signs of a real person: scrolling, clicking, moving the mouse or staying to read</p></div>
+        <span class="src">Own tracking</span>
+      </div>
+      <div class="who" id="who"></div>
+      <div class="vbar">
+        <p class="sub" id="visitsNote"></p>
+        <div class="seg" role="group" aria-label="Show visits">
+          <button data-kind="person">People</button><button data-kind="unclear">Unclear</button><button data-kind="bot">Bots</button><button data-kind="all">All</button>
+        </div>
+      </div>
+      <div class="tablewrap"><table id="visits"></table></div>
+      <button class="ghost more" id="moreVisits" hidden>Show more</button>
+    </section>
 
     <section class="card">
       <div class="head">
@@ -204,8 +244,8 @@ td .path { color: var(--muted); font-size: 12px; margin-left: 6px; }
 <script>
 (function () {
   var MOCK = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) && /[?&]mock/.test(location.search);
-  var state = { range: '30', metric: 'visitors', data: null };
-  try { state.range = localStorage.getItem('stats-range') || '30'; } catch (e) {}
+  var state = { range: '30', metric: 'visitors', data: null, kind: 'person', shown: 50 };
+  try { state.range = localStorage.getItem('stats-range') || '30'; state.kind = localStorage.getItem('stats-kind') || 'person'; } catch (e) {}
 
   var PAGE_NAMES = { '/': 'Home', '/skyline': 'Skyline', '/stealth': 'Stealth', '/space-court': 'Space Court', '/building-onboarding': 'Building Onboarding', '/404': 'Not found (404)' };
   var DEVICE_NAMES = { desktop: 'Desktop', mobile: 'Mobile', tablet: 'Tablet' };
@@ -239,6 +279,11 @@ td .path { color: var(--muted); font-size: 12px; margin-left: 6px; }
     b.addEventListener('click', function () { state.metric = b.dataset.metric; document.querySelectorAll('[data-metric]').forEach(function (x) { x.setAttribute('aria-pressed', x === b); }); renderTrend(); });
   });
 
+  document.querySelectorAll('[data-kind]').forEach(function (b) {
+    b.addEventListener('click', function () { state.kind = b.dataset.kind; state.shown = 50; try { localStorage.setItem('stats-kind', state.kind); } catch (e) {} renderVisits(); });
+  });
+  $('#moreVisits').addEventListener('click', function () { state.shown += 50; renderVisits(); });
+
   function load() {
     document.querySelectorAll('[data-range]').forEach(function (x) { x.setAttribute('aria-pressed', x.dataset.range === state.range); });
     var p = MOCK ? Promise.resolve({ ok: true, j: mock(state.range) }) : fetch('/api/stats?range=' + state.range, { credentials: 'same-origin' }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, status: r.status, j: j }; }); });
@@ -271,6 +316,7 @@ td .path { color: var(--muted); font-size: 12px; margin-left: 6px; }
     ];
     $('#kpis').innerHTML = tiles.map(function (t) { return '<div class="kpi"><p class="label">' + esc(t.label) + '</p><p class="value' + (t.value === '–' ? ' na' : '') + '">' + esc(t.value) + '</p><p class="note">' + esc(t.note) + '</p></div>'; }).join('');
 
+    renderVisits();
     renderTrend();
     renderPages();
     list('#refs', v.referrers, function (k) { return k === 'Direct' || k === '(none)' ? 'Direct or unknown' : k.replace(/^www\./, ''); }, v.error);
@@ -318,6 +364,45 @@ td .path { color: var(--muted); font-size: 12px; margin-left: 6px; }
       });
       h.addEventListener('mouseleave', function () { tip.hidden = true; h.nextSibling.classList.remove('on'); });
     });
+  }
+
+  var KINDS = {
+    person: ['People', 'Scrolled, clicked or stayed to read'],
+    unclear: ['Unclear', 'Short visit with no clear sign either way'],
+    bot: ['Bots', 'Email scanners, search engines and other machines']
+  };
+  function renderVisits() {
+    var vs = state.data.visits || {};
+    document.querySelectorAll('[data-kind]').forEach(function (x) { x.setAttribute('aria-pressed', x.dataset.kind === state.kind); });
+    if (vs.error) {
+      $('#who').innerHTML = ''; $('#visits').innerHTML = '<tr><td class="empty">' + (vs.error === 'not-configured' ? 'Connect storage (Upstash) to see this.' : 'Could not load visits.') + '</td></tr>';
+      $('#visitsNote').textContent = ''; $('#moreVisits').hidden = true; return;
+    }
+    var c = vs.counts || { person: 0, unclear: 0, bot: 0 };
+    $('#who').innerHTML = ['person', 'unclear', 'bot'].map(function (k) {
+      return '<div class="whobox ' + k + '"><p class="label"><span class="dot k-' + k + '"></span>' + KINDS[k][0] + '</p><p class="value">' + fmt(c[k]) + '</p><p class="desc">' + KINDS[k][1] + '</p></div>';
+    }).join('');
+    $('#visitsNote').textContent = vs.since
+      ? 'Tracking since ' + new Date(vs.since).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + '. Earlier visits can’t be checked. No IP addresses are stored.'
+      : 'Tracking starts with the next visit to the live site. No IP addresses are stored.';
+    var all = (vs.list || []).filter(function (v) { return state.kind === 'all' || v.kind === state.kind; });
+    if (!all.length) {
+      $('#visits').innerHTML = '<tr><td class="empty">' + (vs.since ? 'No ' + (state.kind === 'all' ? '' : KINDS[state.kind][0].toLowerCase() + ' ') + 'visits in this range yet.' : 'No visits yet.') + '</td></tr>';
+      $('#moreVisits').hidden = true; return;
+    }
+    var rows = all.slice(0, state.shown).map(function (v) {
+      var when = new Date(v.at).toLocaleString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+      var where = [v.city, countryName(v.country)].filter(Boolean).join(', ') || '–';
+      var pages = (v.pages || []).map(function (p) { return PAGE_NAMES[p] || p; });
+      var pg = pages.slice(0, 4).join(' → ') + (pages.length > 4 ? ' +' + (pages.length - 4) : '');
+      var from = v.ref ? v.ref.replace(/^www\./, '') : 'Direct';
+      return '<tr><td><span class="when"><span class="dot k-' + v.kind + '" title="' + esc(KINDS[v.kind][0]) + '"></span>' + esc(when) + '</span></td>' +
+        '<td>' + esc(where) + '</td><td>' + esc(v.device) + '</td><td>' + esc(from) + '</td>' +
+        '<td class="pgs">' + esc(pg || '–') + '</td><td class="n">' + dur(v.active) + '</td><td class="n">' + pct(v.depth) + '</td>' +
+        '<td class="why">' + esc(v.why) + '</td></tr>';
+    });
+    $('#visits').innerHTML = '<thead><tr><th>When</th><th>Where</th><th>Device</th><th>Came from</th><th>Pages</th><th class="n">Time</th><th class="n">Scroll</th><th>Why</th></tr></thead><tbody>' + rows.join('') + '</tbody>';
+    $('#moreVisits').hidden = all.length <= state.shown;
   }
 
   function renderPages() {
@@ -381,6 +466,20 @@ td .path { color: var(--muted); font-size: 12px; margin-left: 6px; }
       setup: { password: true, storage: true, vercel: true, clarity: true, cron: true },
       range: { key: range, from: out[0].day, to: out[out.length - 1].day, days: n, live: n <= 30 },
       lastRun: { at: new Date().toISOString() },
+      visits: (function () {
+        var now = Date.now(), h = 36e5;
+        var list = [
+          { at: now - 0.4 * h, kind: 'person', why: 'Scrolled, moved the mouse, 2 pages', country: 'IL', city: 'Tel Aviv', device: 'Mac · Chrome', ref: 'www.linkedin.com', pages: ['/', '/skyline'], active: 164, depth: 88 },
+          { at: now - 0.9 * h, kind: 'bot', why: 'Data center location, did nothing', country: 'US', city: 'Ashburn', device: 'Windows · Chrome', ref: '', pages: ['/'], active: 2, depth: 15 },
+          { at: now - 0.9 * h, kind: 'bot', why: 'Loaded the page and vanished', country: 'US', city: 'Boardman', device: 'Linux · Chrome', ref: '', pages: ['/'], active: 1, depth: 15 },
+          { at: now - 3 * h, kind: 'unclear', why: 'Short visit, no scrolling or clicks', country: 'IL', city: 'Herzliya', device: 'iPhone · Safari', ref: '', pages: ['/'], active: 9, depth: 22 },
+          { at: now - 5 * h, kind: 'person', why: 'Scrolled, touched the screen', country: 'IL', city: 'Ramat Gan', device: 'iPhone · Safari', ref: 'mail.google.com', pages: ['/', '/stealth'], active: 71, depth: 64 },
+          { at: now - 26 * h, kind: 'bot', why: 'Automated browser', country: 'US', city: 'Council Bluffs', device: 'Linux · Chrome', ref: '', pages: ['/'], active: 0, depth: 15 },
+          { at: now - 30 * h, kind: 'person', why: 'Stayed 41s', country: 'DE', city: 'Berlin', device: 'Windows · Edge', ref: '', pages: ['/'], active: 41, depth: 15 }
+        ];
+        var counts = { person: 0, unclear: 0, bot: 0 }; list.forEach(function (v) { counts[v.kind]++; });
+        return { since: now - 9 * 864e5, counts: counts, list: list };
+      })(),
       vercel: {
         visitors: V, views: PV, trend: out,
         pages: [{ key: '/', visitors: Math.round(V * .92), views: Math.round(V * .92 * 1.3) }, { key: '/skyline', visitors: Math.round(V * .38), views: Math.round(V * .38 * 1.2) }, { key: '/stealth', visitors: Math.round(V * .2), views: Math.round(V * .2 * 1.1) }, { key: '/space-court', visitors: Math.round(V * .12), views: Math.round(V * .12) }, { key: '/building-onboarding', visitors: Math.round(V * .07), views: Math.round(V * .07) }],

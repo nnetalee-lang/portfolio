@@ -12,6 +12,7 @@ Product design portfolio. Designed in Figma, built with Claude Code, hosted on V
 | `assets/style.css` | All the design: colors, fonts, spacing. The color and font tokens are at the top. |
 | `assets/site.js` | The hero grain and the hobbies animation on the home page |
 | `img/` | Images, one folder per page |
+| `assets/visit.js`, `api/hit.js` | Own visit tracking for the private `/stats` page: records what each visit did (time, scroll, clicks) so the dashboard can tell people from bots. No IP addresses are stored. |
 | `vercel.json` | Tells Vercel to serve clean addresses (`/skyline` instead of `/skyline.html`) |
 
 There is no build step: what you see in these files is exactly what goes live.

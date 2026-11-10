@@ -164,6 +164,131 @@ function parseClarity(resp, dim) {
 }
 const signal = (info) => firstNum(info, ['subTotal', 'sessionsCount', 'count', 'Count']) ?? fuzzyNum(info, /count|total/i) ?? 0;
 
+// ---------- own visit tracking (assets/visit.js → /api/hit) ----------
+// One record per browser-tab session. No IP address is stored; location comes from the
+// city/country headers Vercel adds. Records expire after 180 days.
+// Preview deployments write to a separate namespace so tests never mix with real visits.
+const VISIT_TTL = 180 * 864e5;
+const visitNS = () => (env('VERCEL_ENV') === 'production' ? 'vis' : 'vistest');
+
+const BOT_UA = /bot\b|bot\/|crawl|spider|slurp|headless|lighthouse|pagespeed|preview|scanner|python|curl|wget|phantom|puppeteer|playwright|selenium|axios|node-fetch|go-http|java\/|okhttp|httpclient/i;
+// Places where big cloud data centers sit. A visit from here with no activity is a machine.
+const DC_CITY = /^(ashburn|sterling|leesburg|manassas|boardman|hillsboro|the dalles|council bluffs|quincy|prineville|moncks corner|lenoir|pryor|santa clara|north charleston|san antonio|des moines)$/i;
+
+function deviceOf(ua) {
+  ua = ua || '';
+  const os = /iPad/.test(ua) ? 'iPad' : /iPhone|iPod/.test(ua) ? 'iPhone' : /Android/.test(ua) ? 'Android' : /Mac OS X|Macintosh/.test(ua) ? 'Mac' : /Windows/.test(ua) ? 'Windows' : /CrOS/.test(ua) ? 'ChromeOS' : /Linux/.test(ua) ? 'Linux' : 'Other';
+  const br = /Edg\//.test(ua) ? 'Edge' : /OPR\//.test(ua) ? 'Opera' : /SamsungBrowser/.test(ua) ? 'Samsung' : /Firefox\//.test(ua) ? 'Firefox' : /Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : 'Other';
+  return { os, br, mobile: /iPhone|iPod|Android.*Mobile|Mobile Safari/.test(ua) };
+}
+
+// What the visitor did, added up over every page in the visit.
+function visitTotals(v) {
+  const pages = Object.values(v.pages || {}).sort((a, b) => a.at - b.at);
+  return {
+    pages,
+    active: pages.reduce((s, p) => s + (p.act || 0), 0),
+    depth: pages.reduce((m, p) => Math.max(m, p.sc || 0), 0),
+    px: pages.reduce((m, p) => Math.max(m, p.px || 0), 0),
+    clicks: pages.reduce((s, p) => s + (p.cl || 0), 0),
+  };
+}
+
+// person · unclear · bot, with the reason in plain words. Rules are applied when the
+// dashboard loads, so they can be changed later and every stored visit is re-judged.
+function classify(v) {
+  const t = visitTotals(v);
+  const did = [];
+  if (t.px >= 150) did.push('scrolled');
+  if (t.clicks) did.push('clicked');
+  if (v.mv) did.push('moved the mouse');
+  if (v.tc) did.push('touched the screen');
+  if (v.ky) did.push('typed');
+  const interacted = did.length > 0;
+  const dev = deviceOf(v.ua);
+  if (v.wd) return { kind: 'bot', why: 'Automated browser' };
+  if (BOT_UA.test(v.ua || '')) return { kind: 'bot', why: 'Bot browser' };
+  if (interacted && t.active >= 3) return { kind: 'person', why: cap(did.join(', ')) + (t.pages.length > 1 ? `, ${t.pages.length} pages` : '') };
+  if (t.pages.length > 1 && t.active >= 10) return { kind: 'person', why: `Opened ${t.pages.length} pages` };
+  if (!interacted) {
+    if (v.city && DC_CITY.test(v.city)) return { kind: 'bot', why: 'Data center location, did nothing' };
+    if (dev.os === 'Linux') return { kind: 'bot', why: 'Server-type computer, did nothing' };
+    if (!v.ended && t.active < 15) return { kind: 'bot', why: 'Loaded the page and vanished' };
+    if (t.active < 5) return { kind: 'bot', why: 'Gone within seconds, did nothing' };
+  }
+  if (t.active >= 20) return { kind: 'person', why: `Stayed ${t.active}s` };
+  return { kind: 'unclear', why: interacted ? 'Brief activity' : 'Short visit, no scrolling or clicks' };
+}
+const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
+const clampInt = (x, lo, hi) => { const n = Math.round(Number(x)); return Number.isFinite(n) ? Math.min(hi, Math.max(lo, n)) : 0; };
+const cleanStr = (x, max) => String(x == null ? '' : x).replace(/[\u0000-\u001f]/g, '').slice(0, max);
+const ID = /^[A-Za-z0-9-]{8,64}$/;
+
+// Apply one beacon to the stored visit. Returns the stored record, or null if the beacon is invalid.
+async function recordHit(b, headers, now = Date.now()) {
+  if (!b || !ID.test(b.sid || '') || !ID.test(b.pv || '') || !['start', 'ping', 'end'].includes(b.t)) return null;
+  const p = cleanStr(b.p, 120);
+  if (!p.startsWith('/')) return null;
+  const NS = visitNS(), key = `${NS}:${b.sid}`;
+  let v = await getJSON(key);
+  if (!v) {
+    let city = headers['x-vercel-ip-city'] || '';
+    try { city = decodeURIComponent(city); } catch (e) { /* keep raw */ }
+    v = {
+      sid: b.sid, start: now, pages: {},
+      country: cleanStr(headers['x-vercel-ip-country'], 4), region: cleanStr(headers['x-vercel-ip-country-region'], 8), city: cleanStr(city, 60),
+      ua: cleanStr(headers['user-agent'], 300),
+    };
+    await redis(['ZADD', `${NS}:idx`, String(now), b.sid]);
+    if (Math.random() < 0.02) await redis(['ZREMRANGEBYSCORE', `${NS}:idx`, '0', String(now - VISIT_TTL)]);
+  }
+  if (b.t === 'start') {
+    v.ref = v.ref || cleanStr(b.ref, 80);
+    Object.assign(v, {
+      sw: clampInt(b.sw, 0, 10000), sh: clampInt(b.sh, 0, 10000), vw: clampInt(b.vw, 0, 10000), vh: clampInt(b.vh, 0, 10000),
+      dpr: Math.min(8, Math.max(0, Number(b.dpr) || 0)), lang: cleanStr(b.lang, 20), tz: cleanStr(b.tz, 40), tp: clampInt(b.tp, 0, 20),
+    });
+    if (b.wd) v.wd = 1;
+  }
+  const pg = v.pages[b.pv] || (Object.keys(v.pages).length < 30 ? (v.pages[b.pv] = { p, at: now }) : null);
+  if (pg) {
+    // Values from the page are running totals, so the newest one wins (never going down).
+    pg.act = Math.max(pg.act || 0, clampInt(b.act, 0, 6 * 3600));
+    pg.sc = Math.max(pg.sc || 0, clampInt(b.sc, 0, 100));
+    pg.px = Math.max(pg.px || 0, clampInt(b.px, 0, 200000));
+    pg.cl = Math.max(pg.cl || 0, clampInt(b.cl, 0, 10000));
+  }
+  if (b.mv) v.mv = 1;
+  if (b.tc) v.tc = 1;
+  if (b.ky) v.ky = 1;
+  if (b.t === 'end') v.ended = 1;
+  v.last = now;
+  await redis(['SET', key, JSON.stringify(v), 'PX', String(VISIT_TTL)]);
+  return v;
+}
+
+// Visits that started in [fromMs, toMs], newest first, judged and trimmed for the dashboard.
+async function loadVisits(fromMs, toMs, max = 3000) {
+  const NS = visitNS();
+  const ids = (await redis(['ZREVRANGEBYSCORE', `${NS}:idx`, String(toMs), String(fromMs), 'LIMIT', '0', String(max)])) || [];
+  const first = await redis(['ZRANGE', `${NS}:idx`, '0', '0', 'WITHSCORES']);
+  const out = [];
+  for (let i = 0; i < ids.length; i += 200) {
+    const recs = await mgetJSON(ids.slice(i, i + 200).map((id) => `${NS}:${id}`));
+    for (const v of recs) {
+      if (!v) continue;
+      const t = visitTotals(v), c = classify(v), d = deviceOf(v.ua);
+      out.push({
+        at: v.start, kind: c.kind, why: c.why, country: v.country || '', city: v.city || '',
+        device: `${d.os} · ${d.br}`, mobile: d.mobile, ref: v.ref || '',
+        pages: t.pages.map((p) => normPath(p.p)), active: t.active, depth: t.depth, screen: v.sw ? `${v.sw}×${v.sh}` : '',
+      });
+    }
+  }
+  return { visits: out, since: first && first[1] ? Number(first[1]) : null };
+}
+
 // ---------- auth ----------
 const COOKIE = 'nla_stats';
 function sign(v) { return crypto.createHmac('sha256', env('DASH_PASSWORD') + '|stats').update(v).digest('base64url'); }
@@ -198,4 +323,5 @@ function send(res, status, body) {
 module.exports = {
   env, redis, getJSON, setJSON, mgetJSON, ymd, addDays, today, dayRange, normPath,
   vercelBreakdowns, vercelQuery, claritySnapshot, parseClarity, COOKIE, makeSession, isAuthed, safeEqual, send,
+  visitNS, classify, deviceOf, recordHit, loadVisits,
 };
