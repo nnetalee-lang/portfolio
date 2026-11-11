@@ -544,3 +544,4 @@ p, li, dd, h2, h3 { text-wrap: pretty; }
 .pair .pair-label { margin: 0 0 12px; font-size: 14px; font-weight: 600; color: var(--ink); }
 .pair figcaption { margin-top: 14px; font-size: 15px; line-height: 1.6; color: var(--muted); max-width: 52ch; }
 @media (max-width: 880px) { .pair { grid-template-columns: 1fr; } }
+.pair .shot img { aspect-ratio: 16 / 10; object-fit: cover; object-position: top left; }
