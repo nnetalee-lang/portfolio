@@ -535,9 +535,6 @@ p, li, dd, h2, h3 { text-wrap: pretty; }
   .also-card .ac-name:has(.ac-line) { flex: 1 1 160px; }
   .also-card:has(.ac-name .ac-line) .ac-cta { flex-basis: 100%; }
 }
-/* a split with no image: summary on the left, pain points on the right, in one panel */
-.split:not(:has(.media)) { grid-template-columns: 1fr; }
-.split:not(:has(.media)) .panel { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: clamp(32px, 5vw, 72px); align-items: start; }
-.split:not(:has(.media)) .panel > p:first-child { grid-row: 1 / span 2; margin: 0; font-size: 18px; line-height: 1.55; color: var(--ink); }
-.split:not(:has(.media)) .panel .listlabel { margin-top: 0; }
-@media (max-width: 880px) { .split:not(:has(.media)) .panel { grid-template-columns: 1fr; } .split:not(:has(.media)) .panel > p:first-child { grid-row: auto; margin-bottom: 20px; } }
+.split:not(:has(.media)) { grid-template-columns: 1fr; max-width: 720px; }
+.split:not(:has(.media)) .panel { background: none; border: 0; padding: 0; }
+.split:not(:has(.media)) .panel > p:first-child { font-size: 19px; line-height: 1.55; color: var(--ink); }
