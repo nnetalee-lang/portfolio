@@ -250,6 +250,7 @@ async function recordHit(b, headers, now = Date.now()) {
       dpr: Math.min(8, Math.max(0, Number(b.dpr) || 0)), lang: cleanStr(b.lang, 20), tz: cleanStr(b.tz, 40), tp: clampInt(b.tp, 0, 20),
     });
     if (b.wd) v.wd = 1;
+    if (!v.vid && ID.test(b.vid || '')) v.vid = b.vid;
   }
   const pg = v.pages[b.pv] || (Object.keys(v.pages).length < 30 ? (v.pages[b.pv] = { p, at: now }) : null);
   if (pg) {
@@ -280,13 +281,51 @@ async function loadVisits(fromMs, toMs, max = 3000) {
       if (!v) continue;
       const t = visitTotals(v), c = classify(v), d = deviceOf(v.ua);
       out.push({
-        at: v.start, kind: c.kind, why: c.why, country: v.country || '', city: v.city || '',
+        at: v.start, last: v.last || v.start, vid: v.vid || '', kind: c.kind, why: c.why, country: v.country || '', city: v.city || '',
         device: `${d.os} · ${d.br}`, mobile: d.mobile, ref: v.ref || '',
         pages: t.pages.map((p) => normPath(p.p)), active: t.active, depth: t.depth, screen: v.sw ? `${v.sw}×${v.sh}` : '',
       });
     }
   }
   return { visits: out, since: first && first[1] ? Number(first[1]) : null };
+}
+
+// Group visits from the same browser (same random id) into sittings: a new tab opened within
+// 30 minutes of the last activity is the same sitting, not a return. A visitor who came back on a
+// separate sitting at least once, and was not only a bot, is a returning visitor.
+// Each visit gets ret = { who, n, of } and the raw browser id is removed before it leaves the server.
+const SITTING_GAP = 30 * 60e3;
+function returningVisitors(visits) {
+  const by = new Map();
+  for (const v of visits) if (v.vid) { if (!by.has(v.vid)) by.set(v.vid, []); by.get(v.vid).push(v); }
+  const groups = [];
+  for (const list of by.values()) {
+    list.sort((a, b) => a.at - b.at);
+    const sittings = [];
+    for (const v of list) {
+      const s = sittings[sittings.length - 1];
+      if (s && v.at - s.last <= SITTING_GAP) { s.visits.push(v); s.last = Math.max(s.last, v.last); }
+      else sittings.push({ at: v.at, last: v.last, visits: [v] });
+    }
+    if (sittings.length > 1 && list.some((v) => v.kind !== 'bot')) groups.push(sittings);
+  }
+  groups.sort((a, b) => a[0].at - b[0].at);
+  const out = groups.map((sittings, i) => {
+    const who = i + 1, all = sittings.flatMap((s) => s.visits), latest = all[all.length - 1];
+    sittings.forEach((s, j) => s.visits.forEach((v) => { v.ret = { who, n: j + 1, of: sittings.length }; }));
+    const pages = {};
+    for (const v of all) for (const p of new Set(v.pages)) pages[p] = (pages[p] || 0) + 1;
+    return {
+      who, count: sittings.length, first: sittings[0].at, last: sittings[sittings.length - 1].at,
+      country: latest.country, city: latest.city, device: latest.device, mobile: latest.mobile,
+      active: all.reduce((s, v) => s + (v.active || 0), 0),
+      pages: Object.entries(pages).sort((a, b) => b[1] - a[1]).map(([p, n]) => ({ p, n })),
+      sittings: sittings.map((s) => ({ at: s.at, active: s.visits.reduce((t, v) => t + (v.active || 0), 0), pages: [...new Set(s.visits.flatMap((v) => v.pages))], kind: s.visits.some((v) => v.kind === 'person') ? 'person' : s.visits.some((v) => v.kind === 'unclear') ? 'unclear' : 'bot' })),
+    };
+  });
+  const firstId = visits.filter((v) => v.vid).reduce((m, v) => Math.min(m, v.at), Infinity);
+  for (const v of visits) delete v.vid;
+  return { list: out.reverse(), since: Number.isFinite(firstId) ? firstId : null };
 }
 
 // ---------- auth ----------
@@ -323,5 +362,5 @@ function send(res, status, body) {
 module.exports = {
   env, redis, getJSON, setJSON, mgetJSON, ymd, addDays, today, dayRange, normPath,
   vercelBreakdowns, vercelQuery, claritySnapshot, parseClarity, COOKIE, makeSession, isAuthed, safeEqual, send,
-  visitNS, classify, deviceOf, recordHit, loadVisits,
+  visitNS, classify, deviceOf, recordHit, loadVisits, returningVisitors,
 };

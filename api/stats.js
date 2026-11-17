@@ -126,10 +126,17 @@ module.exports = async (req, res) => {
   // ---------- Own visit tracking: people vs bots ----------
   try {
     if (!setup.storage) throw new Error('not-configured');
-    const { visits, since } = await L.loadVisits(Date.parse(from + 'T00:00:00Z'), Date.now());
+    // Load every stored visit so a return is recognised even when the first visit is before the range.
+    const fromMs = Date.parse(from + 'T00:00:00Z');
+    const { visits: everything, since } = await L.loadVisits(0, Date.now());
+    const ret = L.returningVisitors(everything);
+    const visits = everything.filter((v) => v.at >= fromMs);
     const counts = { person: 0, unclear: 0, bot: 0 };
     for (const v of visits) counts[v.kind]++;
-    out.visits = { since, counts, list: visits.slice(0, 300) };
+    out.visits = {
+      since, counts, list: visits.slice(0, 300),
+      returning: { since: ret.since, list: ret.list.filter((g) => g.last >= fromMs) },
+    };
   } catch (e) { out.visits = { error: e.message }; }
 
   if (url.searchParams.get('raw') && setup.storage) {

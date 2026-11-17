@@ -2,6 +2,8 @@
 // Loaded only on the live domain and never for the site owner (see the snippet in each page).
 // Sends what the visitor did on the page (time, scroll, clicks, mouse/touch), never personal data.
 // A visit id lives in sessionStorage, so it is forgotten when the tab is closed.
+// A separate random browser id lives in localStorage, so a later visit from the same browser
+// can be recognised as a return. It says nothing about who the person is and is renewed after 180 days.
 (function () {
   try {
     var URL_ = '/api/hit';
@@ -9,6 +11,12 @@
     var sid = null, fresh = false;
     try { sid = sessionStorage.getItem('nla-sid'); } catch (e) {}
     if (!sid) { sid = rid(); fresh = true; try { sessionStorage.setItem('nla-sid', sid); } catch (e) {} }
+    var vid = null;
+    try {
+      var saved = (localStorage.getItem('nla-vid') || '').split('.');
+      if (saved[0] && Date.now() - Number(saved[1]) < 180 * 864e5) vid = saved[0];
+      else { vid = rid(); localStorage.setItem('nla-vid', vid + '.' + Date.now()); }
+    } catch (e) { vid = null; }
     var pv = rid();
     var path = location.pathname;
 
@@ -38,7 +46,7 @@
     try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {}
     measure();
     post({
-      t: 'start', sid: sid, pv: pv, p: path, fresh: fresh ? 1 : 0, ref: ref,
+      t: 'start', sid: sid, vid: vid, pv: pv, p: path, fresh: fresh ? 1 : 0, ref: ref,
       sw: screen.width, sh: screen.height, vw: window.innerWidth, vh: window.innerHeight, dpr: window.devicePixelRatio || 1,
       wd: navigator.webdriver ? 1 : 0, lang: navigator.language || '', tz: tz, tp: navigator.maxTouchPoints || 0, sc: depth
     });

@@ -114,6 +114,29 @@ td .path { color: var(--muted); font-size: 12px; margin-left: 6px; }
 #visits td.pgs { white-space: normal; min-width: 160px; }
 #visits .when { display: inline-flex; align-items: center; gap: 8px; }
 .more { margin-top: 12px; }
+.badge { display: inline-block; font-size: 11px; font-weight: 600; color: var(--accent-2); background: var(--accent-soft); border-radius: 999px; padding: 1px 8px; margin-left: 2px; white-space: nowrap; }
+
+/* returning visitors */
+.rets { display: grid; gap: 12px; }
+.ret { border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px 20px; }
+.ret .who { font-weight: 600; font-size: 15px; }
+.ret .meta { color: var(--muted); font-size: 13px; margin-top: 2px; }
+.ret .count { text-align: right; }
+.ret .count b { font-size: 24px; font-weight: 600; letter-spacing: -.02em; font-variant-numeric: tabular-nums; line-height: 1.1; display: block; }
+.ret .count b small { font-size: 14px; font-weight: 500; color: var(--ink-2); letter-spacing: 0; }
+.ret .count span { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.ret .times { grid-column: 1 / -1; display: grid; gap: 0; border-top: 1px solid var(--line-2); }
+.ret .time { display: grid; grid-template-columns: 22px 170px minmax(0, 1fr) 70px; gap: 10px; align-items: baseline; font-size: 14px; padding: 9px 0; border-bottom: 1px solid var(--line-2); }
+.ret .time:last-child { border-bottom: 0; padding-bottom: 0; }
+.ret .time .no { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+.ret .time .pg { color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ret .time .t { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+.ret .seen { grid-column: 1 / -1; font-size: 13px; color: var(--muted); }
+.ret .seen b { color: var(--ink-2); font-weight: 500; }
+@media (max-width: 640px) {
+  .ret .time { grid-template-columns: 22px minmax(0, 1fr) auto; }
+  .ret .time .pg { grid-column: 2 / -1; grid-row: 2; white-space: normal; }
+}
 
 /* setup + notes */
 .setup { border-color: #f5c9b5; background: #fffaf7; }
@@ -198,6 +221,15 @@ td .path { color: var(--muted); font-size: 12px; margin-left: 6px; }
       </div>
       <div class="tablewrap"><table id="visits"></table></div>
       <button class="ghost more" id="moreVisits" hidden>Show more</button>
+    </section>
+
+    <section class="card" aria-labelledby="retTitle">
+      <div class="head">
+        <div><h2 id="retTitle">Came back</h2><p class="sub">Visitors who opened the portfolio again on another occasion, from the same browser</p></div>
+        <span class="src">Own tracking</span>
+      </div>
+      <div class="rets" id="rets"></div>
+      <p class="sub" id="retNote" style="margin-top:14px"></p>
     </section>
 
     <section class="card">
@@ -317,6 +349,7 @@ td .path { color: var(--muted); font-size: 12px; margin-left: 6px; }
     $('#kpis').innerHTML = tiles.map(function (t) { return '<div class="kpi"><p class="label">' + esc(t.label) + '</p><p class="value' + (t.value === '–' ? ' na' : '') + '">' + esc(t.value) + '</p><p class="note">' + esc(t.note) + '</p></div>'; }).join('');
 
     renderVisits();
+    renderReturning();
     renderTrend();
     renderPages();
     list('#refs', v.referrers, function (k) { return k === 'Direct' || k === '(none)' ? 'Direct or unknown' : k.replace(/^www\./, ''); }, v.error);
@@ -396,13 +429,35 @@ td .path { color: var(--muted); font-size: 12px; margin-left: 6px; }
       var pages = (v.pages || []).map(function (p) { return PAGE_NAMES[p] || p; });
       var pg = pages.slice(0, 4).join(' → ') + (pages.length > 4 ? ' +' + (pages.length - 4) : '');
       var from = v.ref ? v.ref.replace(/^www\./, '') : 'Direct';
-      return '<tr><td><span class="when"><span class="dot k-' + v.kind + '" title="' + esc(KINDS[v.kind][0]) + '"></span>' + esc(when) + '</span></td>' +
+      return '<tr><td><span class="when"><span class="dot k-' + v.kind + '" title="' + esc(KINDS[v.kind][0]) + '"></span>' + esc(when) + '</span>' + (v.ret ? ' <span class="badge" title="Visitor ' + v.ret.who + ', visit ' + v.ret.n + ' of ' + v.ret.of + '">Visitor ' + v.ret.who + ' · visit ' + v.ret.n + '</span>' : '') + '</td>' +
         '<td>' + esc(where) + '</td><td>' + esc(v.device) + '</td><td>' + esc(from) + '</td>' +
         '<td class="pgs">' + esc(pg || '–') + '</td><td class="n">' + dur(v.active) + '</td><td class="n">' + pct(v.depth) + '</td>' +
         '<td class="why">' + esc(v.why) + '</td></tr>';
     });
     $('#visits').innerHTML = '<thead><tr><th>When</th><th>Where</th><th>Device</th><th>Came from</th><th>Pages</th><th class="n">Time</th><th class="n">Scroll</th><th>Why</th></tr></thead><tbody>' + rows.join('') + '</tbody>';
     $('#moreVisits').hidden = all.length <= state.shown;
+  }
+
+  function renderReturning() {
+    var vs = state.data.visits || {}, r = vs.returning || {};
+    var since = r.since ? new Date(r.since).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : null;
+    $('#retNote').textContent = (since ? 'Counting returns since ' + since + '. ' : 'Counting starts with the next visit to the live site. ') +
+      'Each browser gets a random ID, so this can’t tell who someone is, and the same person on a phone and a laptop counts as two visitors. Tabs opened within 30 minutes count as one visit.';
+    if (vs.error) { $('#rets').innerHTML = ''; return; }
+    var list = r.list || [];
+    if (!list.length) { $('#rets').innerHTML = '<p class="empty">No one has come back yet' + (state.range === 'all' ? '' : ' in this range') + '.</p>'; return; }
+    var day = function (t) { return new Date(t).toLocaleString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); };
+    $('#rets').innerHTML = list.map(function (g) {
+      var where = [g.city, countryName(g.country)].filter(Boolean).join(', ') || 'Unknown place';
+      var times = g.sittings.map(function (s, i) {
+        var pages = s.pages.map(function (p) { return PAGE_NAMES[p] || p; }).join(' → ');
+        return '<div class="time"><span class="no">' + (i + 1) + '</span><span><span class="dot k-' + s.kind + '" title="' + esc(KINDS[s.kind][0]) + '" style="margin-right:8px"></span>' + esc(day(s.at)) + '</span><span class="pg">' + esc(pages || '–') + '</span><span class="t">' + dur(s.active) + '</span></div>';
+      }).join('');
+      var seen = g.pages.map(function (x) { return '<b>' + esc(PAGE_NAMES[x.p] || x.p) + '</b>' + (x.n > 1 ? ' ×' + x.n : ''); }).join(', ');
+      return '<div class="ret"><div><p class="who">Visitor ' + g.who + '</p><p class="meta">' + esc(where) + ' · ' + esc(g.device) + '</p></div>' +
+        '<div class="count"><b>' + g.count + ' <small>visits</small></b><span>' + dur(g.active) + ' in total</span></div>' +
+        '<div class="times">' + times + '</div><p class="seen">Looked at ' + seen + '</p></div>';
+    }).join('');
   }
 
   function renderPages() {
@@ -477,8 +532,22 @@ td .path { color: var(--muted); font-size: 12px; margin-left: 6px; }
           { at: now - 26 * h, kind: 'bot', why: 'Automated browser', country: 'US', city: 'Council Bluffs', device: 'Linux · Chrome', ref: '', pages: ['/'], active: 0, depth: 15 },
           { at: now - 30 * h, kind: 'person', why: 'Stayed 41s', country: 'DE', city: 'Berlin', device: 'Windows · Edge', ref: '', pages: ['/'], active: 41, depth: 15 }
         ];
+        list[0].ret = { who: 2, n: 3, of: 3 }; list[4].ret = { who: 1, n: 2, of: 2 };
         var counts = { person: 0, unclear: 0, bot: 0 }; list.forEach(function (v) { counts[v.kind]++; });
-        return { since: now - 9 * 864e5, counts: counts, list: list };
+        var returning = { since: now - 9 * 864e5, list: [
+          { who: 2, count: 3, first: now - 6 * 864e5, last: now - 0.4 * h, country: 'IL', city: 'Tel Aviv', device: 'Mac · Chrome', active: 412,
+            pages: [{ p: '/', n: 3 }, { p: '/skyline', n: 2 }, { p: '/stealth', n: 1 }],
+            sittings: [
+              { at: now - 6 * 864e5, active: 126, pages: ['/', '/skyline'], kind: 'person' },
+              { at: now - 2 * 864e5 - 5 * h, active: 122, pages: ['/', '/stealth'], kind: 'person' },
+              { at: now - 0.4 * h, active: 164, pages: ['/', '/skyline'], kind: 'person' }] },
+          { who: 1, count: 2, first: now - 8 * 864e5, last: now - 5 * h, country: 'IL', city: 'Ramat Gan', device: 'iPhone · Safari', active: 94,
+            pages: [{ p: '/', n: 2 }, { p: '/stealth', n: 1 }],
+            sittings: [
+              { at: now - 8 * 864e5, active: 23, pages: ['/'], kind: 'person' },
+              { at: now - 5 * h, active: 71, pages: ['/', '/stealth'], kind: 'person' }] }
+        ] };
+        return { since: now - 9 * 864e5, counts: counts, list: list, returning: returning };
       })(),
       vercel: {
         visitors: V, views: PV, trend: out,
