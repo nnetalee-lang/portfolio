@@ -41,14 +41,6 @@
 </section>
 <section class="section">
   <div class="wrap">
-    <p class="eyebrow">Where it started</p>
-    <h2>A product designed by its engineers</h2>
-    <p class="lead">Before I joined, the engineers had designed the product themselves. The data was all there, but not the story.</p>
-    <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><div class="pair"><figure><p class="pair-label">Before</p><div class="shot"><img src="/img/stealth/before-spend.jpg" alt="The existing Spend screen: a spend breakdown table with green and red amount boxes, and two monthly charts with no labels or context" width="2400" height="1834" loading="lazy" decoding="async"></div><figcaption>Spend was a table of amounts and two monthly charts. Every number looked equally important, and nothing said whether it was good or bad.</figcaption></figure><figure><p class="pair-label">After</p><div class="shot"><img src="/img/stealth/jira-spend.jpg" alt="The redesigned Jira Spend screen with spend cards, a trend by issue type and top repositories by spend" width="1440" height="900" loading="lazy" decoding="async"></div><figcaption>Total, tracked, untracked and over-estimated spend against last quarter, spend by issue type over time, and the repositories that cost the most. Figures shown are sample data.</figcaption></figure></div></div>
-  </div>
-</section>
-<section class="section">
-  <div class="wrap">
     <p class="eyebrow">The solution</p>
     <h2>One analytics layer for all the data, with a view for each stakeholder</h2>
     
@@ -76,47 +68,39 @@
     <p class="eyebrow">Research and insights</p>
     <h2>Competitive analysis</h2>
     <p class="lead">Out of five competitors I analyzed in depth, I’m highlighting three here, with their main features, strengths and limitations. It’s a snapshot of the full research that guided my design decisions.</p>
-    <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><ul class="cards" style="--cols: 3"><li class="card"><h3>Competitor 1</h3><dl><div><dt>Key features</dt><dd>Cycle time metrics, Automation bot, Slack integration</dd></div><div><dt>Strength</dt><dd>Intuitive, easy-to-use interface</dd></div><div><dt>Limitation</dt><dd>No cost or ROI insights</dd></div></dl><p class="foot">Lacks financial reporting</p></li><li class="card"><h3>Competitor 2</h3><dl><div><dt>Key features</dt><dd>Code-level reporting, PR and commit analytics, Benchmarking</dd></div><div><dt>Strength</dt><dd>Detailed insights into code</dd></div><div><dt>Limitation</dt><dd>Limited team performance breakdowns</dd></div></dl><p class="foot">Less focused on team leaders</p></li><li class="card"><h3>Competitor 3</h3><dl><div><dt>Key features</dt><dd>Engineering dashboards, Correlates DevOps data, Review workflow metrics</dd></div><div><dt>Strength</dt><dd>Comprehensive set of reports</dd></div><div><dt>Limitation</dt><dd>No deep dive into GenAI impact</dd></div></dl><p class="foot">Focuses on DevOps practices</p></li></ul><ul class="cards" style="--cols: 3"><li class="card"><span class="ico-sq"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"/></svg></span><span class="tag">Insight 01</span><h3>Most tools don’t talk money</h3><p class="strong">Added financial indicators to every chart</p><ul><li>Quarterly savings comparisons</li><li>Tooltips translating % to $</li><li>Direct links to Jira cost items</li></ul></li><li class="card"><span class="ico-sq"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"/></svg></span><span class="tag">Insight 02</span><h3>There’s data, but no depth</h3><p class="strong">Built drill-down into every widget</p><ul><li>Navigation from group → team → individual</li><li>Filtering by repo, quarter or GenAI tool</li><li>Quick access to team-specific insights</li></ul></li><li class="card"><span class="ico-sq"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"/></svg></span><span class="tag">Insight 03</span><h3>GenAI is present but not measured</h3><p class="strong">Designed a dedicated GenAI impact dashboard</p><ul><li>KPIs comparing AI vs. non-AI contributions</li><li>Time saved per pull request</li><li>Usage trends by group and quarter</li></ul></li></ul></div>
+    <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><ul class="cards" style="--cols: 3"><li class="card"><h3>Competitor 1</h3><dl><div><dt>Key features</dt><dd>Cycle time metrics, Automation bot, Slack integration</dd></div><div><dt>Strength</dt><dd>Intuitive, easy-to-use interface</dd></div><div><dt>Limitation</dt><dd>No cost or ROI insights</dd></div></dl><p class="foot">Lacks financial reporting</p></li><li class="card"><h3>Competitor 2</h3><dl><div><dt>Key features</dt><dd>Code-level reporting, PR and commit analytics, Benchmarking</dd></div><div><dt>Strength</dt><dd>Detailed insights into code</dd></div><div><dt>Limitation</dt><dd>Limited team performance breakdowns</dd></div></dl><p class="foot">Less focused on team leaders</p></li><li class="card"><h3>Competitor 3</h3><dl><div><dt>Key features</dt><dd>Engineering dashboards, Correlates DevOps data, Review workflow metrics</dd></div><div><dt>Strength</dt><dd>Comprehensive set of reports</dd></div><div><dt>Limitation</dt><dd>No deep dive into GenAI impact</dd></div></dl><p class="foot">Focuses on DevOps practices</p></li></ul></div>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <p class="eyebrow">Screen 1 of 5</p>
-    <h2>Jira Spend</h2>
-    <p class="lead">Engineering effort translated into dollars, by issue type and repository, so leaders can see what development actually costs. Figures shown are sample data.</p>
-    <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><div class="shot"><img src="/img/stealth/jira-spend.jpg" alt="Jira Spend dashboard with spend cards, a trend chart and repositories by spend" width="1440" height="900" loading="lazy" decoding="async"></div></div>
+    <p class="eyebrow">Insight 01</p>
+    <h2>Most tools don’t talk money</h2>
+    <p class="lead">Most of the competitors didn’t show cost or ROI. And in our own product, designed by the engineers before I joined, spend was a table of amounts where nothing said whether a number was good or bad.</p>
+    <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><div><p class="listlabel">Added financial indicators to every chart</p><ul class="dots"><li>Quarterly savings comparisons</li><li>Tooltips translating % to $</li><li>Direct links to Jira cost items</li></ul></div><div class="pair"><figure><p class="pair-label">Before</p><div class="shot"><img src="/img/stealth/before-spend.jpg" alt="The existing Spend screen: a spend breakdown table with green and red amount boxes, and two monthly charts with no labels or context" width="2400" height="1834" loading="lazy" decoding="async"></div><figcaption>Spend was a table of amounts and two monthly charts. Every number looked equally important, and nothing said whether it was good or bad.</figcaption></figure><figure><p class="pair-label">After</p><div class="shot"><img src="/img/stealth/jira-spend.jpg" alt="The redesigned Jira Spend screen with spend cards, a trend by issue type and top repositories by spend" width="1440" height="900" loading="lazy" decoding="async"></div><figcaption>Total, tracked, untracked and over-estimated spend against last quarter, spend by issue type over time, and the repositories that cost the most. Figures shown are sample data.</figcaption></figure></div></div>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <p class="eyebrow">Screen 2 of 5</p>
-    <h2>Activity</h2>
-    <p class="lead">Teams using GenAI tools (the POC group) compared with the rest, across groups, teams and repositories. Figures shown are sample data.</p>
-    <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><div class="shot"><img src="/img/stealth/activity.jpg" alt="Activity dashboard comparing the GenAI POC group with other teams" width="1440" height="900" loading="lazy" decoding="async"></div></div>
+    <p class="eyebrow">Insight 02</p>
+    <h2>There’s data, but no depth</h2>
+    <p class="lead">Leaders could see a number, but not follow it down to the team or the person behind it. So I built drill-down into every widget, from group to team to a single developer.</p>
+    <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><div><p class="listlabel">Built drill-down into every widget</p><ul class="dots"><li>Navigation from group → team → individual</li><li>Filtering by repo, quarter or GenAI tool</li><li>Quick access to team-specific insights</li></ul></div><figure class="solo"><div class="shot"><img src="/img/stealth/developer-profile.jpg" alt="Developer profile with contributions, reviews and trends" width="1440" height="900" loading="lazy" decoding="async"></div><figcaption>The deepest level of the drill-down: each developer’s contributions, review activity and trends. Figures shown are sample data.</figcaption></figure></div>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <p class="eyebrow">Screen 3 of 5</p>
-    <h2>Developer profile</h2>
-    <p class="lead">The deepest level of the drill-down: each developer’s contributions, review activity and trends. Figures shown are sample data.</p>
-    <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><div class="shot"><img src="/img/stealth/developer-profile.jpg" alt="Developer profile with contributions, reviews and trends" width="1440" height="900" loading="lazy" decoding="async"></div></div>
+    <p class="eyebrow">Insight 03</p>
+    <h2>GenAI is present but not measured</h2>
+    <p class="lead">Teams were already using GenAI tools, but there was no way to see what they changed. So I designed a dashboard that compares the teams using them, the POC group, with everyone else, so a leader can see whether the tools make a difference before rolling them out further.</p>
+    <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><div><p class="listlabel">Designed a dedicated GenAI impact dashboard</p><ul class="dots"><li>KPIs comparing AI vs. non-AI contributions</li><li>Time saved per pull request</li><li>Usage trends by group and quarter</li></ul></div><figure class="solo"><div class="shot"><img src="/img/stealth/activity.jpg" alt="Activity dashboard comparing the GenAI POC group with other teams" width="1440" height="900" loading="lazy" decoding="async"></div><figcaption>Teams using GenAI tools (the POC group) compared with the rest, across groups, teams and repositories. Figures shown are sample data.</figcaption></figure></div>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <p class="eyebrow">Screen 4 of 5</p>
-    <h2>Integrations</h2>
-    <p class="lead">Connecting the tools the data comes from: project management, Git and CI/CD.</p>
-    <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><div class="shot"><img src="/img/stealth/integrations.jpg" alt="Integrations page listing project management, Git and CI/CD tools" width="1440" height="900" loading="lazy" decoding="async"></div></div>
-  </div>
-</section>
-<section class="section">
-  <div class="wrap">
-    <p class="eyebrow">Screen 5 of 5</p>
-    <h2>Connecting GitHub</h2>
-    <p class="lead">A guided setup for each integration, with OAuth and personal access token options.</p>
-    <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><div class="shot"><img src="/img/stealth/connect-github.jpg" alt="GitHub connection setup with OAuth and personal access token options" width="1440" height="900" loading="lazy" decoding="async"></div></div>
+    <p class="eyebrow">Setup</p>
+    <h2>Getting the data in</h2>
+    <p class="lead">All of this depends on connecting the tools the data comes from.</p>
+    <div class="stack" style="margin-top: clamp(40px, 5vw, 64px)"><figure class="solo"><div class="shot"><img src="/img/stealth/integrations.jpg" alt="Integrations page listing project management, Git and CI/CD tools" width="1440" height="900" loading="lazy" decoding="async"></div><figcaption>Connecting the tools the data comes from: project management, Git and CI/CD.</figcaption></figure><figure class="solo"><div class="shot"><img src="/img/stealth/connect-github.jpg" alt="GitHub connection setup with OAuth and personal access token options" width="1440" height="900" loading="lazy" decoding="async"></div><figcaption>A guided setup for each integration, with OAuth and personal access token options.</figcaption></figure></div>
   </div>
 </section>
 <section class="section">
