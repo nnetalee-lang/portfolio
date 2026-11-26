@@ -549,3 +549,4 @@ p, li, dd, h2, h3 { text-wrap: pretty; }
 figure.solo { margin: 0; }
 figure.solo figcaption { margin-top: 14px; font-size: 15px; line-height: 1.6; color: var(--muted); max-width: 60ch; }
 .panel.plain { background: none; border: 0; padding: 0; }
+.split.top { align-items: start; }
