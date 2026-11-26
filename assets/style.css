@@ -546,3 +546,9 @@ p, li, dd, h2, h3 { text-wrap: pretty; }
 .pair figcaption { margin-top: 14px; font-size: 15px; line-height: 1.6; color: var(--muted); max-width: 52ch; }
 @media (max-width: 880px) { .pair { grid-template-columns: 1fr; } }
 .pair .shot img { aspect-ratio: 16 / 10; object-fit: cover; object-position: top left; }
+.thread { margin-top: clamp(20px, 2.5vw, 28px); padding: 4px 0 4px 20px; border-left: 3px solid var(--accent); max-width: 720px; }
+.thread p { margin: 0; color: var(--ink); font-size: 17px; line-height: 1.55; }
+.thread .tlabel { font-size: 13px; font-weight: 600; color: var(--accent-text); margin-bottom: 6px; }
+.media .note { margin-top: 10px; }
+.result-lead { margin: 0; }
+.diagram.wide { max-width: none; }
