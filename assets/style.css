@@ -550,3 +550,8 @@ figure.solo { margin: 0; }
 figure.solo figcaption { margin-top: 14px; font-size: 15px; line-height: 1.6; color: var(--muted); max-width: 60ch; }
 .panel.plain { background: none; border: 0; padding: 0; }
 .split.top { align-items: start; }
+.before-row { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(20px, 3vw, 40px); align-items: center; }
+.before-row figure { margin: 0; min-width: 0; }
+.before-row .before-cap { margin: 0; font-size: 15px; line-height: 1.6; color: var(--muted); max-width: 44ch; }
+.before-row .pair-label, figure.solo .pair-label { margin: 0 0 12px; font-size: 14px; font-weight: 600; color: var(--ink); }
+@media (max-width: 880px) { .before-row { grid-template-columns: 1fr; } }
